@@ -26,6 +26,7 @@ class User(db.Model):
     is_consumer = db.Column(db.Boolean, nullable=False, default=True)
 
     responses = db.relationship("ResponseToPrompt", back_populates="user") # Not sure 
+    creations = db.relationship("Exercise", back_populates="author") # An exercise has one author
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
@@ -43,9 +44,10 @@ class Exercise(db.Model):
     description = db.Column(db.Text, nullable=False)
     frequency = db.Column(db.Integer, nullable=True) # Theoretically could set a default
     time_limit_per_sitting = db.Column(db.Integer, nullable=True)
-    author = db.Column(db.String(120), db.ForeignKey('users.pen_name'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
     prompts = db.relationship("Prompt", back_populates="exercise")
+    author = db.relationship("User", back_populates="creations") # A user can author many exercises
 
     def __repr__(self):
         return f'<Exercise exercise_id={self.exercise_id} title={self.title}>'

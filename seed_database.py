@@ -57,27 +57,27 @@ for n in range(4):
     description = f'Description{n}'
     frequency = exercise_frequencies[n]
     time_limit_per_sitting = choice(time_limits)
-    author = choice(User.query.filter(User.is_expert == True).all()).pen_name # ??
-    print("author:", author)
+    author_id = choice(User.query.filter(User.is_expert == True).all()).user_id # ??
+    print("author_id:", author_id)
 
     exercise = crud.create_exercise(title=title, 
                                 description=description, 
                                 frequency=frequency, 
                                 time_limit_per_sitting=time_limit_per_sitting,
-                                author=author)
+                                author_id=author_id)
     model.db.session.add(exercise)
     model.db.session.commit()
 
 
-for n in range(4):
-    title = f'Title{n}'
-    description = f'Description{n}'
-    frequency = exercise_frequencies[n]
-    time_limit_per_sitting = choice(time_limits)
+# for n in range(4):
+#     title = f'Title{n}'
+#     description = f'Description{n}'
+#     frequency = exercise_frequencies[n]
+#     time_limit_per_sitting = choice(time_limits)
 
-    exercise = crud.create_exercise(title=title, 
-                                description=description, 
-                                frequency=frequency, 
-                                time_limit_per_sitting=time_limit_per_sitting)
-    model.db.session.add(exercise)
-    model.db.session.commit()
+#     exercise = crud.create_exercise(title=title, 
+#                                 description=description, 
+#                                 frequency=frequency, 
+#                                 time_limit_per_sitting=time_limit_per_sitting)
+#     model.db.session.add(exercise)
+#     model.db.session.commit()

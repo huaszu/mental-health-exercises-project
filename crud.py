@@ -30,14 +30,14 @@ def get_user_by_id(user_id):
     return User.query.get(user_id)
 
 
-def create_exercise(title, description, frequency, time_limit_per_sitting, author):
+def create_exercise(title, description, frequency, time_limit_per_sitting, author_id):
     """Create and return a new exercise."""
 
     exercise = Exercise(title=title, 
                         description=description, 
                         frequency=frequency, 
                         time_limit_per_sitting=time_limit_per_sitting,
-                        author=author)
+                        author_id=author_id)
 
     return exercise
 
@@ -60,7 +60,7 @@ def create_prompt(prompt_content, prompt_type, exercise, author):
     prompt = Prompt(prompt_content=prompt_content, 
                         prompt_type=prompt_type, 
                         exercise=exercise, 
-                        author=)
+                        author=author)
 
     return prompt
 
