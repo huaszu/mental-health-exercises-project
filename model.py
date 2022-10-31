@@ -29,6 +29,45 @@ class User(db.Model):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
 
 
+class Exercise(db.Model):
+    """An exercise."""
+
+    __tablename__ = 'exercises'
+
+    exercise_id = db.Column(db.Integer,
+                            autoincrement=True,
+                            primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text(1000), nullable=False)
+    frequency = db.Column(db.Integer, nullable=True) # Theoretically could set a default
+    time_limit_per_sitting = db.Column(db.Integer, nullable=True)
+
+    prompts = db.relationship("Prompt", back_populates="exercise")
+
+    def __repr__(self):
+        return f'<Exercise exercise_id={self.exercise_id} title={self.title}>'
+
+
+class Prompt(db.Model):
+    """A prompt within an exercise."""
+
+    __tablename__ = 'prompts'
+
+    prompt_id = db.Column(db.Integer,
+                          autoincrement=True,
+                          primary_key=True)
+    prompt_content = db.Column(db.Text(10000), nullable=False)
+    prompt_type = db.Column(db.String(120), nullable=False) 
+    # prompt_type values could be "short answer", "long answer", 
+    # "multiple choice - choose one", "multiple choice - choose multiple"
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.execise_id'))
+
+    exercise = db.relationship("Exercise", back_populates="prompts")
+
+    def __repr__(self):
+        return f'<Prompt prompt_id={self.prompt_id} content={self.prompt_content}>'
+        
+
 def connect_to_db(flask_app, db_uri="postgresql:///mental-health-platform", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
