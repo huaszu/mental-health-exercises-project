@@ -5,6 +5,9 @@ import json
 from random import choice, randint
 from datetime import datetime
 
+from flask_sqlalchemy import SQLAlchemy # Can I add these here?
+from model import User, Exercise
+
 import crud
 import model
 import server
@@ -43,4 +46,38 @@ for n in range(10):
                             is_expert=is_expert,
                             is_consumer=is_consumer)
     model.db.session.add(user)
+    model.db.session.commit()
+
+
+exercise_frequencies = [1, 7, 14, 30]
+time_limits = [None, 10, 20, 30]
+
+for n in range(4):
+    title = f'Title{n}'
+    description = f'Description{n}'
+    frequency = exercise_frequencies[n]
+    time_limit_per_sitting = choice(time_limits)
+    author = choice(User.query.filter(User.is_expert == True).all()).pen_name # ??
+    print("author:", author)
+
+    exercise = crud.create_exercise(title=title, 
+                                description=description, 
+                                frequency=frequency, 
+                                time_limit_per_sitting=time_limit_per_sitting,
+                                author=author)
+    model.db.session.add(exercise)
+    model.db.session.commit()
+
+
+for n in range(4):
+    title = f'Title{n}'
+    description = f'Description{n}'
+    frequency = exercise_frequencies[n]
+    time_limit_per_sitting = choice(time_limits)
+
+    exercise = crud.create_exercise(title=title, 
+                                description=description, 
+                                frequency=frequency, 
+                                time_limit_per_sitting=time_limit_per_sitting)
+    model.db.session.add(exercise)
     model.db.session.commit()

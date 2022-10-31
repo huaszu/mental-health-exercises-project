@@ -25,6 +25,8 @@ class User(db.Model):
     is_expert = db.Column(db.Boolean, nullable=False, default=False) # Not sure about default
     is_consumer = db.Column(db.Boolean, nullable=False, default=True)
 
+    responses = db.relationship("ResponseToPrompt", back_populates="user") # Not sure 
+
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
 
@@ -38,9 +40,10 @@ class Exercise(db.Model):
                             autoincrement=True,
                             primary_key=True)
     title = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text(1000), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     frequency = db.Column(db.Integer, nullable=True) # Theoretically could set a default
     time_limit_per_sitting = db.Column(db.Integer, nullable=True)
+    author = db.Column(db.String(120), db.ForeignKey('users.pen_name'), nullable=False)
 
     prompts = db.relationship("Prompt", back_populates="exercise")
 
@@ -48,7 +51,7 @@ class Exercise(db.Model):
         return f'<Exercise exercise_id={self.exercise_id} title={self.title}>'
 
 
-class Prompt(db.Model):
+class Prompt(db.Model): # Should be subclass of Exercise??
     """A prompt within an exercise."""
 
     __tablename__ = 'prompts'
@@ -56,16 +59,36 @@ class Prompt(db.Model):
     prompt_id = db.Column(db.Integer,
                           autoincrement=True,
                           primary_key=True)
-    prompt_content = db.Column(db.Text(10000), nullable=False)
+    prompt_content = db.Column(db.Text, nullable=False)
     prompt_type = db.Column(db.String(120), nullable=False) 
     # prompt_type values could be "short answer", "long answer", 
     # "multiple choice - choose one", "multiple choice - choose multiple"
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.execise_id'))
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'))
 
     exercise = db.relationship("Exercise", back_populates="prompts")
+    responses = db.relationship("ResponseToPrompt", back_populates="prompt")
 
     def __repr__(self):
         return f'<Prompt prompt_id={self.prompt_id} content={self.prompt_content}>'
+
+
+class ResponseToPrompt(db.Model): 
+    """A response to a prompt."""
+
+    __tablename__ = 'responses'
+
+    response_id = db.Column(db.Integer,
+                          autoincrement=True,
+                          primary_key=True)
+    response_content = db.Column(db.Text, nullable=True)
+    prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+
+    prompt = db.relationship("Prompt", back_populates="responses")
+    user = db.relationship("User", back_populates="responses")
+
+    def __repr__(self):
+        return f'<ResponseToPrompt response_id={self.response_id} content={self.response_content}>'
         
 
 def connect_to_db(flask_app, db_uri="postgresql:///mental-health-platform", echo=True):
