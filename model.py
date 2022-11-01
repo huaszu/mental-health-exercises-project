@@ -25,8 +25,8 @@ class User(db.Model):
     is_expert = db.Column(db.Boolean, nullable=False, default=False) # Not sure about default
     is_consumer = db.Column(db.Boolean, nullable=False, default=True)
 
-    responses = db.relationship("ResponseToPrompt", back_populates="user") # Not sure 
-    creations = db.relationship("Exercise", back_populates="author") # An exercise has one author
+    responses = db.relationship("ResponseToPrompt", back_populates="user") # A response belongs to one user
+    creations = db.relationship("Exercise", back_populates="author") # An exercise has one author, who is a user
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
@@ -45,15 +45,17 @@ class Exercise(db.Model):
     frequency = db.Column(db.Integer, nullable=True) # Theoretically could set a default
     time_limit_per_sitting = db.Column(db.Integer, nullable=True)
     author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    # Having author_id as a column does not mean we need author_id to be a parameter in create_exercise() fn
 
-    prompts = db.relationship("Prompt", back_populates="exercise")
+    prompts = db.relationship("Prompt", back_populates="exercise") # A prompt belongs to one exercise
+    # Does prompts need to be a parameter in create_exercise() fn?  Theory: No, because when we create a prompt, we associate prompt to an exercise 
     author = db.relationship("User", back_populates="creations") # A user can author many exercises
 
     def __repr__(self):
         return f'<Exercise exercise_id={self.exercise_id} title={self.title}>'
 
 
-class Prompt(db.Model): # Should be subclass of Exercise??
+class Prompt(db.Model):
     """A prompt within an exercise."""
 
     __tablename__ = 'prompts'
@@ -67,8 +69,8 @@ class Prompt(db.Model): # Should be subclass of Exercise??
     # "multiple choice - choose one", "multiple choice - choose multiple"
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'))
 
-    exercise = db.relationship("Exercise", back_populates="prompts")
-    responses = db.relationship("ResponseToPrompt", back_populates="prompt")
+    exercise = db.relationship("Exercise", back_populates="prompts") # An exercise can have many prompts
+    responses = db.relationship("ResponseToPrompt", back_populates="prompt") # A response belongs to one prompt
 
     def __repr__(self):
         return f'<Prompt prompt_id={self.prompt_id} content={self.prompt_content}>'
@@ -86,8 +88,8 @@ class ResponseToPrompt(db.Model):
     prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
-    prompt = db.relationship("Prompt", back_populates="responses")
-    user = db.relationship("User", back_populates="responses")
+    prompt = db.relationship("Prompt", back_populates="responses") # A prompt can have many responses, from different users or from the same user completing the same exercise multiple times
+    user = db.relationship("User", back_populates="responses") # A user can have many responses
 
     def __repr__(self):
         return f'<ResponseToPrompt response_id={self.response_id} content={self.response_content}>'

@@ -57,14 +57,15 @@ for n in range(4):
     description = f'Description{n}'
     frequency = exercise_frequencies[n]
     time_limit_per_sitting = choice(time_limits)
-    author_id = choice(User.query.filter(User.is_expert == True).all()).user_id # ??
+    author = choice(User.query.filter(User.is_expert == True).all())
+    #author_id = choice(User.query.filter(User.is_expert == True).all()).user_id # ??
     print("author_id:", author_id)
 
     exercise = crud.create_exercise(title=title, 
                                 description=description, 
                                 frequency=frequency, 
                                 time_limit_per_sitting=time_limit_per_sitting,
-                                author_id=author_id)
+                                author=author)
     model.db.session.add(exercise)
     model.db.session.commit()
 
@@ -81,3 +82,9 @@ for n in range(4):
 #                                 time_limit_per_sitting=time_limit_per_sitting)
 #     model.db.session.add(exercise)
 #     model.db.session.commit()
+
+
+#Print out all of that user's prompts and responses
+# Show surveys user has responded to - viewing responses
+# Making responses
+# Creating forms
