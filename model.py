@@ -22,7 +22,7 @@ class User(db.Model):
     # If we have a default pen_name, then don't exactly need nullable=True.
     # Better than having computation for if pen_name IS NULL, set default to
     # first_name?
-    is_expert = db.Column(db.Boolean, nullable=False, default=False) # Not sure about default
+    is_expert = db.Column(db.Boolean, nullable=False, default=True) # Not sure about default
     is_consumer = db.Column(db.Boolean, nullable=False, default=True)
 
     responses = db.relationship("ResponseToPrompt", back_populates="user") # A response belongs to one user
@@ -67,7 +67,7 @@ class Prompt(db.Model):
     prompt_type = db.Column(db.String(120), nullable=False) 
     # prompt_type values could be "short answer", "long answer", 
     # "multiple choice - choose one", "multiple choice - choose multiple"
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'))
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False)
 
     exercise = db.relationship("Exercise", back_populates="prompts") # An exercise can have many prompts
     responses = db.relationship("ResponseToPrompt", back_populates="prompt") # A response belongs to one prompt
@@ -85,8 +85,8 @@ class ResponseToPrompt(db.Model):
                           autoincrement=True,
                           primary_key=True)
     response_content = db.Column(db.Text, nullable=True)
-    prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id')) # is nullable what allows not signed in user to use?
 
     prompt = db.relationship("Prompt", back_populates="responses") # A prompt can have many responses, from different users or from the same user completing the same exercise multiple times
     user = db.relationship("User", back_populates="responses") # A user can have many responses

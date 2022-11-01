@@ -1,7 +1,7 @@
 '''CRUD operations.'''
 
 from model import db, User, Exercise, Prompt, ResponseToPrompt, connect_to_db
-from datetime import datetime
+from datetime import datetime, date
 
 
 def create_user(email, password, first_name, last_name, is_expert, is_consumer, pen_name):
