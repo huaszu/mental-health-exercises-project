@@ -23,12 +23,13 @@ def register_user():
 
     email = request.form.get("email")
     password = request.form.get("password")
+    first_name = request.form.get("first-name")
+    last_name = request.form.get("last-name")
+    pen_name = request.form.get("pen-name")
 
-    first_name = "First"
-    last_name = "Last"
     is_expert = False
     is_consumer = True
-    pen_name = "pen"
+    # pen_name = "pen"
 
     user = crud.get_user_by_email(email)
     if user:
