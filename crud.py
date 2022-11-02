@@ -2,6 +2,7 @@
 
 from model import db, User, Exercise, Prompt, ResponseToPrompt, connect_to_db
 from datetime import datetime, date
+from random import choice
 
 
 def create_user(email, password, first_name, last_name, is_expert, is_consumer, pen_name):
@@ -98,12 +99,114 @@ def get_response_by_id(response_id):
     return ResponseToPrompt.query.get(response_id)
 
 
-def print_exercise_responses(user, exercise):
+# Take in exercise_id, user_id.  Return that user's responses to prompts for that exercise.
+
+# Should I print or get?
+def print_exercise_responses(user_id, exercise_id):
     """Print all of user's responses for this exercise."""
 
-    pass
+    prompt_response_pairs = []
+
+    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).filter(Prompt.exercise_id == exercise_id).all() # returns list of responses
+    # joinedload for eager loading?
+
+    for response in responses:
+        tup = (response.prompt.prompt_content, response.response_content)
+        prompt_response_pairs.append(tup)
+
+    for tup in prompt_response_pairs:
+        # unpack the tuple
+        (prompt_content, response_content) = tup
+        print(f'Prompt: {prompt_content} Response: {response_content}')
+
+
+
+# # Take in exercise, print prompts
+# def print_exercise_prompts(exercise):
+#     # this_exercise = Exercise.query.filter(exercise.exercise_id == Exercise.exercise_id).one() # Alternative to .one() is .all() and then pull out only element of that list
+#     for prompt in exercise.prompts:
+#         print(prompt.responses) # Prints a list of responses per prompt.
+
+# Exercise.query.filter(1 == Exercise.exercise_id).join(Prompt).all()
+
+# Exercise.query.filter(1 == Exercise.exercise_id).options(db.joinedload('prompts')).one()
+
+
+
+# def print_user_prompts(user):
+#     print(ResponseToPrompt.query.filter(ResponseToPrompt.user == user).all())
+
+
+
+# def print_exercise_responses(user, exercise):
+#     """Print all of user's responses for this exercise."""
+
+#     print(ResponseToPrompt.query.filter(ResponseToPrompt.user == user).join(Prompt).all())
+#     filter for user
+#     join prompt 
+#     filter for exercise 
+
+#     as a list
+
+#     for response in user.responses:
+#         if response.prompt.exercise == exercise:
+#             print(response)
+
+#     # user.responses filter by response.prompt.exercise = exercise
+    
+#     # print(user.responses)
+#     print(User.query.filter(User.user_id == user.user_id))
+
+#     # first_response = ResponseToPrompt.query.first(ResponseToPrompt.user_id == user.user_id) # Use the `user` input to get to the first (any) response of that user
+#     # first_response.prompt.exercise
+#     #     print(response)
+#     #     for user_exercise in response.prompt.exercise: 
+#     #         if user_exercise == exercise:
+#     #             for element in exercise.prompts:
+
+#     #             print(exercise.prompts.
+#     #     for prompt in response.prompt:
+#     #     print(prompt)
+#     #     exercise = prompt.exercise
+#     #     print(exercise)
+#     #     if exercise not in exercises_of_user:
+#     #         exercises_of_user.append(exercise)
+
+
+# # Look at a user who has at least one response.
+# # test_user = User.query.filter(len(User.responses) > 0).first()
+# # print(test_user)
+
+# # exercises_of_user = [] # Elements of list are unique exercises the user has done.
+
+# # # for response in test_user.responses:
+# # for response in User.query.first().responses:
+# #     for prompt in response.prompt:
+# #         print(prompt)
+# #         exercise = prompt.exercise
+# #         print(exercise)
+# #         if exercise not in exercises_of_user:
+# #             exercises_of_user.append(exercise)
+
+# # print_exercise_responses(User.query.first(), choice(exercises_of_user))
 
 
 if __name__ == '__main__':
     from server import app
     connect_to_db(app)
+
+    # exercises_of_user = []
+    # for response in ResponseToPrompt.query.first().user.responses:
+    #     response.prompt.exercise =
+    #     for prompt in response.prompt:
+    #         print(prompt)
+    #         exercise = prompt.exercise
+    #         print(exercise)
+    #         if exercise not in exercises_of_user:
+    #             exercises_of_user.append(exercise)
+    # print(exercises_of_user)
+    # # print_exercise_responses(User.query.first(), choice(exercises_of_user))
+
+    # # print(ResponseToPrompt.query.first().user.responses)
+
+    # print_user_prompts(User.query.filter(User.user_id == 5))
