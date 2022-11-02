@@ -11,11 +11,11 @@ app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
 
-@app.route('/')
+@app.route("/")
 def homepage():
-    '''The Homepage'''
+    """View homepage."""
 
-    return render_template('homepage.html')
+    return render_template("homepage.html")
 
 
 if __name__ == "__main__":
