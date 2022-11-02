@@ -17,7 +17,6 @@ def homepage():
 
     return render_template("homepage.html")
 
-
 @app.route("/users", methods=["POST"])
 def register_user():
     """Create a new user."""
@@ -40,6 +39,23 @@ def register_user():
         db.session.add(user)
         db.session.commit()
         flash("Account created! Please log in.")
+
+    return redirect("/")
+
+@app.route("/login", methods=["POST"])
+def process_login():
+    """Process user login."""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = crud.get_user_by_email(email)
+    if not user or user.password != password:
+        flash("The email or password you entered was incorrect.")
+    else:
+        # Log in user by storing the user's email in session
+        session["user_id"] = user.user_id
+        flash(f"Welcome back, {user.first_name}!")
 
     return redirect("/")
 
