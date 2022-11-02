@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}All Exercises{% endblock %}
+
+{% block body %}
+  <h1>All Exercises</h1>
+
+  <ul>
+    {% for exercise in exercises %}
+      <li>
+        <a href="/movies/{{ exercise.exercise_id }}">
+          {{ exercise.title }}
+        <p>{{ exercise.description }}</p>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

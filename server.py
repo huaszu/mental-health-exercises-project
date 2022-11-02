@@ -17,6 +17,14 @@ def homepage():
 
     return render_template("homepage.html")
 
+@app.route("/exercises")
+def all_exercises():
+    """View all exercises."""
+
+    exercises = crud.get_exercises()
+
+    return render_template("all_exercises.html", exercises=exercises)
+
 @app.route("/users", methods=["POST"])
 def register_user():
     """Create a new user."""

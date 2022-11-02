@@ -13,7 +13,7 @@ import model
 import server
 
 os.system("dropdb mental-health-platform")
-os.system('createdb mental-health-platform')
+os.system("createdb mental-health-platform")
 
 model.connect_to_db(server.app)
 model.db.create_all()
@@ -24,11 +24,11 @@ model.db.create_all()
 # Create test users.
 
 for n in range(10):
-    email = f'user{n}@test.com'  # Voila! A unique email!
-    password = 'test'
-    first_name = f'Fname{n}'
-    last_name = f'Lname{n}'
-    pen_name = f'Mysterious{n}'
+    email = f"user{n}@test.com"  # Voila! A unique email!
+    password = "test"
+    first_name = f"Fname{n}"
+    last_name = f"Lname{n}"
+    pen_name = f"Mysterious{n}"
     # Seed some users who are only Experts, some who are only Consumers, and some who are both.
     if n in range(0, 4): # Users 0, 1, 2, 3
         is_expert = True
