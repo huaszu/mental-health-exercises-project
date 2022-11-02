@@ -34,6 +34,7 @@ def register_user():
     user = crud.get_user_by_email(email)
     if user:
         flash("Cannot create an account with that email. Try again.")
+        # print("user is already a user") # This works, so `if user:` is evaluating as we expect
     else:
         user = crud.create_user(email, password, first_name, last_name, is_expert, is_consumer, pen_name)
         db.session.add(user)
