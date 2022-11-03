@@ -1,3 +1,9 @@
+# Next: When user has logged in, show me what exercises, prompts, responses I have done
+# Then: Allow user to do an exercise from all exercises
+
+# Delay React-ify all exercises
+# Later: At point of user complete exercise, capture date - order how to present exercises to user by date
+
 """Server for mental health exercises app."""
 
 from flask import (Flask, render_template, request, flash, session, redirect)
@@ -33,7 +39,7 @@ def register_user():
     password = request.form.get("password")
     first_name = request.form.get("first-name")
     last_name = request.form.get("last-name")
-    pen_name = request.form.get("pen-name")
+    pen_name = request.form.get("pen-name") # Later set default if left empty
 
     is_expert = False
     is_consumer = True
@@ -59,14 +65,33 @@ def process_login():
     password = request.form.get("password")
 
     user = crud.get_user_by_email(email)
-    if not user or user.password != password:
+
+    if user == None: # is this not repetitive with `elif not user` ?
+        flash("We don't have an account for you under this email!")
+        return redirect("/")
+    elif not user or user.password != password:
         flash("The email or password you entered was incorrect.")
+        return redirect("/")
     else:
         # Log in user by storing the user's email in session
         session["user_id"] = user.user_id
-        flash(f"Welcome back, {user.first_name}!")
+        flash(f"Welcome back, {user.first_name}!") # Funny - when user logs in with email in db and wrong password, get both the Welcome back and the incorrect flash messages
+        # return redirect(f"/users/{user_id}") # If log in correctly, can redirect to user page? redirect(f"/users/{user_id}")
+        return redirect("/users/my_exercises")
 
-    return redirect("/")
+@app.route("/users/my_exercises")
+def show_user_exercises():
+    """Show exercises user has responded to."""
+
+    user_id = session["user_id"]
+
+    user = crud.get_user_by_id(user_id)
+    exercises = crud.get_exercises_of_user(user_id) # This is a list
+
+    # for exercise in exercises:
+    #     prompts = crud.get_prompts_by_exercise(exercise.exercise_id) # This is a list
+
+    return render_template("my_exercises.html", user=user, exercises=exercises)
 
 
 if __name__ == "__main__":

@@ -60,15 +60,17 @@ for n in range(10):
 exercise_frequencies = [1, 7, 14, 30]
 time_limits = [None, 10, 20, 30]
 expert_count = len(User.query.filter(User.is_expert == True).all())
-experts_having_exercise = expert_count - 1
+experts_having_exercise_count = expert_count - 1
 # print("EXPERTS HAVING EXERCISE:", experts_having_exercise) # 6
 # Idea: Could distinguish between expert and author, i.e., if a user has 
 # created an exercise, user could become author as well.
 
+experts_having_exercise = User.query.filter(User.is_expert == True).limit(experts_having_exercise_count).all()
+
 # Note: Each expert who has an exercise has exactly one exercise for now:
-for user in User.query.filter(User.is_expert == True).limit(experts_having_exercise).all():
+for user in experts_having_exercise:
 # Beware of namespace and scoping.  Note that we have imported crud and model.  Can we use `user` here?
-    title = "Title"
+    title = f"Title{experts_having_exercise.index(user)}"
     description = "Description"
     frequency = choice(exercise_frequencies)
     time_limit_per_sitting = choice(time_limits)

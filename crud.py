@@ -83,6 +83,12 @@ def get_prompt_by_id(prompt_id):
     return Prompt.query.get(prompt_id)
 
 
+def get_prompts_by_exercise(exercise_id):
+    """Return prompts with exercise_id."""
+
+    return Prompt.query.filter(Prompt.exercise_id == exercise_id).all()
+
+
 def create_response(response_content, prompt, user):
     """Create and return a new prompt."""
 
@@ -108,7 +114,7 @@ def get_response_by_id(response_id):
 # Take in exercise_id, user_id.  Return that user's responses to prompts for that exercise.
 
 # Should I print or get?
-def print_exercise_responses(user_id, exercise_id):
+def print_exercise_responses_of_user(user_id, exercise_id):
     """Print all of user's responses for this exercise."""
 
     prompt_response_pairs = []
@@ -128,7 +134,7 @@ def print_exercise_responses(user_id, exercise_id):
     return prompt_response_pairs
 
 
-def print_exercises(user_id):
+def print_exercises_of_user(user_id):
     """Print all exercises user has responded to."""
 
     exercises = []
@@ -145,6 +151,26 @@ def print_exercises(user_id):
         exercises.append(response.prompt.exercise)
     
     return exercises # a list of exercises
+
+
+def get_exercises_of_user(user_id):
+    """Get all exercises user has responded to."""
+
+    exercises = []
+
+    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all() # list of responses of user
+
+    # for response in responses:
+    #     print("Exercise Title:", response.prompt.exercise.title, 
+    #           "Prompt:", response.prompt.prompt_content, 
+    #           "Response:", response.response_content)
+
+    for response in responses:
+        # print("Exercise Title:", response.prompt.exercise.title)
+        exercises.append(response.prompt.exercise)
+    
+    return exercises # a list of exercises
+
 
 # # Take in exercise, print prompts
 # def print_exercise_prompts(exercise):

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.first_name }}'s Page{% endblock %}
+
+{% block body %}
+<h1>{{ user.first_name }}</h1>
+<ul>
+{% for exercise in exercises %}
+    <li>
+        {{ exercise.title }}
+        {% for prompt in exercise.prompts %}
+            <p>{{ prompt.prompt_content }}</p>
+            {% for response in prompt.responses %}
+                {% if response.user_id == user.user_id %}
+                    <p>{{ response.response_content }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        <!-- <span>
+            test
+        </span> -->
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
