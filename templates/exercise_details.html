@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ exercise.title }} - Details{% endblock %}
+
+{% block body %}
+<h1>{{ exercise.title }}</h1>
+
+<p>
+  {{ exercise.description }}
+</p>
+
+<p>
+    Exercise Author: {{ exercise.author.pen_name }}
+</p>
+
+<p>
+    {% if exercise.frequency %}
+        We recommend you do this exercise once every {{ exercise.frequency }} day(s).
+    {% endif %}
+</p>
+
+<p>
+    {% if exercise.time_limit_per_sitting %}
+        Suggested time to spend on exercise: {{ exercise.time_limit_per_sitting }} minutes
+    {% endif %}
+</p>
+
+<p>
+    No editing for now once you submit! =P
+</p>
+
+<form action="/exercises/{{ exercise.exercise_id }}/submitted" method="POST">
+    {% for prompt in exercise.prompts %}
+
+        <label for="response-textarea">{{ prompt.prompt_content }}</label>
+        <textarea name="response-textarea" id="response-textarea"></textarea>
+        <br>
+
+    {% endfor %}
+
+    <input type="submit">
+</form>
+
+
+<!-- {% if session.get('user_email') %}
+<h2>Rate this movie</h2>
+<form action="/movies/{{ movie.movie_id }}/ratings" method="POST">
+  <p>
+    Rating:
+    <select name="rating">
+      <option value="">Select rating</option>
+      {% for num in range(6) %}
+        <option value="{{ num }}">{{ num }}</option>
+      {% endfor %}
+    </select>
+  </p>
+  <p><input type="submit"></p>
+</form>
+{% endif %} -->
+
+{% endblock %}

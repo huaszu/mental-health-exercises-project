@@ -93,6 +93,21 @@ def show_user_exercises():
 
     return render_template("my_exercises.html", user=user, exercises=exercises)
 
+@app.route("/exercises/<exercise_id>")
+def show_exercise(exercise_id):
+    """Show details on a particular exercise."""
+
+    exercise = crud.get_exercise_by_id(exercise_id)
+
+    return render_template("exercise_details.html", exercise=exercise)
+
+@app.route("/exercises/<exercise_id>/submitted", methods=["POST"])
+def get_user_to_save(exercise_id):
+
+    if "user_id" in session:
+        # Save data to user
+    # Temporarily save data and alert user to sign in if want data saved
+    
 
 if __name__ == "__main__":
     connect_to_db(app)
