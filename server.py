@@ -107,15 +107,15 @@ def show_exercise(exercise_id):
 def save_user_responses(exercise_id):
     """Create a new set of saved responses for the user for the exercise."""
     
-    prompts = crud.get_prompts_by_exercise(exercise_id)
-    # time = datetime.now
+    # prompts = crud.get_prompts_by_exercise(exercise_id)
+    # Note for later: time = datetime.now
 
     if "user_id" in session:
         # Save data to user
         user_id = session["user_id"]
 
         user = crud.get_user_by_id(user_id)
-        exercise = crud.get_exercise_by_id(exercise_id)
+        # exercise = crud.get_exercise_by_id(exercise_id)
 
         for key in request.form:
             # print(key, request.form.get(key))
@@ -123,7 +123,6 @@ def save_user_responses(exercise_id):
             db.session.add(response)
     
         db.session.commit()
-
 
     return redirect("/users/my_exercises")
     # responses = request.form.get("response-textarea")
