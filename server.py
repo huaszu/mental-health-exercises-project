@@ -6,7 +6,7 @@
 
 """Server for mental health exercises app."""
 
-from flask import (Flask, render_template, request, flash, session, redirect)
+from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
 from model import connect_to_db, db
 import crud
 
@@ -99,9 +99,16 @@ def show_exercise(exercise_id):
 
     exercise = crud.get_exercise_by_id(exercise_id)
 
-    name_count = 0
+    # show_alert = True
+    # if "user_id" in session:
+    #     show_alert = False 
+    # Does not work because program had already set show_alert and sent that data to the browser.  Not going to update show_alert once sent
 
-    return render_template("exercise_details.html", exercise=exercise, name_count=name_count)
+    # I don't think I need session.modified = True because session["user_id"] is
+    # what would change if user logs in on another tab.  We use 
+    # session.modified = True when we change a value in an inner dictionary (?)
+
+    return render_template("exercise_details.html", exercise=exercise, session=session)
 
 @app.route("/exercises/<exercise_id>/submitted", methods=["POST"])
 def save_user_responses(exercise_id):
@@ -109,6 +116,10 @@ def save_user_responses(exercise_id):
     
     # prompts = crud.get_prompts_by_exercise(exercise_id)
     # Note for later: time = datetime.now
+
+    # Is there a way to write this function without the if, if we set it up
+    # so that a user would only get routed here if the user is logged in
+    # already?  Tangled with what my AJAX problem wants to solve
 
     if "user_id" in session:
         # Save data to user
@@ -124,17 +135,24 @@ def save_user_responses(exercise_id):
     
         db.session.commit()
 
-    return redirect("/users/my_exercises")
+    return redirect("/users/my_exercises") # Error when return statement nested in if
+
+
     # responses = request.form.get("response-textarea")
     # print("WHAT IS THIS?", responses)
 
 
-
-
-
-
     # Temporarily save data and alert user to sign in if want data saved
     
+@app.route("/login-status.json")
+def get_login_status():
+    """Get whether or not user is logged in."""
+
+    if "user_id" in session:
+        return jsonify(True)
+
+    return jsonify(False)
+
 
 if __name__ == "__main__":
     connect_to_db(app)

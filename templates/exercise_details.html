@@ -38,10 +38,40 @@
 
     {% endfor %}
 
-    <input type="submit">
+    <button type="submit" id="completed-exercise">Submit</button>
 </form>
 
 <br>
 <a href="/" target="_blank">Create account or log in if you have not already.  Will open in new tab</a>
+
+{% endblock %}
+
+{% block after_body %}{% endblock %}
+
+{% block js %}
+<!-- <script src="/static/js/alert-save-responses.js"></script> -->
+
+<!-- {% if session.get("user_id", "does not exist") == "does not exist" %} -->
+
+<script>
+
+    const button = document.querySelector('#completed-exercise');
+
+    button.addEventListener('click', (evt) => {
+        evt.preventDefault();
+
+        fetch('/login-status.json')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                if (responseJson = false) {
+                    alert('To save your responses for future viewing, create account or log in by clicking link at bottom.  New tab will open.  After login in new tab, click Submit again in current tab to view your responses.');
+                } 
+                
+            });
+        });
+
+</script>
+
+<!-- {% endif %} -->
 
 {% endblock %}

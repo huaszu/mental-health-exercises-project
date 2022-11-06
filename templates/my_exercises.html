@@ -4,6 +4,12 @@
 
 {% block body %}
 <h1>{{ user.first_name }}</h1>
+
+<h2>Navigation</h2>
+<ul>
+  <li><a href="/exercises">View all exercises</a></li>
+</ul>
+
 <ul>
 {% for exercise in exercises %}
     <li>
