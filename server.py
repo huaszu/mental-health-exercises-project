@@ -122,43 +122,43 @@ def save_user_responses(exercise_id):
     # so that a user would only get routed here if the user is logged in
     # already?  Tangled with what my AJAX problem wants to solve
 
-    use request.json 
-    print and see what dict looks like
+    print("\n\n\n\nWhat is request.json?", request.json)
 
-    if "user_id" in session:
+    # destructure dictionary
+
+    # print(request.json.get(""))
+    # print and see what dict looks like
+
+    # if "user_id" in session:
         # Save data to user
-        user_id = session["user_id"]
+    user_id = session["user_id"]
 
-        user = crud.get_user_by_id(user_id)
-        # exercise = crud.get_exercise_by_id(exercise_id)
+    user = crud.get_user_by_id(user_id)
+    # exercise = crud.get_exercise_by_id(exercise_id)
 
-        for key in request.form:
-            # print(key, request.form.get(key))
-            response = crud.create_response(request.form.get(key), crud.get_prompt_by_id(int(key)), user)
-            db.session.add(response)
+    for key in request.json:
+        # print(key, request.form.get(key))
+        response = crud.create_response(request.json.get(key), crud.get_prompt_by_id(int(key)), user)
+        db.session.add(response)
     
-        db.session.commit()
+    db.session.commit()
 
-    return redirect("/users/my_exercises") # Error when return statement nested in if
-
-
-    # responses = request.form.get("response-textarea")
-    # print("WHAT IS THIS?", responses)
-
-
-    # Temporarily save data and alert user to sign in if want data saved
+    return redirect("/users/my_exercises") 
     
 @app.route("/login-status.json")
 def get_login_status():
     """Get whether or not user is logged in."""
 
-    print(session.get("user_id"))
+    print("user_id:", session.get("user_id"))
 
     if "user_id" in session:
         return jsonify(True)
 
     return jsonify(False)
 
+logout route
+    session.clear
+    return redirect to '/'
 
 if __name__ == "__main__":
     connect_to_db(app)
