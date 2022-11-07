@@ -1,7 +1,7 @@
-# Next: When user has logged in, show me what exercises, prompts, responses I have done
-# Then: Allow user to do an exercise from all exercises
+# Next: Allow user to do an exercise from all exercises - tweaking logged out user experience
+# Then: Author create exercise | Notification API
 
-# Delay React-ify all exercises
+# Delay React-ify all_exercises
 # Later: At point of user complete exercise, capture date - order how to present exercises to user by date
 
 """Server for mental health exercises app."""
@@ -9,6 +9,7 @@
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
 from model import connect_to_db, db
 import crud
+import requests
 
 from jinja2 import StrictUndefined
 
