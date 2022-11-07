@@ -122,6 +122,9 @@ def save_user_responses(exercise_id):
     # so that a user would only get routed here if the user is logged in
     # already?  Tangled with what my AJAX problem wants to solve
 
+    use request.json 
+    print and see what dict looks like
+
     if "user_id" in session:
         # Save data to user
         user_id = session["user_id"]
@@ -148,6 +151,8 @@ def save_user_responses(exercise_id):
 @app.route("/login-status.json")
 def get_login_status():
     """Get whether or not user is logged in."""
+
+    print(session.get("user_id"))
 
     if "user_id" in session:
         return jsonify(True)

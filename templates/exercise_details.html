@@ -33,7 +33,7 @@
     {% for prompt in exercise.prompts %}
         
         <label for="response-textarea">{{ prompt.prompt_content }}</label>
-        <textarea name="{{ prompt.prompt_id }}" id="{{ prompt.prompt_id }}"></textarea>
+        <textarea class="responses" name="{{ prompt.prompt_id }}" id="{{ prompt.prompt_id }}"></textarea>
         <br>
 
     {% endfor %}
@@ -49,7 +49,7 @@
 {% block after_body %}{% endblock %}
 
 {% block js %}
-<!-- <script src="/static/js/alert-save-responses.js"></script> -->
+<!-- <script src="js/alert-save-responses.js"></script> -->
 
 <!-- {% if session.get("user_id", "does not exist") == "does not exist" %} -->
 
@@ -60,13 +60,22 @@
     button.addEventListener('click', (evt) => {
         evt.preventDefault();
 
-        fetch('/login-status.json')
+        fetch('/login-status.json', {method: 'GET', credentials: 'include'})
             .then((response) => response.json())
             .then((responseJson) => {
-                if (responseJson = false) {
+                if (responseJson === false) {
                     alert('To save your responses for future viewing, create account or log in by clicking link at bottom.  New tab will open.  After login in new tab, click Submit again in current tab to view your responses.');
                 } 
-                
+                if (responseJson === true) {
+                    let responses = {};
+                    
+                    for (const element of document.querySelectorAll('.responses')) {
+                        responses["element.id"] = element.value;
+                    }
+
+                    fetch('/exercises/<exercise_id>/submitted', {method: 'GET', credentials: 'include'})
+                        
+                }
             });
         });
 
