@@ -32,6 +32,32 @@ def all_exercises():
 
     return render_template("all_exercises.html", exercises=exercises)
 
+@app.route("/add_exercise", methods=["POST"])
+def add_to_all_exercises():
+    """Create exercise and add it to db."""
+
+    title = request.form.get("title")
+    description = request.form.get("description")
+    frequency = request.form.get("freq") # Test that I get value
+    time_limit_per_sitting = request.form.get("time-limit")
+
+    user_id = session["user_id"]
+    author = crud.get_user_by_id(user_id)
+
+    exercise = crud.create_exercise(title=title, 
+                                    description=description, 
+                                    frequency=frequency, 
+                                    time_limit_per_sitting=time_limit_per_sitting, 
+                                    author=author)
+
+    db.session.add(exercise)
+
+    # Create the prompts, too?!
+
+    db.session.commit()
+
+    return redirect("/exercises")
+
 @app.route("/users", methods=["POST"])
 def register_user():
     """Create a new user."""
@@ -51,7 +77,13 @@ def register_user():
         flash("Cannot create an account with that email. Try again.")
         # print("user is already a user") # This works, so `if user:` is evaluating as we expect
     else:
-        user = crud.create_user(email, password, first_name, last_name, is_expert, is_consumer, pen_name)
+        user = crud.create_user(email=email, 
+                                password=password, 
+                                first_name=first_name, 
+                                last_name=last_name, 
+                                is_expert=is_expert, 
+                                is_consumer=is_consumer, 
+                                pen_name=pen_name)
         db.session.add(user)
         db.session.commit()
         flash("Account created! Please log in.")
@@ -138,7 +170,9 @@ def save_user_responses(exercise_id):
 
     for key in request.json:
         # print(key, request.form.get(key))
-        response = crud.create_response(request.json.get(key), crud.get_prompt_by_id(int(key)), user)
+        response = crud.create_response(response_content=request.json.get(key), 
+                                        prompt=crud.get_prompt_by_id(int(key)), 
+                                        user=user)
         db.session.add(response)
     
     db.session.commit()
