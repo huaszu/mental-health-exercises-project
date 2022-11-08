@@ -30,9 +30,24 @@
     <label for="time-limit">Recommend # of minutes for user to spend on exercise: </label>
     <input type="number" name="time-limit" id="time-limit" min="0">
 
-    
+    <br>
+    <label for="1">A prompt for the user to respond to:* </label>
+    <textarea class="prompt" name="1" id="1" required></textarea>
+
+    <div id="more-prompts"></div>
+
+    <br>
+    <p>I want my exercise to have more prompts!</p>
+    <button type="button" id="add-prompt">Add prompt</button>
 
     <br>
     <button type="submit">Submit</button>
   </form>
+{% endblock %}
+
+{% block after_body %}{% endblock %}
+
+{% block js %}
+<script src="/static/js/add_prompt.js"></script>
+
 {% endblock %}
