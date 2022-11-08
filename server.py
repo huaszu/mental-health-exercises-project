@@ -156,9 +156,17 @@ def get_login_status():
 
     return jsonify(False)
 
-logout route
-    session.clear
-    return redirect to '/'
+# logout route
+#     session.clear
+#     return redirect to '/'
+
+
+@app.route("/create")
+def create():
+    """Create an exercise."""
+
+    return render_template("create.html") # Can only get here if logged in
+
 
 if __name__ == "__main__":
     connect_to_db(app)
