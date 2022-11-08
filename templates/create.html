@@ -8,7 +8,31 @@
 
   <br>
   
-  <ul>
+  <form action="/exercises" method="POST">
+    
+    <label for="title">Title of exercise:* </label>
+    <input type="text" name="title" id="title" required>
 
-  </ul>
+    <br>
+    <label for="description">Description:* </label>
+    <textarea name="description" id="description" required></textarea>
+    
+    <br>
+    <label for="freq-select">Choose how often you recommend a user to do this exercise: </label>
+    <select name="freq" id="freq-select">
+      <option value="1">every day</option>
+      <option value="7">once a week</option>
+      <option value="14">once every two weeks</option>
+      <option value="30">once a month</option>
+    </select>
+
+    <br>
+    <label for="time-limit">Recommend # of minutes for user to spend on exercise: </label>
+    <input type="number" name="time-limit" id="time-limit" min="0">
+
+    
+
+    <br>
+    <button type="submit">Submit</button>
+  </form>
 {% endblock %}

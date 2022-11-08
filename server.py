@@ -166,6 +166,7 @@ def create():
     """Create an exercise."""
 
     return render_template("create.html") # Can only get here if logged in
+    # Can let someone give themselves a pen name at this point!
 
 
 if __name__ == "__main__":
