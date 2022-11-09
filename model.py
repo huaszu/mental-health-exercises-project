@@ -64,9 +64,10 @@ class Prompt(db.Model):
                           autoincrement=True,
                           primary_key=True)
     prompt_content = db.Column(db.Text, nullable=False)
-    prompt_type = db.Column(db.String(120), nullable=False) # V0: Let's say all prompts for now get free-form text response
+    prompt_type = db.Column(db.String(120), nullable=False, default="long answer") # V0: Let's say all prompts for now get free-form text response
     # prompt_type values could be "short answer", "long answer", 
     # "multiple choice - choose one", "multiple choice - choose multiple"
+    # Potentially in future: one prompt to many prompt options.  Another table
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False)
 
     exercise = db.relationship("Exercise", back_populates="prompts") # An exercise can have many prompts
@@ -86,7 +87,7 @@ class ResponseToPrompt(db.Model):
                           primary_key=True)
     response_content = db.Column(db.Text, nullable=True)
     prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id')) # is nullable what allows not signed in user to use?
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True) # is nullable what allows not signed in user to use?  Forget that!  Only create responses in db that have user_id
 
     prompt = db.relationship("Prompt", back_populates="responses") # A prompt can have many responses, from different users or from the same user completing the same exercise multiple times
     user = db.relationship("User", back_populates="responses") # A user can have many responses

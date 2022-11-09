@@ -37,10 +37,15 @@ def all_exercises():
 def add_to_all_exercises():
     """Create exercise and add it to db."""
 
-    title = request.form.get("title")
-    description = request.form.get("description")
-    frequency = int(request.form.get("freq")) # Test that I get value # What if blank?
-    time_limit_per_sitting = int(request.form.get("time-limit")) # What if blank? 
+    # Create exercise
+    # One solution: use .pop() method so that by the time we get prompt 
+    # contents, the only remaining keys in the request.form dictionary are
+    # the keys corresponding to prompt contents.
+    title = request.form.pop("title", None) # None interpreted as null
+    # None as default value in case "title" is not present
+    description = request.form.pop("description")
+    frequency = int(request.form.pop("freq")) # Test that I get value # What if blank?
+    time_limit_per_sitting = int(request.form.pop("time-limit")) # What if blank? 
 
     user_id = session["user_id"]
     author = crud.get_user_by_id(user_id)
@@ -53,9 +58,21 @@ def add_to_all_exercises():
 
     db.session.add(exercise)
 
-    # Create the prompts, too?!
+    # Create prompt(s) within exercise
+    # give each prompt same name
+    request.form.getlist("name") # returns list of values
+    # this way would not need to pop ones above
+    
+    for key, answer in request.form.items():
+        
+    # for every prompt:
 
-    db.session.commit()
+    #     crud.create_prompt(prompt_content= use the name and get the value, exercise=exercise)
+
+    # try:
+    #     db.session.commit()
+    # except:
+    #     flash("some error message for user and redirect user back to form")
 
     return redirect("/exercises")
 
