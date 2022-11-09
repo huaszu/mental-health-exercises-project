@@ -11,6 +11,6 @@ button.addEventListener('click', (evt) => {
                                    `<br><label for="${promptCounter}">
                                    A prompt for the user to respond to: 
                                    </label><textarea class="prompt" name=
-                                   "${promptCounter}" id="${promptCounter}"></textarea>`);
+                                   "prompt" id="${promptCounter}"></textarea>`);
     promptCounter += 1;                               
     });

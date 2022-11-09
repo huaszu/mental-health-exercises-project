@@ -64,7 +64,7 @@ class Prompt(db.Model):
                           autoincrement=True,
                           primary_key=True)
     prompt_content = db.Column(db.Text, nullable=False)
-    prompt_type = db.Column(db.String(120), nullable=False, default="long answer") # V0: Let's say all prompts for now get free-form text response
+    prompt_type = db.Column(db.String(120), nullable=True, default="long answer") # V0: Let's say all prompts for now get free-form text response
     # prompt_type values could be "short answer", "long answer", 
     # "multiple choice - choose one", "multiple choice - choose multiple"
     # Potentially in future: one prompt to many prompt options.  Another table

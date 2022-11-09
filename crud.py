@@ -61,7 +61,7 @@ def get_exercise_by_id(exercise_id):
     return Exercise.query.get(exercise_id)
 
 
-def create_prompt(prompt_content, prompt_type, exercise):
+def create_prompt(prompt_content, exercise, prompt_type="long answer"):
     """Create and return a new prompt."""
 
     prompt = Prompt(prompt_content=prompt_content, 

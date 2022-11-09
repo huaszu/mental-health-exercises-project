@@ -38,14 +38,21 @@ def add_to_all_exercises():
     """Create exercise and add it to db."""
 
     # Create exercise
-    # One solution: use .pop() method so that by the time we get prompt 
-    # contents, the only remaining keys in the request.form dictionary are
-    # the keys corresponding to prompt contents.
-    title = request.form.pop("title", None) # None interpreted as null
+    title = request.form.get("title", None) # None interpreted as null
     # None as default value in case "title" is not present
-    description = request.form.pop("description")
-    frequency = int(request.form.pop("freq")) # Test that I get value # What if blank?
-    time_limit_per_sitting = int(request.form.pop("time-limit")) # What if blank? 
+    description = request.form.get("description")
+    try:
+        frequency = int(request.form.get("freq")) 
+    except:
+        frequency = None
+    # Test that I get value # What if blank?
+    try:
+        time_limit_per_sitting = int(request.form.get("time-limit"))
+    except:
+        time_limit_per_sitting = None
+    # What if blank? 
+    # If blank, int() gives Traceback: 
+    # `ValueError: invalid literal for int() with base 10: ''`
 
     user_id = session["user_id"]
     author = crud.get_user_by_id(user_id)
@@ -59,20 +66,22 @@ def add_to_all_exercises():
     db.session.add(exercise)
 
     # Create prompt(s) within exercise
-    # give each prompt same name
-    request.form.getlist("name") # returns list of values
-    # this way would not need to pop ones above
-    
-    for key, answer in request.form.items():
-        
-    # for every prompt:
+    for prompt_content in request.form.getlist("prompt"):
+        prompt = crud.create_prompt(prompt_content=prompt_content, exercise=exercise)
+        # Not giving a value for prompt_type and letting prompt_type default
+        # to "long answer"
 
-    #     crud.create_prompt(prompt_content= use the name and get the value, exercise=exercise)
+        db.session.add(prompt)
 
-    # try:
-    #     db.session.commit()
-    # except:
-    #     flash("some error message for user and redirect user back to form")
+        # Right now if user clicks `Add prompt` button and then decides
+        # not to provide any value for the additional prompt, we would be
+        # adding a prompt to the db with blank prompt_content (to be checked)
+
+    try:
+        db.session.commit()
+    except:
+        flash("Be careful how you fill out the form!")
+        return redirect("/create")
 
     return redirect("/exercises")
 
