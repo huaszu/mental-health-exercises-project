@@ -1,5 +1,6 @@
 # Next: Allow user to do an exercise from all exercises - tweaking logged out user experience
 # Then: Author create exercise | Notification API
+# Password hashing
 
 # Delay React-ify all_exercises
 # Later: At point of user complete exercise, capture date - order how to present exercises to user by date
@@ -38,8 +39,8 @@ def add_to_all_exercises():
 
     title = request.form.get("title")
     description = request.form.get("description")
-    frequency = request.form.get("freq") # Test that I get value
-    time_limit_per_sitting = request.form.get("time-limit")
+    frequency = int(request.form.get("freq")) # Test that I get value # What if blank?
+    time_limit_per_sitting = int(request.form.get("time-limit")) # What if blank? 
 
     user_id = session["user_id"]
     author = crud.get_user_by_id(user_id)
