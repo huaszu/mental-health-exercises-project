@@ -86,7 +86,7 @@ def add_to_all_exercises():
     try:
         db.session.commit()
     except:
-        flash("Be careful how you fill out the form!")
+        flash("Be careful how you fill out the form!") # Don't know the circumstances in which this flash would show
         return redirect("/create")
 
     return redirect("/exercises")
@@ -231,9 +231,15 @@ def get_login_status():
 @app.route("/create")
 def create():
     """Create an exercise."""
+    
+    # If user is not logged in, redirect user to log in.  Only logged in users
+    # can create exercises. 
+    if "user_id" not in session:
+        flash("Please log in if you want to make an exercise.")
+        return redirect("/")
 
     return render_template("create.html") # Can only get here if logged in
-    # Can let someone give themselves a pen name at this point!
+    # Can let someone give themselves a pen name at this point!  Fix blank pen names later
 
 
 if __name__ == "__main__":
