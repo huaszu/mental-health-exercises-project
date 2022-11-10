@@ -13,8 +13,7 @@ form.addEventListener('submit', (evt) => {
                 alert('To save your responses for future viewing, create account or log in by clicking link at bottom.  New tab will open.  After login in new tab, click Submit again in current tab to view your responses.');
             } 
             if (responseJson === true) {
-                // Alternative from Sean F: Send responses to server so that server can use request.form.get.  Do not have to send json
-                let responses = {'testing': true};
+                let responses = {};
                 
                 for (const element of document.querySelectorAll('.responses')) {
                     responses[element.id] = element.value;
@@ -29,7 +28,6 @@ form.addEventListener('submit', (evt) => {
                     body: JSON.stringify(responses),
                     headers: {'Content-Type': 'application/json',},
                     credentials: 'include'})
-                    // Alternative: Server uses data that was sent.  Server send response that we .then use here
                     .then((response) => window.location.replace(response.url))
             }
         });
