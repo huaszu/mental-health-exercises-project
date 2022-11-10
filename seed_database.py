@@ -4,6 +4,7 @@ import os
 import json
 from random import choice, randint
 from datetime import datetime
+import pytz
 
 from flask_sqlalchemy import SQLAlchemy # Can I add these here?
 from model import User, Exercise, Prompt
@@ -120,6 +121,9 @@ for exercise in Exercise.query.all():
 respondents = User.query.filter(User.is_consumer == True).all()
 
 for exercise in Exercise.query.all():
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    time_completed_exercise = datetime.now(pacific_time)
+
     for prompt in exercise.prompts:
         # print("prompt:", prompt)
         # response_content1 = "Response"
@@ -129,13 +133,15 @@ for exercise in Exercise.query.all():
 
         response1 = crud.create_response(response_content=response_content, 
                                          prompt=prompt, 
-                                         user=user1)
+                                         user=user1,
+                                         time_completed_exercise=time_completed_exercise)
 
         user2 = choice(respondents) # It is possible for the same user to have multiple responses to the same prompt, from doing that exercise on different occasions.
 
         response2 = crud.create_response(response_content=response_content, 
                                          prompt=prompt, 
-                                         user=user2)
+                                         user=user2,
+                                         time_completed_exercise=time_completed_exercise)
 
 
     model.db.session.add_all([response1, response2])

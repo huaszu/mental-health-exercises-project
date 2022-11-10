@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import pytz
 
 db = SQLAlchemy()
 
@@ -86,8 +87,9 @@ class ResponseToPrompt(db.Model):
                           autoincrement=True,
                           primary_key=True)
     response_content = db.Column(db.Text, nullable=True)
+    time_completed_exercise = db.Column(db.DateTime(timezone=True), nullable=True)
     prompt_id = db.Column(db.Integer, db.ForeignKey('prompts.prompt_id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True) # is nullable what allows not signed in user to use?  Forget that!  Only create responses in db that have user_id
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False) # is nullable what allows not signed in user to use?  Forget that!  Only create responses in db that have user_id
 
     prompt = db.relationship("Prompt", back_populates="responses") # A prompt can have many responses, from different users or from the same user completing the same exercise multiple times
     user = db.relationship("User", back_populates="responses") # A user can have many responses

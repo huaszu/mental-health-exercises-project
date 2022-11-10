@@ -8,6 +8,8 @@
 """Server for mental health exercises app."""
 
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
+from datetime import datetime
+import pytz
 from model import connect_to_db, db
 import crud
 import requests
@@ -178,10 +180,9 @@ def show_exercise(exercise_id):
 
 @app.route("/exercises/<exercise_id>/submitted", methods=["POST"])
 def save_user_responses(exercise_id):
-    """Create a new set of saved responses for the user for the exercise."""
+    """Create a new group of saved responses for the user for the exercise."""
     
     # prompts = crud.get_prompts_by_exercise(exercise_id)
-    # Note for later: time = datetime.now
 
     # Is there a way to write this function without the if, if we set it up
     # so that a user would only get routed here if the user is logged in
@@ -196,16 +197,23 @@ def save_user_responses(exercise_id):
 
     # if "user_id" in session:
         # Save data to user
+    
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    time_completed_exercise = datetime.now(pacific_time)
+    # Associate one time with all responses from the same form, as opposed to
+    # a different time with each response from the same form.
+    
     user_id = session["user_id"]
 
     user = crud.get_user_by_id(user_id)
     # exercise = crud.get_exercise_by_id(exercise_id)
 
-    for key in request.json: # for i in range(len(request.json))
+    for key in request.json:
         # print(key, request.form.get(key))
         response = crud.create_response(response_content=request.json.get(key), 
                                         prompt=crud.get_prompt_by_id(int(key)), 
-                                        user=user)
+                                        user=user,
+                                        time_completed_exercise=time_completed_exercise)
         db.session.add(response)
     
     db.session.commit()

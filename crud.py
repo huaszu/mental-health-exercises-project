@@ -89,12 +89,12 @@ def get_prompts_by_exercise(exercise_id):
     return Prompt.query.filter(Prompt.exercise_id == exercise_id).all()
 
 
-def create_response(response_content, prompt, user):
+def create_response(response_content, prompt, user, time_completed_exercise):
     """Create and return a new prompt."""
 
     response = ResponseToPrompt(response_content=response_content, 
                                 prompt=prompt, 
-                                user=user)
+                                user=user, time_completed_exercise=time_completed_exercise)
 
     return response
 
