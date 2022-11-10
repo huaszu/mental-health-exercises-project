@@ -31,6 +31,8 @@ def all_exercises():
 
     exercises = crud.get_exercises()
 
+    # Decide whether to show newest added exercises at top or bottom, or elsewhere
+
     return render_template("all_exercises.html", exercises=exercises)
 
 @app.route("/add_exercise", methods=["POST"])
@@ -64,9 +66,13 @@ def add_to_all_exercises():
                                     author=author)
 
     db.session.add(exercise)
+    # db.session.commit()
 
     # Create prompt(s) within exercise
     for prompt_content in request.form.getlist("prompt"):
+        
+        # To add: If prompt_content is blank, do not create blank prompt
+
         prompt = crud.create_prompt(prompt_content=prompt_content, exercise=exercise)
         # Not giving a value for prompt_type and letting prompt_type default
         # to "long answer"
@@ -195,7 +201,7 @@ def save_user_responses(exercise_id):
     user = crud.get_user_by_id(user_id)
     # exercise = crud.get_exercise_by_id(exercise_id)
 
-    for key in request.json:
+    for key in request.json: # for i in range(len(request.json))
         # print(key, request.form.get(key))
         response = crud.create_response(response_content=request.json.get(key), 
                                         prompt=crud.get_prompt_by_id(int(key)), 
