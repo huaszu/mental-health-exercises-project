@@ -3,7 +3,7 @@
 {% block title %}{{ exercise.title }} - Details{% endblock %}
 
 {% block head %}
-<script src="/static/js/desktop_notification.js"></script>
+
 {% endblock %}
 
 {% block body %}
@@ -15,6 +15,7 @@
 
 <p>
     Exercise Author: {{ exercise.author.pen_name }}
+    <!-- Use an if so that if not pen_name, generate a substitute -->
 </p>
 
 <p>
@@ -56,5 +57,5 @@
 
 {% block js %}
 <script src="/static/js/alert_save_responses.js"></script>
-
+<script src="/static/js/desktop_notification.js"></script>
 {% endblock %}

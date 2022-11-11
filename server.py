@@ -1,9 +1,7 @@
-# Next: Allow user to do an exercise from all exercises - tweaking logged out user experience
-# Then: Author create exercise | Notification API
 # Password hashing
 
 # Delay React-ify all_exercises
-# Later: At point of user complete exercise, capture date - order how to present exercises to user by date
+# Later: Order how to present completed exercises to user by datetime
 
 """Server for mental health exercises app."""
 
@@ -103,6 +101,12 @@ def register_user():
     last_name = request.form.get("last-name")
     pen_name = request.form.get("pen-name") # Later set default if left empty
 
+    # Data Integrity
+    # Possible ways to handle pen_name include: 
+    # in crud fn, OR
+    # (when render, plug in a pen name, and
+    # allow null in db - tracks that user did not want a pen name)
+
     is_expert = False
     is_consumer = True
     # pen_name = "pen"
@@ -141,7 +145,7 @@ def process_login():
         flash("The email or password you entered was incorrect.")
         return redirect("/")
     else:
-        # Log in user by storing the user's email in session
+        # Log in user by storing the user's id in session
         session["user_id"] = user.user_id
         flash(f"Welcome back, {user.first_name}!") # Funny - when user logs in with email in db and wrong password, get both the Welcome back and the incorrect flash messages
         # return redirect(f"/users/{user_id}") # If log in correctly, can redirect to user page? redirect(f"/users/{user_id}")
@@ -166,11 +170,6 @@ def show_exercise(exercise_id):
     """Show details on a particular exercise."""
 
     exercise = crud.get_exercise_by_id(exercise_id)
-
-    # show_alert = True
-    # if "user_id" in session:
-    #     show_alert = False 
-    # Does not work because program had already set show_alert and sent that data to the browser.  Not going to update show_alert once sent
 
     # I don't think I need session.modified = True because session["user_id"] is
     # what would change if user logs in on another tab.  We use 
@@ -244,7 +243,8 @@ def create():
     # can create exercises. 
     if "user_id" not in session:
         flash("Please log in if you want to make an exercise.")
-        return redirect("/")
+        return redirect("/") 
+        # Haha alternative: Show user 403 Permission Forbidden error
 
     return render_template("create.html") # Can only get here if logged in
     # Can let someone give themselves a pen name at this point!  Fix blank pen names later
