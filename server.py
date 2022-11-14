@@ -165,7 +165,7 @@ def process_login():
         flash(f"Welcome back, {user.first_name}!") # Funny - when user logs in 
         # with email in db and wrong password, get both the Welcome back and 
         # the incorrect flash messages.  No longer replicating this error.
-        
+
         return redirect("/users/my_exercises")
 
 @app.route("/users/my_exercises")
@@ -196,11 +196,15 @@ def show_exercise(exercise_id):
 
     exercise = crud.get_exercise_by_id(exercise_id)
 
+    day = "day"
+    if exercise.frequency != 1:
+        day = str(exercise.frequency) + " days"
+
     # I don't think I need session.modified = True because session["user_id"] is
     # what would change if user logs in on another tab.  We use 
     # session.modified = True when we change a value in an inner dictionary (?)
 
-    return render_template("exercise_details.html", exercise=exercise, session=session)
+    return render_template("exercise_details.html", exercise=exercise, session=session, day=day)
 
 @app.route("/exercises/<exercise_id>/submitted", methods=["POST"])
 def save_user_responses(exercise_id):
