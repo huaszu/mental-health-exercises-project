@@ -7,6 +7,12 @@
   <h2>Navigation</h2>
   <ul>
     <li><a href="/create">Create an exercise</a></li>
+    {% if show_log_in %}
+      <li><a href="/">Log In</a></li>
+    {% endif %}
+    {% if show_log_out %}
+      <li><a href="/logout">Log Out</a></li>
+    {% endif %}
   </ul>
 
   <br>
