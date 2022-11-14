@@ -14,8 +14,13 @@
 </p>
 
 <p>
-    Exercise Author: {{ exercise.author.pen_name }}
-    <!-- Use an if so that if not pen_name, generate a substitute -->
+    Exercise Author: 
+    {% if exercise.author.pen_name %}
+        {{ exercise.author.pen_name }}
+    {% endif %}
+    {% if not exercise.author.pen_name %} 
+        {{ exercise.author.first_name[0] }}{{ exercise.author.last_name[0] }}
+    {% endif %}
 </p>
 
 <p>

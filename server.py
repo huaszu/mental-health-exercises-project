@@ -162,8 +162,10 @@ def process_login():
     else:
         # Log in user by storing the user's id in session
         session["user_id"] = user.user_id
-        flash(f"Welcome back, {user.first_name}!") # Funny - when user logs in with email in db and wrong password, get both the Welcome back and the incorrect flash messages
-        # return redirect(f"/users/{user_id}") # If log in correctly, can redirect to user page? redirect(f"/users/{user_id}")
+        flash(f"Welcome back, {user.first_name}!") # Funny - when user logs in 
+        # with email in db and wrong password, get both the Welcome back and 
+        # the incorrect flash messages.  No longer replicating this error.
+        
         return redirect("/users/my_exercises")
 
 @app.route("/users/my_exercises")
