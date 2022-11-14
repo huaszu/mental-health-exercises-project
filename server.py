@@ -155,15 +155,23 @@ def process_login():
 def show_user_exercises():
     """Show exercises user has responded to."""
 
-    user_id = session["user_id"]
+    try:
+        user_id = session["user_id"]
 
-    user = crud.get_user_by_id(user_id)
-    exercises = crud.get_exercises_of_user(user_id) # This is a list
+        user = crud.get_user_by_id(user_id)
+        exercises = crud.get_exercises_of_user(user_id) # This is a list
 
-    # for exercise in exercises:
-    #     prompts = crud.get_prompts_by_exercise(exercise.exercise_id) # This is a list
+        # for exercise in exercises:
+        #     prompts = crud.get_prompts_by_exercise(exercise.exercise_id) # This is a list
 
-    return render_template("my_exercises.html", user=user, exercises=exercises)
+        return render_template("my_exercises.html", user=user, exercises=exercises)
+    
+    # If user is not logged in, say if user comes here by typing 
+    # "/users/my_exercises" in the URL bar instead of by being redirected here
+    # from logging in.
+    except:
+        flash("Log in to see exercises you have completed.")
+        return redirect("/")
 
 @app.route("/exercises/<exercise_id>")
 def show_exercise(exercise_id):
@@ -230,10 +238,12 @@ def get_login_status():
 
     return jsonify(False)
 
-# logout route
-#     session.clear
-#     return redirect to '/'
+@app.route("/logout")
+def process_logout():
+    """Process user logout."""
 
+    session.clear()
+    return redirect("/")
 
 @app.route("/create")
 def create():
