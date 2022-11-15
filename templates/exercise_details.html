@@ -9,6 +9,16 @@
 {% block body %}
 <h1>{{ exercise.title }}</h1>
 
+<h2>Navigation</h2>
+<ul>
+    <li><a href="/exercises">View all exercises</a></li>
+    {% if "user_id" in session %}
+        <li><a href="/users/my_exercises">View my completed exercises</a></li>
+    {% endif %}
+</ul>
+
+<br>
+
 <p>
   {{ exercise.description }}
 </p>
