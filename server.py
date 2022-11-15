@@ -84,6 +84,8 @@ def add_to_all_exercises():
         # not to provide any value for the additional prompt, we would be
         # adding a prompt to the db with blank prompt_content (to be checked)
 
+    author.is_expert = True
+
     try:
         db.session.commit()
     except:
