@@ -33,22 +33,8 @@ def all_exercises():
 
     # Decide whether to show newest added exercises at top or bottom, or elsewhere
 
-    show_log_out = False
-    show_log_in = False
-
-    if "user_id" in session:
-        show_log_out = True
-    else:
-        show_log_in = True
-
-    # At any point, only one of show_log_out and show_log_in has value True.
-    # Technically need only one of these two variables but writing both 
-    # variables to be clear.
-
     return render_template("all_exercises.html", 
-                           exercises=exercises,
-                           show_log_in=show_log_in,
-                           show_log_out=show_log_out)
+                           exercises=exercises)
 
 @app.route("/add_exercise", methods=["POST"])
 def add_to_all_exercises():

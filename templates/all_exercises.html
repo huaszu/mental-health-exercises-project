@@ -7,10 +7,10 @@
   <h2>Navigation</h2>
   <ul>
     <li><a href="/create">Create an exercise</a></li>
-    {% if show_log_in %}
+    {% if "user_id" not in session %}
       <li><a href="/">Log In</a></li>
     {% endif %}
-    {% if show_log_out %}
+    {% if "user_id" in session %}
       <li><a href="/logout">Log Out</a></li>
     {% endif %}
   </ul>
