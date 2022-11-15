@@ -200,10 +200,6 @@ def show_exercise(exercise_id):
     if exercise.frequency != 1:
         day = str(exercise.frequency) + " days"
 
-    show_my_exercises = False
-    if "user_id" in session:
-        show_my_exercises = True
-
     # I don't think I need session.modified = True because session["user_id"] is
     # what would change if user logs in on another tab.  We use 
     # session.modified = True when we change a value in an inner dictionary (?)
