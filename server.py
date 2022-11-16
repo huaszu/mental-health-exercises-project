@@ -1,8 +1,3 @@
-# Password hashing
-
-# Delay React-ify all_exercises
-# Later: Order how to present completed exercises to user by datetime
-
 """Server for mental health exercises app."""
 
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
