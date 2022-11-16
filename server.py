@@ -9,7 +9,9 @@ import requests
 
 from jinja2 import StrictUndefined
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_pyfile('application.cfg.py')
+
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
