@@ -17,6 +17,12 @@
 // gets encoded to "YQ==" with length === 4 — a 300% increase.
 
 // Convert to UTF-8 array of characters
+
+// Why do we have this code?  We will want to fetch the server's public key 
+// and convert the response to text; then it needs to be converted to a 
+// Uint8Array (to support Chrome).
+// https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
+
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
@@ -82,7 +88,12 @@ function subscribeUser(swRegistration,
 
     // Side effect of subscribe(): request permission from user to show
     // push notifications, if user has not already given permission.
+
+    // When accepted, the permission works for both notifications and push.
+    // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
+
     // Hurrah, tested that this side effect is true!
+    // TEST WHAT HAPPENS IF USER CLICKS BLOCK.  ARE THERE PROBLEMS W USING APP?
     swRegistration.pushManager.subscribe({
 
         // userVisibleOnly is a boolean indicating that the returned 

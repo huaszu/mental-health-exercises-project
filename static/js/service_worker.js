@@ -1,5 +1,7 @@
 'use strict';
 
+// Let's use the MDN Service Worker API!
+
 self.addEventListener('install', (evt) => {
   console.log('Service Worker installing {=');
 });

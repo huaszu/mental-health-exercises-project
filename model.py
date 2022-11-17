@@ -101,7 +101,7 @@ class ResponseToPrompt(db.Model):
 class PushSubscription(db.Model):
     """Subscription to push notification"""
 
-    __tablename__ = 'push_subscription'
+    __tablename__ = 'push_subscriptions'
 
     id = db.Column(db.Integer,
                    autoincrement=True,
@@ -110,7 +110,7 @@ class PushSubscription(db.Model):
     # We expect subscription_json to be assigned a value that includes an
     # "endpoint", e.g., https://fcm.googleapis.com/fcm/send/ ... , an
     # "expirationTime", and "keys" - such as a "p256dh" key and an "auth" key.
-    
+
     # https://developer.mozilla.org/en-US/docs/Web/API/PushSubscription/expirationTime
 
     def __repr__(self):
