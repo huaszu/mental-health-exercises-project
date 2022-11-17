@@ -98,7 +98,21 @@ class ResponseToPrompt(db.Model):
         return f'<ResponseToPrompt response_id={self.response_id} content={self.response_content}>'
         
 
-def connect_to_db(flask_app, db_uri="postgresql:///mental-health-platform", echo=True):
+class PushSubscription(db.Model):
+    """Subscription to push notification"""
+
+    __tablename__ = 'push_subscription'
+
+    id = db.Column(db.Integer,
+                   autoincrement=True,
+                   primary_key=True)
+    subscription_json = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f'<PushSubscription id={self.id} subscription_json={self.subscription_json}>'
+
+
+def connect_to_db(flask_app, db_uri="postgresql:///health", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

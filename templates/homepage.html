@@ -51,4 +51,16 @@
       <input type="submit">
     </p>
   </form>
+
+  <script 
+		type="text/javascript" 
+		src="/static/js/register_service_worker.js">
+	</script>
+	<script type="text/javascript">
+		registerServiceWorker(
+			"/static/js/service_worker.js",
+			"{{config['VAPID_PUBLIC_KEY']}}",
+			"/api/push-subscriptions"
+		);
+	</script>
 {% endblock %}

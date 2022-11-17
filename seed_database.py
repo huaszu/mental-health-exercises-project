@@ -13,8 +13,8 @@ import crud
 import model
 import server
 
-os.system("dropdb mental-health-platform")
-os.system("createdb mental-health-platform")
+os.system("dropdb health")
+os.system("createdb health")
 
 model.connect_to_db(server.app)
 model.db.create_all()

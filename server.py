@@ -10,6 +10,8 @@ import requests
 from jinja2 import StrictUndefined
 
 app = Flask(__name__, instance_relative_config=True)
+
+# Load configuration set up for use of MDN Push API
 app.config.from_pyfile('application.cfg.py')
 
 app.secret_key = "dev"
@@ -264,6 +266,32 @@ def create():
 
     return render_template("create.html") # Can only get here if logged in
     # Can let someone give themselves a pen name at this point!  Fix blank pen names later
+
+@app.route("/api/push-subscriptions", methods=["POST"])
+def create_push_subscription():
+    """Create a push subscription."""
+
+    json_data = request.json # vs request.get_json() ?
+    subscription_json=json_data["subscription_json"]
+    
+    # Check if there is already a matching PushSubscription object with the same 
+    # subscription_json because when we reload the page, even when the browser 
+    # resends the same subscription_json due to invoking the 
+    # registerServiceWorker function again, we will not cause an error on the 
+    # server. 
+    subscription = crud.get_first_subscription(subscription_json=subscription_json)
+
+    # If there is no PushSubscription object with matching subscription_json, 
+    # create a new PushSubscription object.
+    if subscription is None:
+        subscription = crud.create_push_subscription(subscription_json)
+
+        db.session.add(subscription)
+        db.session.commit()
+
+    return jsonify({
+        "status": "success"
+    })
 
 
 if __name__ == "__main__":

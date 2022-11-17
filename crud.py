@@ -1,6 +1,6 @@
 '''CRUD operations.'''
 
-from model import db, User, Exercise, Prompt, ResponseToPrompt, connect_to_db
+from model import db, User, Exercise, Prompt, ResponseToPrompt, PushSubscription, connect_to_db
 from datetime import datetime, date
 from random import choice
 
@@ -240,6 +240,28 @@ def get_exercises_of_user(user_id):
 # #             exercises_of_user.append(exercise)
 
 # # print_exercise_responses(User.query.first(), choice(exercises_of_user))
+
+
+def create_push_subscription(subscription_json):
+    """Create a subscription to push notifications."""
+
+    subscription = PushSubscription(subscription_json=subscription_json)
+
+    return subscription
+
+
+def get_first_subscription(subscription_json):
+    """Get first subscription to push notifications."""
+
+    first_subscription = PushSubscription.query.filter(PushSubscription.subscription_json == subscription_json).first()
+
+    return first_subscription
+
+
+def get_subscription_by_id(subscription_id):
+    """Return subscription with subscription_id."""
+
+    return PushSubscription.query.get(subscription_id)
 
 
 if __name__ == '__main__':
