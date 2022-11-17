@@ -271,6 +271,10 @@ def create():
 def create_push_subscription():
     """Create a push subscription."""
 
+    # Is subscription unique for every user? 
+    # Is subscription unique for every user for every time user permits push
+    # notifications from not having permitted them?
+
     json_data = request.json # vs request.get_json() ?
     subscription_json=json_data["subscription_json"]
     

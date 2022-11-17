@@ -82,6 +82,7 @@ function subscribeUser(swRegistration,
 
     // Side effect of subscribe(): request permission from user to show
     // push notifications, if user has not already given permission.
+    // Hurrah, tested that this side effect is true!
     swRegistration.pushManager.subscribe({
 
         // userVisibleOnly is a boolean indicating that the returned 
