@@ -107,6 +107,11 @@ class PushSubscription(db.Model):
                    autoincrement=True,
                    primary_key=True)
     subscription_json = db.Column(db.Text, nullable=False)
+    # We expect subscription_json to be assigned a value that includes an
+    # "endpoint", e.g., https://fcm.googleapis.com/fcm/send/ ... , an
+    # "expirationTime", and "keys" - such as a "p256dh" key and an "auth" key.
+    
+    # https://developer.mozilla.org/en-US/docs/Web/API/PushSubscription/expirationTime
 
     def __repr__(self):
         return f'<PushSubscription id={self.id} subscription_json={self.subscription_json}>'
