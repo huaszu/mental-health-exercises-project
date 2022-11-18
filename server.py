@@ -3,6 +3,7 @@
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
 from datetime import datetime
 import pytz
+from pywebpush import webpush
 from model import connect_to_db, db
 import crud
 import requests
@@ -13,6 +14,8 @@ app = Flask(__name__, instance_relative_config=True)
 
 # Load configuration set up for use of MDN Push API
 app.config.from_pyfile('application.cfg.py')
+
+# MAKE SURE SESSION IS STILL WORKING!
 
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined

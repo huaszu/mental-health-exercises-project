@@ -20,7 +20,7 @@
 
 // Why do we have this code?  We will want to fetch the server's public key 
 // and convert the response to text; then it needs to be converted to a 
-// Uint8Array (to support Chrome).
+// Uint8Array (to support Chrome).  Browser interoperability.
 // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
 
 function urlB64ToUint8Array(base64String) {
