@@ -23,11 +23,12 @@ class User(db.Model):
     # If we have a default pen_name, then don't exactly need nullable=True.
     # Better than having computation for if pen_name IS NULL, set default to
     # first_name?
-    is_expert = db.Column(db.Boolean, nullable=False, default=True) # Not sure about default
+    is_expert = db.Column(db.Boolean, nullable=False, default=False) # Not sure about default
     is_consumer = db.Column(db.Boolean, nullable=False, default=True)
 
     responses = db.relationship("ResponseToPrompt", back_populates="user") # A response belongs to one user
     creations = db.relationship("Exercise", back_populates="author") # An exercise has one author, who is a user
+    push_subscriptions = db.relationship("PushSubscription", back_populates="users") # A push subscription can have more than one user, if different users have logged in on the same browser
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
@@ -107,15 +108,30 @@ class PushSubscription(db.Model):
                    autoincrement=True,
                    primary_key=True)
     subscription_json = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+
+    users = db.relationship("User", back_populates="push_subscriptions") # A user can have many push subscriptions
+
     # We expect subscription_json to be assigned a value that includes an
     # "endpoint", e.g., https://fcm.googleapis.com/fcm/send/ ... , an
     # "expirationTime", and "keys" - such as a "p256dh" key and an "auth" key.
+
+    # subscription_json has the information that webpush takes in for the
+    # subscription_info parameter.
 
     # https://developer.mozilla.org/en-US/docs/Web/API/PushSubscription/expirationTime
 
     def __repr__(self):
         return f'<PushSubscription id={self.id} subscription_json={self.subscription_json}>'
 
+# have to be logged in to sign up for notifs 
+# if logged in, don't worry about duplicates 
+# user 1
+# name of Exercise
+# frequency 
+# last notif sent
+# if > 7 days, send a new notif
+# update last notif column
 
 def connect_to_db(flask_app, db_uri="postgresql:///health", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri

@@ -3,22 +3,26 @@
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
 from datetime import datetime
 import pytz
-from pywebpush import webpush
+from pywebpush import webpush, WebPushException
 from model import connect_to_db, db
 import crud
 import requests
+import os
 
 from jinja2 import StrictUndefined
 
 app = Flask(__name__, instance_relative_config=True)
 
-# Load configuration set up for use of MDN Push API
+# Load configuration setup for use of MDN Push API
 app.config.from_pyfile('application.cfg.py')
 
 # MAKE SURE SESSION IS STILL WORKING!
 
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
+
+push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
+push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
 @app.route("/")
@@ -299,6 +303,39 @@ def create_push_subscription():
     return jsonify({
         "status": "success"
     })
+
+# @app.route("/push", methods=["POST"])
+# def push():
+#     """Create a push notification."""
+
+#     # Get subscriber
+#     # sub = json.loads(request.form["sub"])
+
+#     # Test push notification
+#     result = "OK"
+#     try:
+#         webpush(
+#             subscription_info = sub, 
+#             data = json.dumps({
+#                 "title": "Test /push route",
+#                 "body": "Yes, it works"
+#                 # "icon": "static/tbd.png", 
+#                 # "image": "static/tbd2.png"
+#             }),
+#             vapid_private_key = push_API_private_key, 
+#             vapid_claims = {"sub": push_API_subject}
+#         )
+#     except WebPushException as ex:
+#         print(ex, repr(ex))
+#         if ex.response and ex.response.json():
+#             extra = ex.response.json()
+#             print("Remote service replied with a {}:{}, {}",
+#                   extra.code,
+#                   extra.errno,
+#                   extra.message)
+#         result = "FAILED"
+
+#     return result
 
 
 if __name__ == "__main__":

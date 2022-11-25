@@ -5,7 +5,7 @@ from datetime import datetime, date
 from random import choice
 
 
-def create_user(email, password, first_name, last_name, is_expert, is_consumer, pen_name):
+def create_user(email, password, first_name, last_name, is_expert=False, is_consumer=True, pen_name=None):
     """Create and return a new user."""
 
     user = User(email=email, 
@@ -37,14 +37,14 @@ def get_user_by_email(email):
     return User.query.filter(User.email == email).first()
 
 
-def create_exercise(title, description, frequency, time_limit_per_sitting, author):
+def create_exercise(title, description, author, frequency=None, time_limit_per_sitting=None):
     """Create and return a new exercise."""
 
     exercise = Exercise(title=title, 
-                        description=description, 
+                        description=description,
+                        author=author, 
                         frequency=frequency, 
-                        time_limit_per_sitting=time_limit_per_sitting,
-                        author=author)
+                        time_limit_per_sitting=time_limit_per_sitting)
 
     return exercise
 
@@ -94,7 +94,8 @@ def create_response(response_content, prompt, user, time_completed_exercise):
 
     response = ResponseToPrompt(response_content=response_content, 
                                 prompt=prompt, 
-                                user=user, time_completed_exercise=time_completed_exercise)
+                                user=user, 
+                                time_completed_exercise=time_completed_exercise)
 
     return response
 
@@ -242,10 +243,11 @@ def get_exercises_of_user(user_id):
 # # print_exercise_responses(User.query.first(), choice(exercises_of_user))
 
 
-def create_push_subscription(subscription_json):
+def create_push_subscription(subscription_json, user_id):
     """Create a subscription to push notifications."""
 
-    subscription = PushSubscription(subscription_json=subscription_json)
+    subscription = PushSubscription(subscription_json=subscription_json,
+                                    user_id=user_id)
 
     return subscription
 
