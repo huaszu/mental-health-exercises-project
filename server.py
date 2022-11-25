@@ -306,7 +306,8 @@ def create_push_subscription():
     # If there is no PushSubscription object with matching subscription_json, 
     # create a new PushSubscription object.
     if subscription is None:
-        subscription = crud.create_push_subscription(subscription_json, user)
+        subscription = crud.create_push_subscription(subscription_json=subscription_json, 
+                                                     user=user)
 
         db.session.add(subscription)
         db.session.commit()
@@ -347,6 +348,10 @@ def create_push_subscription():
 #         result = "FAILED"
 
 #     return result
+
+
+# Remember to send notifs through subscription to user(s), as in, for this subscription, 
+# which of the associated users should get a notif today
 
 
 if __name__ == "__main__":

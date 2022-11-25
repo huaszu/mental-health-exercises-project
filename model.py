@@ -28,7 +28,8 @@ class User(db.Model):
 
     responses = db.relationship("ResponseToPrompt", back_populates="user") # A response belongs to one user
     creations = db.relationship("Exercise", back_populates="author") # An exercise has one author, who is a user
-    push_subscriptions = db.relationship("PushSubscription", back_populates="users") # A push subscription can have more than one user, if different users have logged in on the same browser
+    push_subscriptions = db.relationship("PushSubscription", back_populates="user") # A push subscription belongs to one user
+    # Currently not accommodating: A push subscription can have more than one user, if different users have logged in on the same browser
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
@@ -110,7 +111,12 @@ class PushSubscription(db.Model):
     subscription_json = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
-    users = db.relationship("User", back_populates="push_subscriptions") # A user can have many push subscriptions
+    user = db.relationship("User", back_populates="push_subscriptions") # A user can have many push subscriptions, for instance if the same user signs in on many different browsers
+
+    # users = db.relationship("User", back_populates="push_subscriptions") # A user can have many push subscriptions
+    #   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/sqlalchemy/orm/decl_base.py", line 1142, in _declarative_constructor
+    # raise TypeError(
+    # TypeError: 'user' is an invalid keyword argument for PushSubscription
 
     # We expect subscription_json to be assigned a value that includes an
     # "endpoint", e.g., https://fcm.googleapis.com/fcm/send/ ... , an

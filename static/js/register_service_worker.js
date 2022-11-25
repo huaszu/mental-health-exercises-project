@@ -178,6 +178,11 @@ function subscribeUser(swRegistration,
 function registerServiceWorker(serviceWorkerUrl, 
                                applicationServerPublicKey, 
                                apiEndpoint) {
+    
+    // console.log(serviceWorkerUrl);
+    // console.log(applicationServerPublicKey);
+    // console.log(apiEndpoint);
+
     let swRegistration = null;
     if ('serviceWorker' in navigator && 'PushManager' in window) {
         console.log('ヽ(´▽`)/ Browser supports Service Worker and Push');
@@ -191,8 +196,8 @@ function registerServiceWorker(serviceWorkerUrl,
         // page. I.e., don't need to first check whether there's an active 
         // registration.
         // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
-        navigator.serviceWorker.register(serviceWorkerUrl)
-        // navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
+        // navigator.serviceWorker.register(serviceWorkerUrl)
+        navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
 
         // scope: A string representing a URL that defines a service worker's 
         // registration scope; that is, what range of URLs a service worker 
