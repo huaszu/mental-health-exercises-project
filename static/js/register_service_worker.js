@@ -192,6 +192,14 @@ function registerServiceWorker(serviceWorkerUrl,
         // registration.
         // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
         navigator.serviceWorker.register(serviceWorkerUrl)
+        // navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
+
+        // scope: A string representing a URL that defines a service worker's 
+        // registration scope; that is, what range of URLs a service worker 
+        // can control. This is usually a relative URL. It is relative to the 
+        // base URL of the application. By default, the scope value for a 
+        // service worker registration is set to the directory where the 
+        // service worker script is located. 
 
         // register() returns a Promise that resolves with a 
         // ServiceWorkerRegistration object.

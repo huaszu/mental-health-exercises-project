@@ -1,6 +1,6 @@
 """Server for mental health exercises app."""
 
-from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
+from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory)
 from datetime import datetime
 import pytz
 from pywebpush import webpush, WebPushException
@@ -273,6 +273,14 @@ def create():
 
     return render_template("create.html") # Can only get here if logged in
     # Can let someone give themselves a pen name at this point!  Fix blank pen names later
+
+@app.route("/service_worker.js")
+def sw():
+    response = make_response(send_from_directory(app.static_folder, "/js/service_worker.js"))
+    response.headers["Service-Worker-Allowed"] = "/"
+    response.headers["Content-Type"] = "application/javascript"
+    print(response)
+    return response
 
 @app.route("/api/push-subscriptions", methods=["POST"])
 def create_push_subscription():

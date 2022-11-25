@@ -7,7 +7,7 @@
   <h2>Navigation</h2>
   <ul>
     <li><a href="/exercises">View all exercises</a></li>
-    <!-- <li><a href="/users">View all users</a></li> -->
+    <li><a href="/users/my_exercises">View my completed exercises</a></li>
   </ul>
 
   <h2>Create an Account</h2>
@@ -52,15 +52,4 @@
     </p>
   </form>
 
-  <script 
-		type="text/javascript" 
-		src="/static/js/register_service_worker.js">
-	</script>
-	<script type="text/javascript">
-		registerServiceWorker(
-			"/static/js/service_worker.js",
-			"{{config['VAPID_PUBLIC_KEY']}}",
-			"/api/push-subscriptions"
-		);
-	</script>
 {% endblock %}
