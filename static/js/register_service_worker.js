@@ -67,6 +67,7 @@ function subscribeUser(swRegistration,
 
     // FILL IN COMMENT ON WHY APPSERVERKEY COMES IN AS B64
     const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+    // console.log(applicationServerKey);
 
     // The PushManager interface of the Push API provides a way to receive 
     // notifications from third-party servers as well as request URLs for 
@@ -146,6 +147,7 @@ function subscribeUser(swRegistration,
 
     .then((responseData) => {
         console.log(responseData);
+            // if the route /api/push-subscriptions returns a "status" that is not "success":
             if (responseData.status!=="success") {
                 throw new Error('v.v Bad response from server.');
             }
@@ -196,8 +198,8 @@ function registerServiceWorker(serviceWorkerUrl,
         // page. I.e., don't need to first check whether there's an active 
         // registration.
         // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
-        // navigator.serviceWorker.register(serviceWorkerUrl)
-        navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
+        navigator.serviceWorker.register(serviceWorkerUrl)
+        // navigator.serviceWorker.register(serviceWorkerUrl, { scope: "/" })
 
         // scope: A string representing a URL that defines a service worker's 
         // registration scope; that is, what range of URLs a service worker 
@@ -224,5 +226,6 @@ function registerServiceWorker(serviceWorkerUrl,
         console.warn('( ༎ຶ ۝ ༎ຶ ) Push messaging is not supported');
     } 
     
+    console.log(swRegistration);
     return swRegistration;
 }
