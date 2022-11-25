@@ -282,6 +282,9 @@ def create_push_subscription():
     # Is subscription unique for every user for every time user permits push
     # notifications from not having permitted them?
 
+    user_id = session["user_id"]
+    user = crud.get_user_by_id(user_id)
+
     json_data = request.json # vs request.get_json() ?
     subscription_json=json_data["subscription_json"]
     
@@ -295,7 +298,7 @@ def create_push_subscription():
     # If there is no PushSubscription object with matching subscription_json, 
     # create a new PushSubscription object.
     if subscription is None:
-        subscription = crud.create_push_subscription(subscription_json)
+        subscription = crud.create_push_subscription(subscription_json, user)
 
         db.session.add(subscription)
         db.session.commit()

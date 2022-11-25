@@ -243,11 +243,11 @@ def get_exercises_of_user(user_id):
 # # print_exercise_responses(User.query.first(), choice(exercises_of_user))
 
 
-def create_push_subscription(subscription_json, user_id):
+def create_push_subscription(subscription_json, user):
     """Create a subscription to push notifications."""
 
     subscription = PushSubscription(subscription_json=subscription_json,
-                                    user_id=user_id)
+                                    user=user)
 
     return subscription
 
