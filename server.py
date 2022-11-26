@@ -1,14 +1,15 @@
 """Server for mental health exercises app."""
 
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory)
+from model import connect_to_db, db
+import crud
 from datetime import datetime
 import pytz
 from pywebpush import webpush, WebPushException
-from model import connect_to_db, db
-import crud
+from apscheduler.schedulers.background import BackgroundScheduler
+import json
 import requests
 import os
-import json
 
 from jinja2 import StrictUndefined
 
