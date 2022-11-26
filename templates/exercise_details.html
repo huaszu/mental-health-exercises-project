@@ -40,7 +40,7 @@
         <button type="button" id="notify">Notify me</button>
 
         {% if "user_id" in session %}
-            If you want to notifications on this frequency to remind you, enable push messaging:
+            If you want notifications on this frequency to remind you, enable push messaging:
             <button type="button" id="push">Push to me</button>
         {% endif %}
     {% endif %}
@@ -82,13 +82,6 @@
 <script 
     type="text/javascript" 
     src="/static/js/register_service_worker.js">
-</script>
-<script type="text/javascript">
-    registerServiceWorker(
-        "/static/js/service_worker.js",
-        "{{config['VAPID_PUBLIC_KEY']}}",
-        "/api/push-subscriptions"
-    );
 </script>
 
 {% endblock %}

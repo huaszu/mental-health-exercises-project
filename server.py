@@ -21,6 +21,7 @@ app.config.from_pyfile('application.cfg.py')
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
+push_API_public_key = os.environ['VAPID_PUBLIC_KEY']
 push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
@@ -281,6 +282,14 @@ def sw():
     response.headers["Content-Type"] = "application/javascript"
     print(response)
     return response
+
+@app.route("/vapid_public.json")
+def get_vapid_public_key():
+    """Get VAPID public key for Push API."""
+
+    # print("VAPID Public Key:", push_API_public_key)
+
+    return jsonify(push_API_public_key)
 
 @app.route("/api/push-subscriptions", methods=["POST"])
 def create_push_subscription():
