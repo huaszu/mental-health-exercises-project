@@ -8,6 +8,7 @@ from model import connect_to_db, db
 import crud
 import requests
 import os
+import json
 
 from jinja2 import StrictUndefined
 
@@ -325,38 +326,52 @@ def create_push_subscription():
         "status": "success"
     })
 
-# @app.route("/push", methods=["POST"])
-# def push():
-#     """Create a push notification."""
+@app.route("/push", methods=["POST"])
+def push():
+    """Create a push notification."""
 
-#     # Get subscriber
-#     # sub = json.loads(request.form["sub"])
+    # Get subscriber
+    # sub = json.loads(request.form["sub"])
+    # sub = json.dumps(crud.get_subscription_json_by_id(3))
+    # print(f"\n\n\n\n{sub}")
+    # print(type(sub))
+    # Added json.dumps above because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
+#     webpush(
+#   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
+#     url = urlparse(subscription_info.get('endpoint'))
+# AttributeError: 'str' object has no attribute 'get'`
+    # No, we need json.loads() !
 
-#     # Test push notification
-#     result = "OK"
-#     try:
-#         webpush(
-#             subscription_info = sub, 
-#             data = json.dumps({
-#                 "title": "Test /push route",
-#                 "body": "Yes, it works"
-#                 # "icon": "static/tbd.png", 
-#                 # "image": "static/tbd2.png"
-#             }),
-#             vapid_private_key = push_API_private_key, 
-#             vapid_claims = {"sub": push_API_subject}
-#         )
-#     except WebPushException as ex:
-#         print(ex, repr(ex))
-#         if ex.response and ex.response.json():
-#             extra = ex.response.json()
-#             print("Remote service replied with a {}:{}, {}",
-#                   extra.code,
-#                   extra.errno,
-#                   extra.message)
-#         result = "FAILED"
+    sub = crud.get_subscription_by_id(3).subscription_json
+    # print(f"\n\n\n\n{sub}")
+    # print(type(sub))
 
-#     return result
+    # Test push notification
+    result = "OK"
+    # print(result)
+    try:
+        webpush(
+            subscription_info = json.loads(sub), 
+            data = json.dumps({"title": "*\O/* Ahoy",
+                               "body": "A notification will look like this one."}),
+            # data = json.dumps({"title": "Test /push route",
+            #                    "body": "Yes, it works"}),
+            vapid_private_key = push_API_private_key, 
+            vapid_claims = {"sub": push_API_subject}
+        )
+    except WebPushException as ex:
+        print(ex, repr(ex))
+        if ex.response and ex.response.json():
+            extra = ex.response.json()
+            print("Remote service replied with a {}:{}, {}",
+                  extra.code,
+                  extra.errno,
+                  extra.message)
+        result = "FAILED"
+
+    # print(result)
+
+    return result
 
 
 # Remember to send notifs through subscription to user(s), as in, for this subscription, 

@@ -266,6 +266,12 @@ def get_subscription_by_id(subscription_id):
     return PushSubscription.query.get(subscription_id)
 
 
+def get_subscription_json_by_id(subscription_id):
+    """Return subscription_json for subscription_id."""
+
+    return PushSubscription.query.get(subscription_id).subscription_json
+
+
 if __name__ == '__main__':
     from server import app
     connect_to_db(app)

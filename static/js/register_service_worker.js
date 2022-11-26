@@ -76,7 +76,7 @@ function registerServiceWorker(serviceWorkerUrl,
         console.warn('( ༎ຶ ۝ ༎ຶ ) Push messaging is not supported');
     } 
 
-    console.log(swRegistration);
+    console.log(swRegistration); // We see console log say null because this logs before the AJAX
     return swRegistration;
 }
 
@@ -199,6 +199,11 @@ function subscribeUser(swRegistration,
     // does not have an existing subscription.
     .then((subscription) => {
         console.log('ヽ(^o^)丿 User is subscribed.');
+
+        fetch('/push', { method:"POST" })
+            .then((res) => res.text())
+            .then((txt) => console.log(txt))
+            .catch((err) => console.error(err))
 
         // CLARIFICATION TO COME ON WHAT THIS RETURNS, SHOULD BE IN JSON since later we do response.json()
         return updateSubscriptionOnServer(subscription, apiEndpoint);
