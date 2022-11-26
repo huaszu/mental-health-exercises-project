@@ -28,6 +28,54 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
+def push_on_schedule():
+    """Create a push notification."""
+
+    # Get subscriber
+    # sub = json.loads(request.form["sub"])
+
+    sub = crud.get_subscription_by_id(3).subscription_json
+    # print(f"\n\n\n\n{sub}")
+    # print(type(sub))
+
+    # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
+#     webpush(
+#   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
+#     url = urlparse(subscription_info.get('endpoint'))
+# AttributeError: 'str' object has no attribute 'get'`
+
+    # Test push notification
+    result = "OK"
+    print(f"\n\n\n\n{result}")
+
+    try:
+        webpush(
+            subscription_info = json.loads(sub), 
+            data = json.dumps({"title": "*\O/* Ahoy",
+                               "body": "A notification will look like this one."}),
+            # data = json.dumps({"title": "Test /push route",
+            #                    "body": "Yes, it works"}),
+            vapid_private_key = push_API_private_key, 
+            vapid_claims = {"sub": push_API_subject}
+        )
+    except WebPushException as ex:
+        print(ex, repr(ex))
+        if ex.response and ex.response.json():
+            extra = ex.response.json()
+            print("Remote service replied with a {}:{}, {}",
+                  extra.code,
+                  extra.errno,
+                  extra.message)
+        result = "FAILED"
+
+    # print(result)
+
+    return result
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=push_on_schedule, trigger="interval", seconds=60)
+scheduler.start()
+
 @app.route("/")
 def homepage():
     """View homepage."""
@@ -346,7 +394,7 @@ def push():
 
     # Test push notification
     result = "OK"
-    # print(result)
+    print(f"\n\n\n\n{result}")
 
     try:
         webpush(
