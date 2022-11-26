@@ -72,9 +72,9 @@ def push_on_schedule():
 
     return result
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=push_on_schedule, trigger="interval", seconds=60)
-scheduler.start()
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=push_on_schedule, trigger="interval", seconds=60)
+# scheduler.start()
 
 @app.route("/")
 def homepage():

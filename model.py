@@ -101,7 +101,7 @@ class ResponseToPrompt(db.Model):
         
 
 class PushSubscription(db.Model):
-    """Subscription to push notification"""
+    """A subscription to push notifications."""
 
     __tablename__ = 'push_subscriptions'
 
@@ -130,7 +130,28 @@ class PushSubscription(db.Model):
     def __repr__(self):
         return f'<PushSubscription id={self.id} subscription_json={self.subscription_json}>'
 
-# have to be logged in to sign up for notifs 
+
+class Notification(db.Model):
+    """A push notification."""
+
+    __tablename__ = 'notifications'
+
+    id = db.Column(db.Integer,
+                   autoincrement=True,
+                   primary_key=True)
+    last_sent = db.Column(db.DateTime(timezone=True), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False) # unique?
+    freq = db.Column(db.Integer, db.ForeignKey('exercises.frequency'), nullable=False)
+
+    def __repr__(self):
+        return f'<Notification id={self.id} last_sent={self.last_sent}>'
+
+# Notes on notif implementation:
+# Have to be logged in to sign up for notifs - right now enforce in that we do
+# not create a push subscription when there is no user_id -> look into the 
+# ROLLBACKs in terminal?
+
 # if logged in, don't worry about duplicates 
 # user 1
 # name of Exercise
