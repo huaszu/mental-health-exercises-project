@@ -35,9 +35,7 @@
 
 <p>
     {% if exercise.frequency %}
-        We recommend you do this exercise once every {{ day }}. 
-        If you want to get notifications on this frequency to remind you, click this button: 
-        <button type="button" id="notify">Notify me</button>
+        We recommend you do this exercise once every {{ day }}. <br>
 
         {% if "user_id" in session %}
             If you want notifications on this frequency to remind you, enable push messaging:
@@ -77,7 +75,6 @@
 
 {% block js %}
 <script src="/static/js/alert_save_responses.js"></script>
-<script src="/static/js/desktop_notification.js"></script>
 
 <script 
     type="text/javascript" 

@@ -332,23 +332,21 @@ def push():
 
     # Get subscriber
     # sub = json.loads(request.form["sub"])
-    # sub = json.dumps(crud.get_subscription_json_by_id(3))
-    # print(f"\n\n\n\n{sub}")
-    # print(type(sub))
-    # Added json.dumps above because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
-#     webpush(
-#   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
-#     url = urlparse(subscription_info.get('endpoint'))
-# AttributeError: 'str' object has no attribute 'get'`
-    # No, we need json.loads() !
 
     sub = crud.get_subscription_by_id(3).subscription_json
     # print(f"\n\n\n\n{sub}")
     # print(type(sub))
 
+    # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
+#     webpush(
+#   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
+#     url = urlparse(subscription_info.get('endpoint'))
+# AttributeError: 'str' object has no attribute 'get'`
+
     # Test push notification
     result = "OK"
     # print(result)
+
     try:
         webpush(
             subscription_info = json.loads(sub), 
