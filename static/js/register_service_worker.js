@@ -174,7 +174,9 @@ function subscribeUser(swRegistration,
     // When accepted, the permission works for both notifications and push.
     // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
 
-    // Hurrah, tested that this side effect is true!
+    // Hurrah, tested that this side effect is true!  We do not rely on this
+    // side effect though because we have code to intentionally ask user for
+    // permission.
     // TEST WHAT HAPPENS IF USER CLICKS BLOCK.  ARE THERE PROBLEMS W USING APP?
     swRegistration.pushManager.subscribe({
 
