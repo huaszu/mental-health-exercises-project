@@ -28,12 +28,18 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
-def get_users_for_push():
-    """Return users who should get push notifications."""
-
-    pass
-
-
+# This function can take in 1) a dictionary having users as keys and each 
+# value is a set of exercises about which that user should be notified, 
+# and 2) a dictionary having users as keys and each value is a set of 
+# PushSubscription objects associated with that user.  We use 1) to customize 
+# content in the notification and 2) to deliver the notification.
+# Alternative: Take in one dictionary where each key is a user and the value 
+# of each key is another dictionary, where one key is "exercises", with 
+# value as set of exercises, and another key is "subscriptions", with value
+# as set of subscriptions.  
+# Expect that a user will usually be associated with one subscription.  An 
+# edge case is that a user has multiple subscriptions, if the user has logged 
+# in on multiple browsers. 
 def push_on_schedule():
     """Create a push notification."""
 
