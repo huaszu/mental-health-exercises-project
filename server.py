@@ -28,6 +28,12 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
+def get_users_for_push():
+    """Return users who should get push notifications."""
+
+    pass
+
+
 def push_on_schedule():
     """Create a push notification."""
 

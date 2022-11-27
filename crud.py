@@ -1,7 +1,8 @@
 '''CRUD operations.'''
 
-from model import db, User, Exercise, Prompt, ResponseToPrompt, PushSubscription, connect_to_db
+from model import db, User, Exercise, Prompt, ResponseToPrompt, PushSubscription, Notification, connect_to_db
 from datetime import datetime, date
+import pytz
 from random import choice
 
 
@@ -270,6 +271,33 @@ def get_subscription_by_id(subscription_id):
 #     """Return subscription_json for subscription_id."""
 
 #     return PushSubscription.query.get(subscription_id).subscription_json
+
+
+def get_users_for_push():
+    """Return users who should get push notifications."""
+
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    now = datetime.now(pacific_time)
+    print(now)
+
+    # A dictionary where keys are users and each value is a list of exercises 
+    # about which that user should be notified 
+    users_exercises_push = {}
+
+    # There could be efficiency improvements in going through all notifs
+    for notification in Notification.query.all():
+        print(notification.user)
+        print(notification.exercise)
+
+        gap = now - notification.last_sent
+        print(gap)
+        print(notification.exercise.frequency)
+        if gap > notification.exercise.frequency:
+            users_exercises_push[notification.user] = users_exercises_push.get(notification.user, []).append(notification.exercise)
+            # For a user, the same exercise could show up multiple times in
+            # dictionary.  An example of when: user completed that exercise 
+            # more than once, at times in which those completions are all 
+            # reflected within this time gap
 
 
 if __name__ == '__main__':
