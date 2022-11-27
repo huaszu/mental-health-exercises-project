@@ -30,6 +30,7 @@ class User(db.Model):
     creations = db.relationship("Exercise", back_populates="author") # An exercise has one author, who is a user
     push_subscriptions = db.relationship("PushSubscription", back_populates="user") # A push subscription belongs to one user
     # Currently not accommodating: A push subscription can have more than one user, if different users have logged in on the same browser
+    notifications = db.relationship("Notification", back_populates="user") # A notification belongs to one user
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email} is_expert={self.is_expert}>'
@@ -53,6 +54,7 @@ class Exercise(db.Model):
     prompts = db.relationship("Prompt", back_populates="exercise") # A prompt belongs to one exercise
     # Does prompts need to be a parameter in create_exercise() fn?  Theory: No, because when we create a prompt, we associate prompt to an exercise 
     author = db.relationship("User", back_populates="creations") # A user can author many exercises
+    notifications = db.relationship("Notification", back_populates="exercise") # An exercise can have multiple notifications, for different users # Edge case example: If a user completes an exercise of freq 7 days today and then completes the same exercise tomorrow -> get notifications associated with both sittings
 
     def __repr__(self):
         return f'<Exercise exercise_id={self.exercise_id} title={self.title}>'
@@ -141,8 +143,13 @@ class Notification(db.Model):
                    primary_key=True)
     last_sent = db.Column(db.DateTime(timezone=True), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False) # unique?
-    freq = db.Column(db.Integer, db.ForeignKey('exercises.frequency'), nullable=False)
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False) # unique?  no because while each user should get only one notification for one exercise, multiple users can have notification enabled for that exercise
+    # freq = db.Column(db.Integer, db.ForeignKey('exercises.frequency'), nullable=False) # sqlalchemy.exc.ProgrammingError: (psycopg2.errors.InvalidForeignKey) there is no unique constraint matching given keys for referenced table "exercises" (Background on this error at: http://sqlalche.me/e/14/f405)
+
+    user = db.relationship("User", back_populates="notifications") # A user can have many notifications | but user can have many push subscriptions and the notification sends to user via (a) subscription(s) - current solution: send through all of that user's subscriptions
+    exercise = db.relationship("Exercise", back_populates="notifications") # A notification belong to one exercise
+
+    # freq = exercise.frequency # raise AttributeError(key) AttributeError: frequency
 
     def __repr__(self):
         return f'<Notification id={self.id} last_sent={self.last_sent}>'

@@ -354,6 +354,7 @@ def create_push_subscription():
 
     json_data = request.json # vs request.get_json() ?
     subscription_json=json_data["subscription_json"]
+    print(subscription_json)
     
     # Check if there is already a matching PushSubscription object with the same 
     # subscription_json because when we reload the page, even when the browser 
@@ -365,6 +366,7 @@ def create_push_subscription():
     # If there is no PushSubscription object with matching subscription_json, 
     # create a new PushSubscription object.
     if subscription is None:
+        print("Let's create")
         subscription = crud.create_push_subscription(subscription_json=subscription_json, 
                                                      user=user)
 
