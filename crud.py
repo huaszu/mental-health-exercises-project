@@ -286,6 +286,13 @@ def get_notifications():
 
     # Handle first notif - OR last_sent None? 
     
+    # 11:59 pm Day 0   11/27
+    # Day 1   date   12:00   11/28
+
+    # default last_sent at creation of notification
+
+    
+
 
 def get_users_notify():
     """Return users to be notified."""

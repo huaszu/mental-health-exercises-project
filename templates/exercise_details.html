@@ -34,17 +34,6 @@
 </p>
 
 <p>
-    {% if exercise.frequency %}
-        We recommend you do this exercise once every {{ day }}. <br>
-
-        {% if "user_id" in session %}
-            If you want notifications on this frequency to remind you, enable push messaging:
-            <button type="button" id="push">Push to me</button>
-        {% endif %}
-    {% endif %}
-</p>
-
-<p>
     {% if exercise.time_limit_per_sitting %}
         Suggested time to spend on exercise: {{ exercise.time_limit_per_sitting }} minutes
     {% endif %}
@@ -62,6 +51,18 @@
         <br>
 
     {% endfor %}
+
+    <br>
+    <p>
+        {% if exercise.frequency %}
+            We recommend you do this exercise once every {{ day }}. <br>
+    
+            {% if "user_id" in session %}
+                If you want notifications on this frequency to remind you, enable push messaging:
+                <button type="button" id="push">Push to me</button>
+            {% endif %}
+        {% endif %}
+    </p>
 
     <button type="submit" id="completed-exercise">Submit</button>
 </form>

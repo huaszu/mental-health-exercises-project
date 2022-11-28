@@ -410,7 +410,7 @@ def push():
     # Get subscriber
     # sub = json.loads(request.form["sub"])
 
-    sub = crud.get_subscription_by_id(3).subscription_json
+    sub = crud.get_subscription_by_id(1).subscription_json
     # print(f"\n\n\n\n{sub}")
     # print(type(sub))
 
