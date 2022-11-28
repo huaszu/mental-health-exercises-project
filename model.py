@@ -141,7 +141,7 @@ class Notification(db.Model):
     id = db.Column(db.Integer,
                    autoincrement=True,
                    primary_key=True)
-    last_sent = db.Column(db.DateTime(timezone=True), nullable=False, default=None)
+    last_sent = db.Column(db.DateTime(timezone=True), nullable=False, default=None) # don't want default?
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False) # unique?  no because while each user should get only one notification for one exercise, multiple users can have notification enabled for that exercise
     # freq = db.Column(db.Integer, db.ForeignKey('exercises.frequency'), nullable=False) # sqlalchemy.exc.ProgrammingError: (psycopg2.errors.InvalidForeignKey) there is no unique constraint matching given keys for referenced table "exercises" (Background on this error at: http://sqlalche.me/e/14/f405)

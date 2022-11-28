@@ -8,12 +8,15 @@ function enablePush() {
         if (Notification.permission === 'granted') {
             console.log('granted');
             // const notification = new Notification('Test!');
+            const splitPath = window.location.pathname.split('/');
+            const exerciseId = splitPath[2];
             fetch('/vapid_public.json') // Double check later! 
                 .then((response) => response.json())
                 .then((responseJson) => registerServiceWorker(
                     "/static/js/service_worker.js",
                     responseJson,
-                    "/api/push-subscriptions"
+                    "/api/push-subscriptions",
+                    exerciseId
                 ));
         } else if (Notification.permission !== 'denied') {
             console.log('ask for permission');
@@ -21,12 +24,15 @@ function enablePush() {
                 if (permission === 'granted') {
                     console.log('now granted');
                     // const notification = new Notification('Test me');
+                    const splitPath = window.location.pathname.split('/');
+                    const exerciseId = splitPath[2];
                     fetch('/vapid_public.json')
                         .then((response) => response.json())
                         .then((responseJson) => registerServiceWorker(
                             "/static/js/service_worker.js",
                             responseJson,
-                            "/api/push-subscriptions"
+                            "/api/push-subscriptions",
+                            exerciseId
                     ));
                 }
             });
@@ -51,7 +57,8 @@ pushButton.addEventListener('click', (evt) => {enablePush()});
 
 function registerServiceWorker(serviceWorkerUrl, 
                                applicationServerPublicKey, 
-                               apiEndpoint) {
+                               apiEndpoint, 
+                               exerciseId) {
 
     // console.log(serviceWorkerUrl);
     // console.log(applicationServerPublicKey);
@@ -63,7 +70,7 @@ function registerServiceWorker(serviceWorkerUrl,
         navigator.serviceWorker.register(serviceWorkerUrl)
         .then((swReg) => {
             console.log('(＾▽＾) Service Worker is registered', swReg);
-            subscribeUser(swReg, applicationServerPublicKey, apiEndpoint);
+            subscribeUser(swReg, applicationServerPublicKey, apiEndpoint, exerciseId);
 
         // Reassign swRegistration from null to value of swReg
         swRegistration = swReg;
@@ -126,23 +133,36 @@ function urlB64ToUint8Array(base64String) {
 
 // Send subscription to application server
 // POSTs subscription_json to API endpoint
-function updateSubscriptionOnServer(subscription, apiEndpoint) {
+function updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) {
     console.log('function updateSubscriptionOnServer() about to run');
+    // const subscription_json = JSON.stringify(subscription);
     return fetch(apiEndpoint, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            subscription_json: JSON.stringify(subscription)
+            subscription_json: JSON.stringify(subscription), 
+            exercise_id: JSON.stringify(exerciseId)
         })
     });
 }
 
+
+// Send first push notification to user
+// function sendFirstPush(subscription) {
+//     fetch('/push', { method:"POST" })
+//         .then((res) => res.text())
+//         .then((txt) => console.log(txt))
+//         .catch((err) => console.error(err))}
+// Goal: Send a notification that is associated to a subscription and record
+// this notification as the first notification in a notification series in the 
+// db.  Before doing so, we want the subscription to exist in the db first.
+
 // Subscribe user to subscription
 function subscribeUser(swRegistration, 
                        applicationServerPublicKey, 
-                       apiEndpoint) {
+                       apiEndpoint, exerciseId) {
 
     console.log('function subscribeUser() about to run');
 
@@ -202,13 +222,24 @@ function subscribeUser(swRegistration,
     .then((subscription) => {
         console.log('ヽ(^o^)丿 User is subscribed.');
 
-        fetch('/push', { method:"POST" })
-            .then((res) => res.text())
-            .then((txt) => console.log(txt))
-            .catch((err) => console.error(err))
+        // fetch('/push', { method:"POST" })
+        //     .then((res) => res.text())
+        //     .then((txt) => console.log(txt))
+        //     .catch((err) => console.error(err))
+        // The '/push' route shows a notification to the user, but we have no 
+        // record associating this notification to the user in the db.  We 
+        // want the db to record this first "test" notification so that we 
+        // populate a Notification record with last_sent of when this 
+        // notification was sent, which helps us to know when to send future
+        // notifications in this series.  To stay organized, we want the 
+        // order so that a Subscription record is made in the db, which the
+        // subsequent running of the 
+        // updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) function 
+        // achieves.  Then we create a Notification record, populated with the
+        // data we want. 
 
         // CLARIFICATION TO COME ON WHAT THIS RETURNS, SHOULD BE IN JSON since later we do response.json()
-        return updateSubscriptionOnServer(subscription, apiEndpoint);
+        return updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId);
 
     })
 

@@ -367,9 +367,41 @@ def get_vapid_public_key():
 
     return jsonify(push_API_public_key)
 
+
+def send_first_push(subscription):
+    """Spawn a push notification.  Takes in a PushSubscription object."""
+
+    result = "OK"
+    print(f"\n\n\n\n{result}")
+
+    try:
+        webpush(
+            subscription_info = json.loads(subscription.subscription_json), 
+            data = json.dumps({"title": "*\O/* Ahoy",
+                               "body": "A notification will look like this one."}),
+            # data = json.dumps({"title": "Test /push route",
+            #                    "body": "Yes, it works"}),
+            vapid_private_key = push_API_private_key, 
+            vapid_claims = {"sub": push_API_subject}
+        )
+    except WebPushException as ex:
+        print(ex, repr(ex))
+        if ex.response and ex.response.json():
+            extra = ex.response.json()
+            print("Remote service replied with a {}:{}, {}",
+                  extra.code,
+                  extra.errno,
+                  extra.message)
+        result = "FAILED"
+
+    print("ending result:", result)
+
+    return result
+
+
 @app.route("/api/push-subscriptions", methods=["POST"])
-def create_push_subscription():
-    """Create a push subscription."""
+def initiate_push():
+    """Create a push subscription and first notification."""
 
     # Is subscription unique for every user? 
     # Is subscription unique for every user for every time user permits push
@@ -379,8 +411,11 @@ def create_push_subscription():
     user = crud.get_user_by_id(user_id)
 
     json_data = request.json # vs request.get_json() ?
-    subscription_json=json_data["subscription_json"]
+    subscription_json = json_data["subscription_json"]
     print(subscription_json)
+
+    exercise_id = json_data["exercise_id"]
+    print("EXERCISE:", exercise_id)
     
     # Check if there is already a matching PushSubscription object with the same 
     # subscription_json because when we reload the page, even when the browser 
@@ -397,15 +432,22 @@ def create_push_subscription():
                                                      user=user)
 
         db.session.add(subscription)
-        db.session.commit()
+
+    # Spawn first notification.
+    send_first_push(subscription)
+
+    # notification = crud.create_notification(user=user, exercise, last_sent)
+
+    db.session.commit()
 
     return jsonify({
         "status": "success"
     })
 
+
 @app.route("/push", methods=["POST"])
 def push():
-    """Create a push notification."""
+    """Spawn a push notification."""
 
     # Get subscriber
     # sub = json.loads(request.form["sub"])

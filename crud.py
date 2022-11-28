@@ -245,12 +245,18 @@ def get_exercises_of_user(user_id):
 
 
 def create_push_subscription(subscription_json, user):
-    """Create a subscription to push notifications."""
+    """Create and return a new subscription to push notifications."""
 
     subscription = PushSubscription(subscription_json=subscription_json,
                                     user=user)
 
     return subscription
+
+
+def get_subscriptions():
+    """Return all subscriptions from database."""
+
+    return PushSubscription.query.all()  
 
 
 def get_first_subscription(subscription_json):
@@ -273,6 +279,28 @@ def get_subscription_by_id(subscription_id):
 #     return PushSubscription.query.get(subscription_id).subscription_json
 
 
+def create_notification(user, exercise, last_sent):
+    """Create and return a new notification."""
+
+    notification = Notification(user=user,
+                                exercise=exercise,
+                                last_sent=last_sent)
+
+    return notification
+
+
+def get_notifications():
+    """Return all notifications from database."""
+
+    return Notification.query.all() 
+
+
+def get_notification_by_id(notification_id):
+    """Return notification with notification_id."""
+
+    return Notification.query.get(notification_id)
+
+
 def get_notifications():
     """Return notifications to deliver."""
 
@@ -291,55 +319,57 @@ def get_notifications():
 
     # default last_sent at creation of notification
 
-    
-
 
 def get_users_notify():
     """Return users to be notified."""
 
-
-
-
-def get_users_for_push():
-    """Return users who should get push notifications."""
-
-    pacific_time = pytz.timezone("America/Los_Angeles")
-    now = datetime.now(pacific_time)
-    print(now)
-
-    # A dictionary where keys are users and each value is a set of exercises 
-    # about which that user should be notified.  Put exercises in set because 
-    # in one scheduled push, we want each user to get one notification per 
-    # exercise.
-    users_exercises_push = {}
-
-    # There could be efficiency improvements in going through all notifs
-    for notification in Notification.query.all():
-        print(notification.user)
-        print(notification.exercise)
-
-        # gap is a timedelta object
-        gap = now - notification.last_sent
-        print(gap)
-        print(notification.exercise.frequency)
-        print(timedelta(days=notification.exercise.frequency))
-
-        if gap > timedelta(days=notification.exercise.frequency):
-            users_exercises_push[notification.user] = users_exercises_push.get(notification.user, {"exercises": set()})["exercises"].add(notification.exercise)
-            # Can an object, can an instance of a class be a dictionary key?  Immutable?
-
-        # Data structures are fun.  Am I making Python do too much?  
-        # Use Object-Relational Mapping! 
-
-    print(users_exercises_push)
-
-    return users_exercises_push
-
-
-def update_subscription_data_on_users_for_push():
-    """Return users who get notifications, with respective subscription data."""
-
     pass
+
+
+# # Deprecated
+# def get_users_for_push():
+#     """Return users who should get push notifications."""
+
+#     pacific_time = pytz.timezone("America/Los_Angeles")
+#     now = datetime.now(pacific_time)
+#     print(now)
+
+#     # A dictionary where keys are users and each value is a set of exercises 
+#     # about which that user should be notified.  Put exercises in set because 
+#     # in one scheduled push, we want each user to get one notification per 
+#     # exercise.
+#     users_exercises_push = {}
+
+#     # There could be efficiency improvements in going through all notifs
+#     for notification in Notification.query.all():
+#         print(notification.user)
+#         print(notification.exercise)
+
+#         # gap is a timedelta object
+#         gap = now - notification.last_sent
+#         print(gap)
+#         print(notification.exercise.frequency)
+#         print(timedelta(days=notification.exercise.frequency))
+
+#         if gap > timedelta(days=notification.exercise.frequency):
+#             users_exercises_push[notification.user] = users_exercises_push.get(notification.user, {"exercises": set()})["exercises"].add(notification.exercise)
+#             # Can an object, can an instance of a class be a dictionary key?  Immutable?
+#               # Make another key in inner dictionary - "subscription" and value is PushSubscription object(s)
+#               #     Was going to in function update_subscription_data_on_users_for_push()
+
+#         # Data structures are fun.  Am I making Python do too much?  
+#         # Use Object-Relational Mapping! 
+
+#     print(users_exercises_push)
+
+#     return users_exercises_push
+
+
+# # Deprecated
+# def update_subscription_data_on_users_for_push():
+#     """Return users who get notifications, with respective subscription data."""
+
+#     pass
 
 
 if __name__ == '__main__':
