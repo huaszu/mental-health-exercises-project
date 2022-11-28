@@ -84,6 +84,12 @@ def push_on_schedule():
 
     return result
 
+    # To handle first notif: For users who have subscriptions, scheduled task can check for if (gap between now and time_completed exercise) > frequency
+    # time_completed_exercise is on response - go through prompt to get to exercise
+    # Does user have to have completed an exercise to get notifs?  If no - record subscription creation time and use that time to help make first notif
+    # How about I edit so that complete an exercise -> redirect back to not filled out exercise page and then show enable push messaging button
+    # Or at response creation - see below
+
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(func=push_on_schedule, trigger="interval", seconds=60)
 # scheduler.start()
@@ -302,6 +308,14 @@ def save_user_responses(exercise_id):
         db.session.add(response)
     
     db.session.commit()
+
+    # Check if user has subscription -> add a notif for future OR alternative
+    # see above in scheduled task function
+    # One scheduled task that seeds notifs and another scheduled task for sending them
+    # first_send in notifs table <- if first_send today, then send today
+
+    # Schedule task: You have a subscription, you completed exercise on this day, generate a future first notif
+    # Another schedule task: send first notifs - only want the day - if today == the day
 
     return redirect("/users/my_exercises") 
     

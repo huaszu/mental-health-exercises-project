@@ -273,6 +273,26 @@ def get_subscription_by_id(subscription_id):
 #     return PushSubscription.query.get(subscription_id).subscription_json
 
 
+def get_notifications():
+    """Return notifications to deliver."""
+
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    now = datetime.now(pacific_time)
+    print(now)
+
+    print(Notification.query.filter((now - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all())
+
+    return Notification.query.filter((now - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all()
+
+    # Handle first notif - OR last_sent None? 
+    
+
+def get_users_notify():
+    """Return users to be notified."""
+
+
+
+
 def get_users_for_push():
     """Return users who should get push notifications."""
 
@@ -298,7 +318,11 @@ def get_users_for_push():
         print(timedelta(days=notification.exercise.frequency))
 
         if gap > timedelta(days=notification.exercise.frequency):
-            users_exercises_push[notification.user] = users_exercises_push.get(notification.user, set()).add(notification.exercise)
+            users_exercises_push[notification.user] = users_exercises_push.get(notification.user, {"exercises": set()})["exercises"].add(notification.exercise)
+            # Can an object, can an instance of a class be a dictionary key?  Immutable?
+
+        # Data structures are fun.  Am I making Python do too much?  
+        # Use Object-Relational Mapping! 
 
     print(users_exercises_push)
 
