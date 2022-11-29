@@ -95,13 +95,13 @@ def push_on_schedule():
 # scheduler.start()
 
 @app.route("/")
-def homepage():
+def show_homepage():
     """View homepage."""
 
     return render_template("homepage.html")
 
 @app.route("/exercises")
-def all_exercises():
+def show_all_exercises():
     """View all exercises."""
 
     exercises = crud.get_exercises()
@@ -351,13 +351,44 @@ def create():
     return render_template("create.html") # Can only get here if logged in
     # Can let someone give themselves a pen name at this point!  Fix blank pen names later
 
+# Route currently not in use:
 @app.route("/service_worker.js")
-def sw():
+def allow_sw_scope_with_http_header():
+    """Override path restriction that limits scope of sw script."""
+
+    # Service Worker Script Response:
+    # An HTTP response to a service worker's script resource request can 
+    # include the following header:
+
+    # `Service-Worker-Allowed`
+    # Indicates the user agent will override the path restriction, which 
+    # limits the maximum allowed scope url that the script can control, to 
+    # the given value.
+
+    # Note: The value is a URL. If a relative URL is given, it is parsed 
+    # against the script’s URL.
+
+    # In addition to the origin restriction, service workers are restricted by 
+    # the path of the service worker script. For example, a service worker 
+    # script at https://www.example.com/~bob/sw.js can be registered for the 
+    # scope url https://www.example.com/~bob/ but not for the scope 
+    # https://www.example.com/ or https://www.example.com/~alice/. This 
+    # provides some protection for sites that host multiple-user content in 
+    # separated directories on the same origin. However, the path restriction 
+    # is not considered a hard security boundary, as only origins are. Sites 
+    # are encouraged to use different origins to securely isolate segments of 
+    # the site if appropriate.
+
+    # Servers can remove the path restriction by setting a 
+    # Service-Worker-Allowed header on the service worker script.
+    # https://www.w3.org/TR/service-workers/
+
     response = make_response(send_from_directory(app.static_folder, "/js/service_worker.js"))
     response.headers["Service-Worker-Allowed"] = "/"
     response.headers["Content-Type"] = "application/javascript"
     print(response)
     return response
+
 
 @app.route("/vapid_public.json")
 def get_vapid_public_key():
@@ -369,7 +400,7 @@ def get_vapid_public_key():
 
 
 def send_first_push(subscription):
-    """Spawn a push notification.  Takes in a PushSubscription object."""
+    """Push a notification.  Takes in a PushSubscription object."""
 
     result = "OK"
     print(f"\n\n\n\n{result}")
@@ -379,8 +410,6 @@ def send_first_push(subscription):
             subscription_info = json.loads(subscription.subscription_json), 
             data = json.dumps({"title": "*\O/* Ahoy",
                                "body": "A notification will look like this one."}),
-            # data = json.dumps({"title": "Test /push route",
-            #                    "body": "Yes, it works"}),
             vapid_private_key = push_API_private_key, 
             vapid_claims = {"sub": push_API_subject}
         )
@@ -401,7 +430,7 @@ def send_first_push(subscription):
 
 @app.route("/api/push-subscriptions", methods=["POST"])
 def initiate_push():
-    """Create a push subscription and first notification."""
+    """Create a push subscription if necessary and spawn first notification."""
 
     # Is subscription unique for every user? 
     # Is subscription unique for every user for every time user permits push
@@ -445,50 +474,50 @@ def initiate_push():
     })
 
 
-@app.route("/push", methods=["POST"])
-def push():
-    """Spawn a push notification."""
+# @app.route("/push", methods=["POST"])
+# def push():
+#     """Spawn a push notification."""
 
-    # Get subscriber
-    # sub = json.loads(request.form["sub"])
+#     # Get subscriber
+#     # sub = json.loads(request.form["sub"])
 
-    sub = crud.get_subscription_by_id(1).subscription_json
-    # print(f"\n\n\n\n{sub}")
-    # print(type(sub))
+#     sub = crud.get_subscription_by_id(1).subscription_json # Hard-coded a specific subscription id that was known to exist for testing
+#     # print(f"\n\n\n\n{sub}")
+#     # print(type(sub))
 
-    # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
-#     webpush(
-#   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
-#     url = urlparse(subscription_info.get('endpoint'))
-# AttributeError: 'str' object has no attribute 'get'`
+#     # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
+# #     webpush(
+# #   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
+# #     url = urlparse(subscription_info.get('endpoint'))
+# # AttributeError: 'str' object has no attribute 'get'`
 
-    # Test push notification
-    result = "OK"
-    print(f"\n\n\n\n{result}")
+#     # Test push notification
+#     result = "OK"
+#     print(f"\n\n\n\n{result}")
 
-    try:
-        webpush(
-            subscription_info = json.loads(sub), 
-            data = json.dumps({"title": "*\O/* Ahoy",
-                               "body": "A notification will look like this one."}),
-            # data = json.dumps({"title": "Test /push route",
-            #                    "body": "Yes, it works"}),
-            vapid_private_key = push_API_private_key, 
-            vapid_claims = {"sub": push_API_subject}
-        )
-    except WebPushException as ex:
-        print(ex, repr(ex))
-        if ex.response and ex.response.json():
-            extra = ex.response.json()
-            print("Remote service replied with a {}:{}, {}",
-                  extra.code,
-                  extra.errno,
-                  extra.message)
-        result = "FAILED"
+#     try:
+#         webpush(
+#             subscription_info = json.loads(sub), 
+#             data = json.dumps({"title": "*\O/* Ahoy",
+#                                "body": "A notification will look like this one."}),
+#             # data = json.dumps({"title": "Test /push route",
+#             #                    "body": "Yes, it works"}),
+#             vapid_private_key = push_API_private_key, 
+#             vapid_claims = {"sub": push_API_subject}
+#         )
+#     except WebPushException as ex:
+#         print(ex, repr(ex))
+#         if ex.response and ex.response.json():
+#             extra = ex.response.json()
+#             print("Remote service replied with a {}:{}, {}",
+#                   extra.code,
+#                   extra.errno,
+#                   extra.message)
+#         result = "FAILED"
 
-    # print(result)
+#     # print(result)
 
-    return result
+#     return result
 
 
 # Remember to send notifs through subscription to user(s), as in, for this subscription, 
