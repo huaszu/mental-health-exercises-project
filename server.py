@@ -28,6 +28,58 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
+def send_push(notifications):
+    """Push next notification of each notification in input notifications."""
+
+    print(notifications)
+
+    for notification in notifications:
+        print(notification)
+        subscriptions = crud.get_subscriptions_from_notification(notification)
+        print(subscriptions)
+        for subscription in subscriptions:
+            result = "OK"
+            print(f"\n\n\n\n{result}")
+
+            try:
+                webpush(
+                    subscription_info = json.loads(subscription.subscription_json), 
+                    data = json.dumps({"title": "*\O/* Ahoy",
+                                    "body": "A notification will look like this one."}),
+                    vapid_private_key = push_API_private_key, 
+                    vapid_claims = {"sub": push_API_subject}
+                )
+            except WebPushException as ex:
+                print(ex, repr(ex))
+                if ex.response and ex.response.json():
+                    extra = ex.response.json()
+                    print("Remote service replied with a {}:{}, {}",
+                        extra.code,
+                        extra.errno,
+                        extra.message)
+                result = "FAILED"
+
+            print("ending result:", result)
+        
+        pacific_time = pytz.timezone("America/Los_Angeles")
+        now = datetime.now(pacific_time)
+        print(now)
+        
+        notification.last_sent = now
+
+    print(notifications)
+
+    return notifications
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=send_push, 
+                  trigger="interval", 
+                  kwargs={'notifications': crud.get_notifications()},
+                  seconds=60)
+scheduler.start()
+
+
 # This function can take in 1) a dictionary having users as keys and each 
 # value is a set of exercises about which that user should be notified, 
 # and 2) a dictionary having users as keys and each value is a set of 
