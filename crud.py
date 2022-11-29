@@ -355,7 +355,7 @@ def get_notifications_to_send_for_test(current):
     return notifs_to_send
 
     #print(Notification.query.filter((current - Notification.last_sent) > timedelta(seconds=Exercise.frequency)).all())
-
+                                                                                            # Works because SQLAlchemy knows which exercise based on notification having relationship to exercise
     #return Notification.query.filter((current - Notification.last_sent) > timedelta(seconds=Exercise.frequency)).all()
 
 
