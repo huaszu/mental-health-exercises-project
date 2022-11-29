@@ -143,7 +143,7 @@ function updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) {
         },
         body: JSON.stringify({
             subscription_json: JSON.stringify(subscription), 
-            exercise_id: JSON.stringify(exerciseId)
+            exercise_id: exerciseId
         })
     });
 }

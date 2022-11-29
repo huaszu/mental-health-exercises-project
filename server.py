@@ -443,8 +443,9 @@ def initiate_push():
     subscription_json = json_data["subscription_json"]
     print(subscription_json)
 
-    exercise_id = json_data["exercise_id"]
+    exercise_id = int(json_data["exercise_id"])
     print("EXERCISE:", exercise_id)
+    exercise = crud.get_exercise_by_id(exercise_id)
     
     # Check if there is already a matching PushSubscription object with the same 
     # subscription_json because when we reload the page, even when the browser 
@@ -464,8 +465,14 @@ def initiate_push():
 
     # Spawn first notification.
     send_first_push(subscription)
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    last_sent = datetime.now(pacific_time)
 
-    # notification = crud.create_notification(user=user, exercise, last_sent)
+    notification = crud.create_notification(user=user, 
+                                            exercise=exercise, 
+                                            last_sent=last_sent)
+    
+    db.session.add(notification)
 
     db.session.commit()
 

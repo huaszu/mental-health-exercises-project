@@ -1,4 +1,4 @@
-'''CRUD operations.'''
+"""CRUD operations."""
 
 from model import db, User, Exercise, Prompt, ResponseToPrompt, PushSubscription, Notification, connect_to_db
 from datetime import datetime, date, timedelta
