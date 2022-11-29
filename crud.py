@@ -301,16 +301,18 @@ def get_notification_by_id(notification_id):
     return Notification.query.get(notification_id)
 
 
-def get_notifications():
+def get_notifications_to_send(current):
     """Return notifications to deliver."""
 
-    pacific_time = pytz.timezone("America/Los_Angeles")
-    now = datetime.now(pacific_time)
-    print(now)
+    # Change function to take in now as an input, where now is when the 
+    # scheduled send_push() function begins to run
+    # pacific_time = pytz.timezone("America/Los_Angeles")
+    # now = datetime.now(pacific_time)
+    # print(now)
 
-    print(Notification.query.filter((now - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all())
+    print(Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all())
 
-    return Notification.query.filter((now - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all()
+    return Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all()
 
     # Handle first notif - OR last_sent None? 
     

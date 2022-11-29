@@ -28,13 +28,26 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
-def send_push(notifications):
+def send_push():
     """Push next notification of each notification in input notifications."""
 
-    print(notifications)
+    # A current timestamp at the start of each time that this function runs, 
+    # which is more organized than creating different timestamps throughout
+    # various parts of the code within this function.  In one run of this job, 
+    # all notifications evaluated within the job are evaluated against the 
+    # same timestamp. 
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    current = datetime.now(pacific_time)
+    print(current)
 
-    for notification in notifications:
-        print(notification)
+    notifications_to_send = crud.get_notifications_to_send(current)
+    print(notifications_to_send)
+
+    for notification in notifications_to_send:
+        user = notification.user
+        exercise = notification.exercise
+        print(notification, user, exercise)
+
         subscriptions = crud.get_subscriptions_from_notification(notification)
         print(subscriptions)
         for subscription in subscriptions:
@@ -44,8 +57,8 @@ def send_push(notifications):
             try:
                 webpush(
                     subscription_info = json.loads(subscription.subscription_json), 
-                    data = json.dumps({"title": "*\O/* Ahoy",
-                                    "body": "A notification will look like this one."}),
+                    data = json.dumps({"title": f"*\O/* Ahoy, {user.first_name}",
+                                       "body": f"Time to do {exercise.title}"}),
                     vapid_private_key = push_API_private_key, 
                     vapid_claims = {"sub": push_API_subject}
                 )
@@ -61,21 +74,18 @@ def send_push(notifications):
 
             print("ending result:", result)
         
-        pacific_time = pytz.timezone("America/Los_Angeles")
-        now = datetime.now(pacific_time)
-        print(now)
-        
-        notification.last_sent = now
+        notification.last_sent = current
+        db.session.commit()
 
-    print(notifications)
+    print("Job succeeded")
 
-    return notifications
+    # return
 
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=send_push, 
                   trigger="interval", 
-                  kwargs={'notifications': crud.get_notifications()},
+                  kwargs={'notifications': crud.get_notifications_to_send()},
                   seconds=60)
 scheduler.start()
 
