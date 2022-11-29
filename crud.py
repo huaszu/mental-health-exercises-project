@@ -320,6 +320,14 @@ def get_notifications():
     # default last_sent at creation of notification
 
 
+def get_subscriptions_from_notification(notification):
+    """Return push subscriptions of user to whom notification belongs."""
+
+    subscriptions = PushSubscription.query.filter(notification.user_id == PushSubscription.user_id).all()
+
+    return subscriptions
+    
+
 def get_users_notify():
     """Return users to be notified."""
 
