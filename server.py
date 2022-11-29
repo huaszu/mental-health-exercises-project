@@ -2,6 +2,7 @@
 
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory)
 from model import connect_to_db, db
+from push_notification import send_first_push, send_push_for_test, send_push
 import crud
 from datetime import datetime
 import pytz
@@ -28,125 +29,11 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
-# If timer on task > update period, e.g., 
-
-# task runs every 2 min      say every 10 sec 
-# the notif should send every 5 min
-# on some task runs, i should not get a notif
-# does it know when to ignore 
-
-
-def send_push():
-    """Push next notification of each notification whose time is due."""
-
-    # A current timestamp at the start of each time that this function runs, 
-    # which is more organized than creating different timestamps throughout
-    # various parts of the code within this function.  In one run of this job, 
-    # all notifications evaluated within the job are evaluated against the 
-    # same timestamp. 
-    pacific_time = pytz.timezone("America/Los_Angeles")
-    current = datetime.now(pacific_time)
-    print(current)
-
-    notifications_to_send = crud.get_notifications_to_send(current)
-    print(notifications_to_send)
-
-    for notification in notifications_to_send:
-        user = notification.user
-        exercise = notification.exercise
-        print(notification, user, exercise)
-
-        subscriptions = crud.get_subscriptions_from_notification(notification)
-        print(subscriptions)
-        for subscription in subscriptions:
-            result = "OK"
-            print(f"\n\n\n\n{result}")
-
-            try:
-                webpush(
-                    subscription_info = json.loads(subscription.subscription_json), 
-                    data = json.dumps({"title": f"*\O/* Ahoy, {user.first_name}",
-                                       "body": f"Time to do {exercise.title}"}),
-                    vapid_private_key = push_API_private_key, 
-                    vapid_claims = {"sub": push_API_subject}
-                )
-            except WebPushException as ex:
-                print(ex, repr(ex))
-                if ex.response and ex.response.json():
-                    extra = ex.response.json()
-                    print("Remote service replied with a {}:{}, {}",
-                        extra.code,
-                        extra.errno,
-                        extra.message)
-                result = "FAILED"
-
-            print("ending result:", result)
-        
-        notification.last_sent = current
-        db.session.commit()
-
-    print("Job succeeded")
-
-    # return
-
-
-def send_push_for_test():
-    """Push next notification of each notification whose time is due, for testing purposes."""
-
-    # A current timestamp at the start of each time that this function runs, 
-    # which is more organized than creating different timestamps throughout
-    # various parts of the code within this function.  In one run of this job, 
-    # all notifications evaluated within the job are evaluated against the 
-    # same timestamp. 
-    pacific_time = pytz.timezone("America/Los_Angeles")
-    current = datetime.now(pacific_time)
-    print(current)
-
-    notifications_to_send = crud.get_notifications_to_send_for_test(current)
-    print(notifications_to_send)
-
-    for notification in notifications_to_send:
-        user = notification.user
-        exercise = notification.exercise
-        print("\n\n\n\n", "LOOK HERE", notification, user, exercise)
-
-        subscriptions = crud.get_subscriptions_from_notification(notification)
-        print(subscriptions)
-        for subscription in subscriptions:
-            result = "OK"
-            print(f"\n\n\n\n{result}")
-
-            try:
-                webpush(
-                    subscription_info = json.loads(subscription.subscription_json), 
-                    data = json.dumps({"title": f"*\O/* Ahoy, {user.first_name}",
-                                       "body": f"Time to do {exercise.title} CURRENT: {current}"}),
-                    vapid_private_key = push_API_private_key, 
-                    vapid_claims = {"sub": push_API_subject}
-                )
-            except WebPushException as ex:
-                print(ex, repr(ex))
-                if ex.response and ex.response.json():
-                    extra = ex.response.json()
-                    print("Remote service replied with a {}:{}, {}",
-                        extra.code,
-                        extra.errno,
-                        extra.message)
-                result = "FAILED"
-
-            print("ending result:", result)
-        
-        notification.last_sent = current
-        db.session.commit()
-
-    print("Job succeeded")
-
-
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=send_push, 
-#                   trigger="interval", 
-#                   seconds=60)
-# scheduler.start()
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=send_push, 
+                  trigger="interval", 
+                  hours=8)
+scheduler.start()
 
 # For testing job at interval of 30 seconds:
 # scheduler = BackgroundScheduler()
@@ -156,11 +43,11 @@ def send_push_for_test():
 # scheduler.start()
 
 # For testing job at interval of 10 seconds:
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=send_push_for_test, 
-                  trigger="interval", 
-                  seconds=10)
-scheduler.start()
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=send_push_for_test, 
+#                   trigger="interval", 
+#                   seconds=10)
+# scheduler.start()
 
 
 # # Deprecated
@@ -508,7 +395,6 @@ def allow_sw_scope_with_http_header():
     print(response)
     return response
 
-
 @app.route("/vapid_public.json")
 def get_vapid_public_key():
     """Get VAPID public key for Push API."""
@@ -517,39 +403,9 @@ def get_vapid_public_key():
 
     return jsonify(push_API_public_key)
 
-
-def send_first_push(subscription):
-    """Push a notification.  Takes in a PushSubscription object."""
-
-    result = "OK"
-    print(f"\n\n\n\n{result}")
-
-    try:
-        webpush(
-            subscription_info = json.loads(subscription.subscription_json), 
-            data = json.dumps({"title": "*\O/* Ahoy",
-                               "body": "A notification will look like this one."}),
-            vapid_private_key = push_API_private_key, 
-            vapid_claims = {"sub": push_API_subject}
-        )
-    except WebPushException as ex:
-        print(ex, repr(ex))
-        if ex.response and ex.response.json():
-            extra = ex.response.json()
-            print("Remote service replied with a {}:{}, {}",
-                  extra.code,
-                  extra.errno,
-                  extra.message)
-        result = "FAILED"
-
-    print("ending result:", result)
-
-    return result
-
-
 @app.route("/api/push-subscriptions", methods=["POST"])
 def initiate_push():
-    """Create a push subscription if necessary and spawn first notification."""
+    """Create a subscription record if necessary and spawn first notification."""
 
     # Is subscription unique for every user? 
     # Is subscription unique for every user for every time user permits push

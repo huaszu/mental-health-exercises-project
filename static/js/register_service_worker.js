@@ -1,5 +1,10 @@
 'use strict';
 
+// Ask user for permission to send notifications, register service worker, 
+// create push subscription, and create a subscription record in db if 
+// necessary and spawn first notification via 
+// route /api/push-subscriptions
+
 const pushButton = document.querySelector('#push'); 
 
 function enablePush() {
