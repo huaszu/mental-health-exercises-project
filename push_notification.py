@@ -146,3 +146,6 @@ def send_push():
         db.session.commit()
 
     print("Job succeeded")
+
+# Timing of push notification delivery currently based on when user opted in, 
+# and not also related to datetime of user's past completion of that exercise.

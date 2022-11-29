@@ -304,22 +304,31 @@ def get_notification_by_id(notification_id):
 def get_notifications_to_send(current):
     """Return notifications to deliver."""
 
-    # Change function to take in now as an input, where now is when the 
+    # Change function to take in current as an input, where current is when the 
     # scheduled send_push() function begins to run
     # pacific_time = pytz.timezone("America/Los_Angeles")
     # now = datetime.now(pacific_time)
     # print(now)
 
-    print(Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all())
+    notifs_to_send = []
+    notifications = Notification.query.all()
+    for notification in notifications:
+        next_date = notification.last_sent + timedelta(days=notification.exercise.frequency)
+        if next_date < current:
+            notifs_to_send.append(notification)
+    print(notifs_to_send)
+    return notifs_to_send
 
-    return Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all()
+    # print(Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all())
+
+    # return Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all()
 
     # Handle first notif - OR last_sent None? 
     
     # 11:59 pm Day 0   11/27
     # Day 1   date   12:00   11/28
 
-    # default last_sent at creation of notification
+    # default last_sent at creation of notification?
 
 
 def get_notifications_to_send_for_test(current):
