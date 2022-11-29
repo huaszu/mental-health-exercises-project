@@ -322,6 +322,34 @@ def get_notifications_to_send(current):
     # default last_sent at creation of notification
 
 
+def get_notifications_to_send_for_test(current):
+    """Return notifications to deliver for testing purposes."""
+
+    # get list of all notifications
+    # for each notification:
+    #   Check if that particular notification needs to be sent
+    #   get the date that this particular notification was LAST sent on
+    #   calculate the nextDate (when it should go out)
+    #   if nextDate < current:
+    #       include that notification in the list
+    #   compare that date to the current time
+    #   Add to a list if so
+    # Return all notifications in the list
+
+    notifs_to_send = []
+    notifications = Notification.query.all()
+    for notification in notifications:
+        next_date = notification.last_sent + timedelta(seconds=notification.exercise.frequency)
+        if next_date < current:
+            notifs_to_send.append(notification)
+    print(notifs_to_send)
+    return notifs_to_send
+
+    #print(Notification.query.filter((current - Notification.last_sent) > timedelta(seconds=Exercise.frequency)).all())
+
+    #return Notification.query.filter((current - Notification.last_sent) > timedelta(seconds=Exercise.frequency)).all()
+
+
 def get_subscriptions_from_notification(notification):
     """Return push subscriptions of user to whom notification belongs."""
 

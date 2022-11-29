@@ -28,8 +28,16 @@ push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
+# If timer on task > update period, e.g., 
+
+# task runs every 2 min      say every 10 sec 
+# the notif should send every 5 min
+# on some task runs, i should not get a notif
+# does it know when to ignore 
+
+
 def send_push():
-    """Push next notification of each notification in input notifications."""
+    """Push next notification of each notification whose time is due."""
 
     # A current timestamp at the start of each time that this function runs, 
     # which is more organized than creating different timestamps throughout
@@ -82,79 +90,138 @@ def send_push():
     # return
 
 
+def send_push_for_test():
+    """Push next notification of each notification whose time is due, for testing purposes."""
+
+    # A current timestamp at the start of each time that this function runs, 
+    # which is more organized than creating different timestamps throughout
+    # various parts of the code within this function.  In one run of this job, 
+    # all notifications evaluated within the job are evaluated against the 
+    # same timestamp. 
+    pacific_time = pytz.timezone("America/Los_Angeles")
+    current = datetime.now(pacific_time)
+    print(current)
+
+    notifications_to_send = crud.get_notifications_to_send_for_test(current)
+    print(notifications_to_send)
+
+    for notification in notifications_to_send:
+        user = notification.user
+        exercise = notification.exercise
+        print("\n\n\n\n", "LOOK HERE", notification, user, exercise)
+
+        subscriptions = crud.get_subscriptions_from_notification(notification)
+        print(subscriptions)
+        for subscription in subscriptions:
+            result = "OK"
+            print(f"\n\n\n\n{result}")
+
+            try:
+                webpush(
+                    subscription_info = json.loads(subscription.subscription_json), 
+                    data = json.dumps({"title": f"*\O/* Ahoy, {user.first_name}",
+                                       "body": f"Time to do {exercise.title} CURRENT: {current}"}),
+                    vapid_private_key = push_API_private_key, 
+                    vapid_claims = {"sub": push_API_subject}
+                )
+            except WebPushException as ex:
+                print(ex, repr(ex))
+                if ex.response and ex.response.json():
+                    extra = ex.response.json()
+                    print("Remote service replied with a {}:{}, {}",
+                        extra.code,
+                        extra.errno,
+                        extra.message)
+                result = "FAILED"
+
+            print("ending result:", result)
+        
+        notification.last_sent = current
+        db.session.commit()
+
+    print("Job succeeded")
+
+
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=send_push, 
+#                   trigger="interval", 
+#                   seconds=60)
+# scheduler.start()
+
+# For testing:
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=send_push, 
+scheduler.add_job(func=send_push_for_test, 
                   trigger="interval", 
-                  kwargs={'notifications': crud.get_notifications_to_send()},
-                  seconds=60)
+                  seconds=30)
 scheduler.start()
 
 
-# This function can take in 1) a dictionary having users as keys and each 
-# value is a set of exercises about which that user should be notified, 
-# and 2) a dictionary having users as keys and each value is a set of 
-# PushSubscription objects associated with that user.  We use 1) to customize 
-# content in the notification and 2) to deliver the notification.
-# Alternative: Take in one dictionary where each key is a user and the value 
-# of each key is another dictionary, where one key is "exercises", with 
-# value as set of exercises, and another key is "subscriptions", with value
-# as set of subscriptions.  
-# Expect that a user will usually be associated with one subscription.  An 
-# edge case is that a user has multiple subscriptions, if the user has logged 
-# in on multiple browsers. 
-def push_on_schedule():
-    """Create a push notification."""
+# # Deprecated
+# # This function can take in 1) a dictionary having users as keys and each 
+# # value is a set of exercises about which that user should be notified, 
+# # and 2) a dictionary having users as keys and each value is a set of 
+# # PushSubscription objects associated with that user.  We use 1) to customize 
+# # content in the notification and 2) to deliver the notification.
+# # Alternative: Take in one dictionary where each key is a user and the value 
+# # of each key is another dictionary, where one key is "exercises", with 
+# # value as set of exercises, and another key is "subscriptions", with value
+# # as set of subscriptions.  
+# # Expect that a user will usually be associated with one subscription.  An 
+# # edge case is that a user has multiple subscriptions, if the user has logged 
+# # in on multiple browsers. 
+# def push_on_schedule():
+#     """Create a push notification."""
 
-    # Get subscriber
-    # sub = json.loads(request.form["sub"])
+#     # Get subscriber
+#     # sub = json.loads(request.form["sub"])
 
-    sub = crud.get_subscription_by_id(3).subscription_json
-    # print(f"\n\n\n\n{sub}")
-    # print(type(sub))
+#     sub = crud.get_subscription_by_id(3).subscription_json
+#     # print(f"\n\n\n\n{sub}")
+#     # print(type(sub))
 
-    # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
-#     webpush(
-#   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
-#     url = urlparse(subscription_info.get('endpoint'))
-# AttributeError: 'str' object has no attribute 'get'`
+#     # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
+# #     webpush(
+# #   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
+# #     url = urlparse(subscription_info.get('endpoint'))
+# # AttributeError: 'str' object has no attribute 'get'`
 
-    # Test push notification
-    result = "OK"
-    print(f"\n\n\n\n{result}")
+#     # Test push notification
+#     result = "OK"
+#     print(f"\n\n\n\n{result}")
 
-    try:
-        webpush(
-            subscription_info = json.loads(sub), 
-            data = json.dumps({"title": "*\O/* Ahoy",
-                               "body": "A notification will look like this one."}),
-            # data = json.dumps({"title": "Test /push route",
-            #                    "body": "Yes, it works"}),
-            vapid_private_key = push_API_private_key, 
-            vapid_claims = {"sub": push_API_subject}
-        )
-    except WebPushException as ex:
-        print(ex, repr(ex))
-        if ex.response and ex.response.json():
-            extra = ex.response.json()
-            print("Remote service replied with a {}:{}, {}",
-                  extra.code,
-                  extra.errno,
-                  extra.message)
-        result = "FAILED"
+#     try:
+#         webpush(
+#             subscription_info = json.loads(sub), 
+#             data = json.dumps({"title": "*\O/* Ahoy",
+#                                "body": "A notification will look like this one."}),
+#             # data = json.dumps({"title": "Test /push route",
+#             #                    "body": "Yes, it works"}),
+#             vapid_private_key = push_API_private_key, 
+#             vapid_claims = {"sub": push_API_subject}
+#         )
+#     except WebPushException as ex:
+#         print(ex, repr(ex))
+#         if ex.response and ex.response.json():
+#             extra = ex.response.json()
+#             print("Remote service replied with a {}:{}, {}",
+#                   extra.code,
+#                   extra.errno,
+#                   extra.message)
+#         result = "FAILED"
 
-    # print(result)
+#     # print(result)
 
-    return result
+#     return result
 
-    # To handle first notif: For users who have subscriptions, scheduled task can check for if (gap between now and time_completed exercise) > frequency
-    # time_completed_exercise is on response - go through prompt to get to exercise
-    # Does user have to have completed an exercise to get notifs?  If no - record subscription creation time and use that time to help make first notif
-    # How about I edit so that complete an exercise -> redirect back to not filled out exercise page and then show enable push messaging button
-    # Or at response creation - see below
+#     # To handle first notif: For users who have subscriptions, scheduled task can check for if (gap between now and time_completed exercise) > frequency
+#     # time_completed_exercise is on response - go through prompt to get to exercise
+#     # Does user have to have completed an exercise to get notifs?  If no - record subscription creation time and use that time to help make first notif
+#     # How about I edit so that complete an exercise -> redirect back to not filled out exercise page and then show enable push messaging button
+#     # Or at response creation - see below
 
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=push_on_schedule, trigger="interval", seconds=60)
-# scheduler.start()
+# # scheduler = BackgroundScheduler()
+# # scheduler.add_job(func=push_on_schedule, trigger="interval", seconds=60)
+# # scheduler.start()
 
 @app.route("/")
 def show_homepage():
@@ -498,6 +565,7 @@ def initiate_push():
     # Is subscription unique for every user for every time user permits push
     # notifications from not having permitted them?
 
+    print("INSIDE PUSH SUBSCRIPTIONS")
     user_id = session["user_id"]
     user = crud.get_user_by_id(user_id)
 

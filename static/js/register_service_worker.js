@@ -166,6 +166,8 @@ function subscribeUser(swRegistration,
 
     console.log('function subscribeUser() about to run');
 
+
+    function finishSubscription() {                
     // FILL IN COMMENT ON WHY APPSERVERKEY COMES IN AS B64
     const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
     // console.log(applicationServerKey);
@@ -281,6 +283,8 @@ function subscribeUser(swRegistration,
         // earlier ones, leading back to the original global scope call.
         console.log(err.stack);
     });
+    };
+    setTimeout(finishSubscription, 4000);
 }
 
 // Register service worker
