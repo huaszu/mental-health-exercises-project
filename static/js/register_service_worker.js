@@ -168,121 +168,121 @@ function subscribeUser(swRegistration,
 
 
     function finishSubscription() {                
-    // FILL IN COMMENT ON WHY APPSERVERKEY COMES IN AS B64
-    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-    // console.log(applicationServerKey);
+        // FILL IN COMMENT ON WHY APPSERVERKEY COMES IN AS B64
+        const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+        // console.log(applicationServerKey);
 
-    // The PushManager interface of the Push API provides a way to receive 
-    // notifications from third-party servers as well as request URLs for 
-    // push notifications.
-    // This interface is accessed via the ServiceWorkerRegistration.pushManager 
-    // property.
-    // https://developer.mozilla.org/en-US/docs/Web/API/PushManager
+        // The PushManager interface of the Push API provides a way to receive 
+        // notifications from third-party servers as well as request URLs for 
+        // push notifications.
+        // This interface is accessed via the ServiceWorkerRegistration.pushManager 
+        // property.
+        // https://developer.mozilla.org/en-US/docs/Web/API/PushManager
 
-    // The subscribe() method of the PushManager interface subscribes to a 
-    // push service.
-    // It returns a Promise that resolves to a PushSubscription object containing 
-    // details 
+        // The subscribe() method of the PushManager interface subscribes to a 
+        // push service.
+        // It returns a Promise that resolves to a PushSubscription object containing 
+        // details 
 
-                        // WHAT DETAILS, incl API endpoint?
+                            // WHAT DETAILS, incl API endpoint?
 
-    // of a push subscription. A new push subscription is created if the 
-    // current service worker does not have an existing subscription.  
-    // https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe
+        // of a push subscription. A new push subscription is created if the 
+        // current service worker does not have an existing subscription.  
+        // https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe
 
-    // Side effect of subscribe(): request permission from user to show
-    // push notifications, if user has not already given permission.
+        // Side effect of subscribe(): request permission from user to show
+        // push notifications, if user has not already given permission.
 
-    // When accepted, the permission works for both notifications and push.
-    // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
+        // When accepted, the permission works for both notifications and push.
+        // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
 
-    // Hurrah, tested that this side effect is true!  We do not rely on this
-    // side effect though because we have code to intentionally ask user for
-    // permission.
-    // TEST WHAT HAPPENS IF USER CLICKS BLOCK.  ARE THERE PROBLEMS W USING APP?
-    swRegistration.pushManager.subscribe({
+        // Hurrah, tested that this side effect is true!  We do not rely on this
+        // side effect though because we have code to intentionally ask user for
+        // permission.
+        // TEST WHAT HAPPENS IF USER CLICKS BLOCK.  ARE THERE PROBLEMS W USING APP?
+        swRegistration.pushManager.subscribe({
 
-        // userVisibleOnly is a boolean indicating that the returned 
-        // push subscription will only be used for messages whose effect 
-        // is made visible to the user.
-        userVisibleOnly: true,
+            // userVisibleOnly is a boolean indicating that the returned 
+            // push subscription will only be used for messages whose effect 
+            // is made visible to the user.
+            userVisibleOnly: true,
 
-        // applicationServerKey is a Base64-encoded string or ArrayBuffer 
-        // containing an ECDSA P-256 public key that the push server will use 
-        // to authenticate the application server. If specified, all messages 
-        // from the application server must use the VAPID authentication scheme, 
-        // and include a JSON Web Token signed with the corresponding private key. This 
-        // key IS NOT the same ECDH key used to encrypt the data.
-        // This parameter is required in some browsers, including Chrome and Edge.
-        applicationServerKey: applicationServerKey
-    })
+            // applicationServerKey is a Base64-encoded string or ArrayBuffer 
+            // containing an ECDSA P-256 public key that the push server will use 
+            // to authenticate the application server. If specified, all messages 
+            // from the application server must use the VAPID authentication scheme, 
+            // and include a JSON Web Token signed with the corresponding private key. This 
+            // key IS NOT the same ECDH key used to encrypt the data.
+            // This parameter is required in some browsers, including Chrome and Edge.
+            applicationServerKey: applicationServerKey
+        })
 
-    // The subscribe() method returns a Promise that resolves to a 
-    // PushSubscription object, containing details of a push subscription. 
-    // A new push subscription is created if the current service worker 
-    // does not have an existing subscription.
-    .then((subscription) => {
-        console.log('ヽ(^o^)丿 User is subscribed.');
+        // The subscribe() method returns a Promise that resolves to a 
+        // PushSubscription object, containing details of a push subscription. 
+        // A new push subscription is created if the current service worker 
+        // does not have an existing subscription.
+        .then((subscription) => {
+            console.log('ヽ(^o^)丿 User is subscribed.');
 
-        // fetch('/push', { method:"POST" })
-        //     .then((res) => res.text())
-        //     .then((txt) => console.log(txt))
-        //     .catch((err) => console.error(err))
-        // The '/push' route shows a notification to the user, but we have no 
-        // record associating this notification to the user in the db.  We 
-        // want the db to record this first "test" notification so that we 
-        // populate a Notification record with last_sent of when this 
-        // notification was sent, which helps us to know when to send future
-        // notifications in this series.  To stay organized, we want the 
-        // order so that a Subscription record is made in the db, which the
-        // subsequent running of the 
-        // updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) function 
-        // achieves.  Then we create a Notification record, populated with the
-        // data we want. 
+            // fetch('/push', { method:"POST" })
+            //     .then((res) => res.text())
+            //     .then((txt) => console.log(txt))
+            //     .catch((err) => console.error(err))
+            // The '/push' route shows a notification to the user, but we have no 
+            // record associating this notification to the user in the db.  We 
+            // want the db to record this first "test" notification so that we 
+            // populate a Notification record with last_sent of when this 
+            // notification was sent, which helps us to know when to send future
+            // notifications in this series.  To stay organized, we want the 
+            // order so that a Subscription record is made in the db, which the
+            // subsequent running of the 
+            // updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) function 
+            // achieves.  Then we create a Notification record, populated with the
+            // data we want. 
 
-        // CLARIFICATION TO COME ON WHAT THIS RETURNS, SHOULD BE IN JSON since later we do response.json()
-        return updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId);
+            // CLARIFICATION TO COME ON WHAT THIS RETURNS, SHOULD BE IN JSON since later we do response.json()
+            return updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId);
 
-    })
+        })
 
-    .then((response) => {
+        .then((response) => {
 
-        // The ok read-only property of the Response interface contains 
-        // a Boolean stating whether the response was successful (status in 
-        // the range 200-299) or not.
-        // https://developer.mozilla.org/en-US/docs/Web/API/Response/ok
-        if (!response.ok) {
+            // The ok read-only property of the Response interface contains 
+            // a Boolean stating whether the response was successful (status in 
+            // the range 200-299) or not.
+            // https://developer.mozilla.org/en-US/docs/Web/API/Response/ok
+            if (!response.ok) {
 
-            // The throw statement throws a user-defined exception. Execution 
-            // of the current function will stop (the statements after throw 
-            // won't be executed), and control will be passed to the first catch 
-            // block in the call stack. If no catch block exists among caller 
-            // functions, the program will terminate.
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw
-            throw new Error(':@ Bad status code from server.');
-        }
-        return response.json(); // Return a promise that resolves with the 
-        // result of parsing the body text as JSON, i.e., of taking JSON as 
-        // input and parsing it to produce a JavaScript object.
-    })
-
-    .then((responseData) => {
-        console.log(responseData);
-            // if the route /api/push-subscriptions returns a "status" that is not "success":
-            if (responseData.status!=="success") {
-                throw new Error('v.v Bad response from server.');
+                // The throw statement throws a user-defined exception. Execution 
+                // of the current function will stop (the statements after throw 
+                // won't be executed), and control will be passed to the first catch 
+                // block in the call stack. If no catch block exists among caller 
+                // functions, the program will terminate.
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw
+                throw new Error(':@ Bad status code from server.');
             }
-    })
-  
-    .catch((err) => {
-        console.log(';_; Failed to subscribe the user: ', err);
+            return response.json(); // Return a promise that resolves with the 
+            // result of parsing the body text as JSON, i.e., of taking JSON as 
+            // input and parsing it to produce a JavaScript object.
+        })
 
-        // The stack property of Error objects offer a trace of which functions 
-        // were called, in what order, from which line and file, and with what 
-        // arguments. The stack string proceeds from the most recent calls to 
-        // earlier ones, leading back to the original global scope call.
-        console.log(err.stack);
-    });
+        .then((responseData) => {
+            console.log(responseData);
+                // if the route /api/push-subscriptions returns a "status" that is not "success":
+                if (responseData.status!=="success") {
+                    throw new Error('v.v Bad response from server.');
+                }
+        })
+    
+        .catch((err) => {
+            console.log(';_; Failed to subscribe the user: ', err);
+
+            // The stack property of Error objects offer a trace of which functions 
+            // were called, in what order, from which line and file, and with what 
+            // arguments. The stack string proceeds from the most recent calls to 
+            // earlier ones, leading back to the original global scope call.
+            console.log(err.stack);
+        });
     };
     setTimeout(finishSubscription, 4000);
 }

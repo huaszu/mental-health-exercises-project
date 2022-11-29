@@ -148,11 +148,18 @@ def send_push_for_test():
 #                   seconds=60)
 # scheduler.start()
 
-# For testing:
+# For testing job at interval of 30 seconds:
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=send_push_for_test, 
+#                   trigger="interval", 
+#                   seconds=30)
+# scheduler.start()
+
+# For testing job at interval of 10 seconds:
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=send_push_for_test, 
                   trigger="interval", 
-                  seconds=30)
+                  seconds=10)
 scheduler.start()
 
 
@@ -402,21 +409,12 @@ def show_exercise(exercise_id):
 def save_user_responses(exercise_id):
     """Create a new group of saved responses for the user for the exercise."""
     
+    # User would only get routed here if the user is logged in because of the 
+    # way static/js/alert_save_responses.js works.
+    
     # prompts = crud.get_prompts_by_exercise(exercise_id)
 
-    # Is there a way to write this function without the if, if we set it up
-    # so that a user would only get routed here if the user is logged in
-    # already?  Tangled with what my AJAX problem wants to solve
-
     print("\n\n\n\nWhat is request.json?", request.json)
-
-    # destructure dictionary
-
-    # print(request.json.get(""))
-    # print and see what dict looks like
-
-    # if "user_id" in session:
-        # Save data to user
     
     pacific_time = pytz.timezone("America/Los_Angeles")
     time_completed_exercise = datetime.now(pacific_time)
@@ -437,14 +435,6 @@ def save_user_responses(exercise_id):
         db.session.add(response)
     
     db.session.commit()
-
-    # Check if user has subscription -> add a notif for future OR alternative
-    # see above in scheduled task function
-    # One scheduled task that seeds notifs and another scheduled task for sending them
-    # first_send in notifs table <- if first_send today, then send today
-
-    # Schedule task: You have a subscription, you completed exercise on this day, generate a future first notif
-    # Another schedule task: send first notifs - only want the day - if today == the day
 
     return redirect("/users/my_exercises") 
     
@@ -609,56 +599,6 @@ def initiate_push():
     return jsonify({
         "status": "success"
     })
-
-
-# @app.route("/push", methods=["POST"])
-# def push():
-#     """Spawn a push notification."""
-
-#     # Get subscriber
-#     # sub = json.loads(request.form["sub"])
-
-#     sub = crud.get_subscription_by_id(1).subscription_json # Hard-coded a specific subscription id that was known to exist for testing
-#     # print(f"\n\n\n\n{sub}")
-#     # print(type(sub))
-
-#     # Will have to do json.loads(sub) because of error `  File "/Users/hsy/src/mental-health-exercises-project/server.py", line 341, in push
-# #     webpush(
-# #   File "/Users/hsy/src/mental-health-exercises-project/env/lib/python3.10/site-packages/pywebpush/__init__.py", line 447, in webpush
-# #     url = urlparse(subscription_info.get('endpoint'))
-# # AttributeError: 'str' object has no attribute 'get'`
-
-#     # Test push notification
-#     result = "OK"
-#     print(f"\n\n\n\n{result}")
-
-#     try:
-#         webpush(
-#             subscription_info = json.loads(sub), 
-#             data = json.dumps({"title": "*\O/* Ahoy",
-#                                "body": "A notification will look like this one."}),
-#             # data = json.dumps({"title": "Test /push route",
-#             #                    "body": "Yes, it works"}),
-#             vapid_private_key = push_API_private_key, 
-#             vapid_claims = {"sub": push_API_subject}
-#         )
-#     except WebPushException as ex:
-#         print(ex, repr(ex))
-#         if ex.response and ex.response.json():
-#             extra = ex.response.json()
-#             print("Remote service replied with a {}:{}, {}",
-#                   extra.code,
-#                   extra.errno,
-#                   extra.message)
-#         result = "FAILED"
-
-#     # print(result)
-
-#     return result
-
-
-# Remember to send notifs through subscription to user(s), as in, for this subscription, 
-# which of the associated users should get a notif today
 
 
 if __name__ == "__main__":
