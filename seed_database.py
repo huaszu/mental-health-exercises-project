@@ -124,36 +124,36 @@ for exercise in Exercise.query.all():
 model.db.session.commit()
 
 
-# Create 2 test responses for each prompt of each exercise. 
+# # Create 2 test responses for each prompt of each exercise. 
 
-respondents = User.query.filter(User.is_consumer == True).all()
+# respondents = User.query.filter(User.is_consumer == True).all()
 
-for exercise in Exercise.query.all():
-    pacific_time = pytz.timezone("America/Los_Angeles")
-    time_completed_exercise = datetime.now(pacific_time)
+# for exercise in Exercise.query.all():
+#     pacific_time = pytz.timezone("America/Los_Angeles")
+#     time_completed_exercise = datetime.now(pacific_time)
 
-    for prompt in exercise.prompts:
-        # print("prompt:", prompt)
-        # response_content1 = "Response"
-        response_content = "Response"
-        # prompt1 = prompt
-        user1 = choice(respondents)
+#     for prompt in exercise.prompts:
+#         # print("prompt:", prompt)
+#         # response_content1 = "Response"
+#         response_content = "Response"
+#         # prompt1 = prompt
+#         user1 = choice(respondents)
 
-        response1 = crud.create_response(response_content=response_content, 
-                                         prompt=prompt, 
-                                         user=user1,
-                                         time_completed_exercise=time_completed_exercise)
+#         response1 = crud.create_response(response_content=response_content, 
+#                                          prompt=prompt, 
+#                                          user=user1,
+#                                          time_completed_exercise=time_completed_exercise)
 
-        user2 = choice(respondents) # It is possible for the same user to have multiple responses to the same prompt, from doing that exercise on different occasions.
+#         user2 = choice(respondents) # It is possible for the same user to have multiple responses to the same prompt, from doing that exercise on different occasions.
 
-        response2 = crud.create_response(response_content=response_content, 
-                                         prompt=prompt, 
-                                         user=user2,
-                                         time_completed_exercise=time_completed_exercise)
+#         response2 = crud.create_response(response_content=response_content, 
+#                                          prompt=prompt, 
+#                                          user=user2,
+#                                          time_completed_exercise=time_completed_exercise)
 
 
-    model.db.session.add_all([response1, response2])
-    model.db.session.commit()
+#     model.db.session.add_all([response1, response2])
+#     model.db.session.commit()
 
 #Print out all of that user's prompts and responses
 # Show surveys user has responded to - viewing responses

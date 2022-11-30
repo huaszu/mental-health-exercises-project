@@ -5,7 +5,17 @@
 // necessary and spawn first notification via 
 // route /api/push-subscriptions
 
-const pushButton = document.querySelector('#push'); 
+// try {
+//     const pushButton = document.querySelector('#push'); 
+//     pushButton.addEventListener('click', (evt) => {enablePush()});
+// } catch (error) {
+//     console.error('HTML elements do not have element with id #push', error);
+// }
+
+if (document.querySelector('#push') !== null) {
+    const pushButton = document.querySelector('#push'); 
+    pushButton.addEventListener('click', (evt) => {enablePush()});
+}
 
 function enablePush() {
     console.log('hello');
@@ -45,7 +55,6 @@ function enablePush() {
     }
 };
 
-pushButton.addEventListener('click', (evt) => {enablePush()});
 
 // Removed from end of block js in exercise_details.html: 
 // <script type="text/javascript">
@@ -59,6 +68,7 @@ pushButton.addEventListener('click', (evt) => {enablePush()});
 // Within the function registerServiceWorker(), we call the function 
 // subscribeUser().  Within subscribeUser(), we call the functions
 // urlB64ToUint8Array() and updateSubscriptionOnServer(). 
+
 
 function registerServiceWorker(serviceWorkerUrl, 
                                applicationServerPublicKey, 
@@ -136,6 +146,7 @@ function urlB64ToUint8Array(base64String) {
     return outputArray;
 }
 
+
 // Send subscription to application server
 // POSTs subscription_json to API endpoint
 function updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) {
@@ -163,6 +174,7 @@ function updateSubscriptionOnServer(subscription, apiEndpoint, exerciseId) {
 // Goal: Send a notification that is associated to a subscription and record
 // this notification as the first notification in a notification series in the 
 // db.  Before doing so, we want the subscription to exist in the db first.
+
 
 // Subscribe user to subscription
 function subscribeUser(swRegistration, 
@@ -291,6 +303,7 @@ function subscribeUser(swRegistration,
     };
     setTimeout(finishSubscription, 4000);
 }
+
 
 // Register service worker
 

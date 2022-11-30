@@ -7,7 +7,6 @@ seed_experts = {
         }
     }
 
-
 seed_exercise_details = {
     "Dare to Lead: Am I ready to give feedback?": {
         "description": "Sometimes speaking the truth feels as if we are being unkind, especially when sharing difficult information or feedback. But in reality, dancing around the truth is unkind. When we avoid stating the truth - when we are vague or ambiguous under the guise of being kind — it is often because we are trying to lessen the discomfort for ourselves, not for the other person.",
