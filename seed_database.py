@@ -53,10 +53,16 @@ for n in range(10):
     model.db.session.add(user)
 model.db.session.commit()
 
+# Create renowned experts and author their exercises.
 
-# Create renowned experts.
+prompt_types = ["short answer", 
+        "long answer", 
+        "multiple choice - choose one", 
+        "multiple choice - choose multiple"]
 
-for name in seed_experts:
+for name, val in seed_experts.items(): # val is a dict with key "exercises" and value being a dict
+    # Create renowned experts.
+
     # .split() splits on whitespace by default
     split_name = name.split()
     email_local_part = "".join(split_name) # e.g., Brené Brown's email_local_part is BrenéBrown
@@ -77,51 +83,43 @@ for name in seed_experts:
                             pen_name=pen_name)
     model.db.session.add(user)
 
-model.db.session.commit()
+    # Seed exercises, authored by users who are renowned experts. 
 
-
-# Seed exercises, authored by users who are renowned experts.  
-
-for expert, val in seed_experts.items(): # val is a dict with key "exercises" and value being a dict
     for exercise_title in val["exercises"]: # val["exercises"] is a list of exercise titles
         title = exercise_title
         description = seed_exercise_details[exercise_title]["description"] # seed_exercise_details[exercise_title] is a dict containing keys of "description", "frequency", "time_limit_per_sitting", and "prompts"
         frequency = int(seed_exercise_details[exercise_title]["frequency"])
         time_limit_per_sitting = int(seed_exercise_details[exercise_title]["time_limit_per_sitting"])
-        author = User.query.filter(User.pen_name == expert).first()
+        author = User.query.filter(User.pen_name == name).first()
 
         exercise = crud.create_exercise(title=title, 
                                         description=description, 
                                         frequency=frequency, 
                                         time_limit_per_sitting=time_limit_per_sitting,
                                         author=author)
+        # Alternative: Add exercise to list and loop over that list.  Do not do `for exercise in Exercise.query.all()` later
 
         model.db.session.add(exercise)
 
-model.db.session.commit()
+        # Create prompts for every seed exercise.
 
+        prompt_type = "long answer"
 
-# Create prompts for every seed exercise.
+        # seed_exercise_details[exercise.title] is a dict containing keys of "description", "frequency", "time_limit_per_sitting", and "prompts"
+        for prompt_str in seed_exercise_details[exercise.title]["prompts"]: # seed_exercise_details[exercise.title]["prompts"] is a list of strings that are prompts
+            prompt_content = prompt_str
 
-prompt_types = ["short answer", 
-                "long answer", 
-                "multiple choice - choose one", 
-                "multiple choice - choose multiple"]
-
-for exercise in Exercise.query.all():
-    prompt_type = "long answer"
-
-    # seed_exercise_details[exercise.title] is a dict containing keys of "description", "frequency", "time_limit_per_sitting", and "prompts"
-    for prompt_str in seed_exercise_details[exercise.title]["prompts"]: # seed_exercise_details[exercise.title]["prompts"] is a list of strings that are prompts
-        prompt_content = prompt_str
-
-        prompt = crud.create_prompt(prompt_content=prompt_content, 
-                                    prompt_type=prompt_type, 
-                                    exercise=exercise)
-        
-        model.db.session.add(prompt)
+            prompt = crud.create_prompt(prompt_content=prompt_content, 
+                                        prompt_type=prompt_type, 
+                                        exercise=exercise)
+            
+            model.db.session.add(prompt)
 
 model.db.session.commit()
+# Commit takes a long time so better to commit once outside loop 
+
+# Can make helper fn inside loop if code unwieldy
+
 
 
 # # Create 2 test responses for each prompt of each exercise. 
@@ -159,4 +157,3 @@ model.db.session.commit()
 # Show surveys user has responded to - viewing responses
 # Making responses
 # Creating forms
-
