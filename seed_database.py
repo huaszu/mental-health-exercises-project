@@ -6,6 +6,7 @@ from random import choice, randint
 from datetime import datetime
 import pytz
 import re
+from data.exercises import seed_experts, seed_exercise_details
 
 from flask_sqlalchemy import SQLAlchemy # Can I add these here?
 from model import User, Exercise, Prompt
@@ -50,71 +51,77 @@ for n in range(10):
                             is_consumer=is_consumer,
                             pen_name=pen_name)
     model.db.session.add(user)
-    model.db.session.commit()
+model.db.session.commit()
 
 
-# Create test exercises, authored by test users who are experts.  
+# Create renowned experts.
 
-# Have one expert who has not authored any exercise.  Implies that user sets
-# their ability to be an expert at the outset, instead of automatically
-# turning on is_expert == True when a user creates an exercise ?!
+for name in seed_experts:
+    # .split() splits on whitespace by default
+    split_name = name.split()
+    email_local_part = "".join(split_name) # e.g., Brené Brown's email_local_part is BrenéBrown
+    email = email_local_part + "@test.com"
+    password = "test"
+    first_name = split_name[0]
+    last_name = split_name[1]
+    pen_name = name
+    is_expert = True
+    is_consumer = True
 
-exercise_frequencies = [1, 7, 14, 30]
-time_limits = [None, 10, 20, 30]
-expert_count = len(User.query.filter(User.is_expert == True).all())
-experts_having_exercise_count = expert_count - 1
-# print("EXPERTS HAVING EXERCISE:", experts_having_exercise) # 6
-# Idea: Could distinguish between expert and author, i.e., if a user has 
-# created an exercise, user could become author as well.
+    user = crud.create_user(email=email, 
+                            password=password, 
+                            first_name=first_name,
+                            last_name=last_name,
+                            is_expert=is_expert,
+                            is_consumer=is_consumer,
+                            pen_name=pen_name)
+    model.db.session.add(user)
 
-experts_having_exercise = User.query.filter(User.is_expert == True).limit(experts_having_exercise_count).all()
-
-# Note: Each expert who has an exercise has exactly one exercise for now:
-for user in experts_having_exercise:
-# Beware of namespace and scoping.  Note that we have imported crud and model.  Can we use `user` here?
-    title = f"Title{experts_having_exercise.index(user)}"
-    description = "Description"
-    frequency = choice(exercise_frequencies)
-    time_limit_per_sitting = choice(time_limits)
-    author = user
-    # print("author:", author)
-
-    exercise = crud.create_exercise(title=title, 
-                                    description=description, 
-                                    frequency=frequency, 
-                                    time_limit_per_sitting=time_limit_per_sitting,
-                                    author=author)
-    model.db.session.add(exercise)
-    model.db.session.commit()
+model.db.session.commit()
 
 
-# Create test prompts, within test exercises.
+# Seed exercises, authored by users who are renowned experts.  
+
+for expert, val in seed_experts.items(): # val is a dict with key "exercises" and value being a dict
+    for exercise_title in val["exercises"]: # val["exercises"] is a list of exercise titles
+        title = exercise_title
+        description = seed_exercise_details[exercise_title]["description"] # seed_exercise_details[exercise_title] is a dict containing keys of "description", "frequency", "time_limit_per_sitting", and "prompts"
+        frequency = int(seed_exercise_details[exercise_title]["frequency"])
+        time_limit_per_sitting = int(seed_exercise_details[exercise_title]["time_limit_per_sitting"])
+        author = User.query.filter(User.pen_name == expert).first()
+
+        exercise = crud.create_exercise(title=title, 
+                                        description=description, 
+                                        frequency=frequency, 
+                                        time_limit_per_sitting=time_limit_per_sitting,
+                                        author=author)
+
+        model.db.session.add(exercise)
+
+model.db.session.commit()
+
+
+# Create prompts for every seed exercise.
 
 prompt_types = ["short answer", 
                 "long answer", 
                 "multiple choice - choose one", 
                 "multiple choice - choose multiple"]
 
-# Let's give 2 prompts to every exercise.
 for exercise in Exercise.query.all():
-    prompt_content1 = "Prompt"
-    prompt_type1 = choice(prompt_types)
-    exercise = exercise
+    prompt_type = "long answer"
 
-    prompt1 = crud.create_prompt(prompt_content=prompt_content1, 
-                                prompt_type=prompt_type1, 
-                                exercise=exercise)
+    # seed_exercise_details[exercise.title] is a dict containing keys of "description", "frequency", "time_limit_per_sitting", and "prompts"
+    for prompt_str in seed_exercise_details[exercise.title]["prompts"]: # seed_exercise_details[exercise.title]["prompts"] is a list of strings that are prompts
+        prompt_content = prompt_str
 
-    prompt_content2 = "Prompt"
-    prompt_type2 = choice(prompt_types)
-    exercise = exercise
+        prompt = crud.create_prompt(prompt_content=prompt_content, 
+                                    prompt_type=prompt_type, 
+                                    exercise=exercise)
+        
+        model.db.session.add(prompt)
 
-    prompt2 = crud.create_prompt(prompt_content=prompt_content2, 
-                                prompt_type=prompt_type2, 
-                                exercise=exercise)
-    
-    model.db.session.add_all([prompt1, prompt2])
-    model.db.session.commit()
+model.db.session.commit()
 
 
 # Create 2 test responses for each prompt of each exercise. 
@@ -153,28 +160,3 @@ for exercise in Exercise.query.all():
 # Making responses
 # Creating forms
 
-# Create renowned experts
-expert_pen_names = ["Brené Brown", ""]
-
-for name in expert_pen_names:
-    # .split() splits on whitespace by default
-    split_name = name.split()
-    email_local_part = "".join(split_name) # e.g., Brené Brown's email_local_part is BrenéBrown
-    email = email_local_part + "@test.com"
-    password = "test"
-    first_name = split_name[0]
-    last_name = split_name[1]
-    pen_name = name
-    is_expert = True
-    is_consumer = True
-
-    user = crud.create_user(email=email, 
-                            password=password, 
-                            first_name=first_name,
-                            last_name=last_name,
-                            is_expert=is_expert,
-                            is_consumer=is_consumer,
-                            pen_name=pen_name)
-    model.db.session.add(user)
-
-model.db.session.commit()
