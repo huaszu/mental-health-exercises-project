@@ -5,6 +5,7 @@ import json
 from random import choice, randint
 from datetime import datetime
 import pytz
+import re
 
 from flask_sqlalchemy import SQLAlchemy # Can I add these here?
 from model import User, Exercise, Prompt
@@ -151,3 +152,29 @@ for exercise in Exercise.query.all():
 # Show surveys user has responded to - viewing responses
 # Making responses
 # Creating forms
+
+# Create renowned experts
+expert_pen_names = ["Brené Brown", ""]
+
+for name in expert_pen_names:
+    # .split() splits on whitespace by default
+    split_name = name.split()
+    email_local_part = "".join(split_name) # e.g., Brené Brown's email_local_part is BrenéBrown
+    email = email_local_part + "@test.com"
+    password = "test"
+    first_name = split_name[0]
+    last_name = split_name[1]
+    pen_name = name
+    is_expert = True
+    is_consumer = True
+
+    user = crud.create_user(email=email, 
+                            password=password, 
+                            first_name=first_name,
+                            last_name=last_name,
+                            is_expert=is_expert,
+                            is_consumer=is_consumer,
+                            pen_name=pen_name)
+    model.db.session.add(user)
+
+model.db.session.commit()

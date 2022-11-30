@@ -1,8 +1,9 @@
 [
-    {
-
-    },
-    {
-        
+    {"title": "",
+     "description": "",
+     "frequency": 1,
+     "time_limit_per_sitting": 2,
+     "creator": "Brené Brown",
+     "prompts": ["prompt1", "prompt2"]
     }
 ]
