@@ -19,7 +19,7 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     first_name = db.Column(db.String(120), nullable=False)
     last_name = db.Column(db.String(120), nullable=False)
-    pen_name = db.Column(db.String(120), nullable=False)
+    pen_name = db.Column(db.String(120), nullable=True)
     # If we have a default pen_name, then don't exactly need nullable=True.
     # Better than having computation for if pen_name IS NULL, set default to
     # first_name?
@@ -69,7 +69,7 @@ class Prompt(db.Model):
                           autoincrement=True,
                           primary_key=True)
     prompt_content = db.Column(db.Text, nullable=False)
-    prompt_type = db.Column(db.String(120), nullable=True, default="long answer") # V0: Let's say all prompts for now get free-form text response
+    prompt_type = db.Column(db.String(120), nullable=False, default="long answer") # V0: Let's say all prompts for now get free-form text response
     # prompt_type values could be "short answer", "long answer", 
     # "multiple choice - choose one", "multiple choice - choose multiple"
     # Potentially in future: one prompt to many prompt options.  Another table
@@ -110,7 +110,7 @@ class PushSubscription(db.Model):
     id = db.Column(db.Integer,
                    autoincrement=True,
                    primary_key=True)
-    subscription_json = db.Column(db.Text, nullable=False)
+    subscription_json = db.Column(db.Text, nullable=False) # unique?
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
     user = db.relationship("User", back_populates="push_subscriptions") # A user can have many push subscriptions, for instance if the same user signs in on many different browsers
@@ -141,7 +141,7 @@ class Notification(db.Model):
     id = db.Column(db.Integer,
                    autoincrement=True,
                    primary_key=True)
-    last_sent = db.Column(db.DateTime(timezone=True), nullable=False, default=None) # don't want default?
+    last_sent = db.Column(db.DateTime(timezone=True), nullable=False) # don't want default?
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.exercise_id'), nullable=False) # unique?  no because while each user should get only one notification for one exercise, multiple users can have notification enabled for that exercise
     # freq = db.Column(db.Integer, db.ForeignKey('exercises.frequency'), nullable=False) # sqlalchemy.exc.ProgrammingError: (psycopg2.errors.InvalidForeignKey) there is no unique constraint matching given keys for referenced table "exercises" (Background on this error at: http://sqlalche.me/e/14/f405)
