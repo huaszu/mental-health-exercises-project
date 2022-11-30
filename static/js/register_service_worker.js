@@ -12,10 +12,11 @@
 //     console.error('HTML elements do not have element with id #push', error);
 // }
 
-// Store document.querySelector('#push') as variable
+// Store document.querySelector('#push') as variable.  Test for variable null
 
-if (document.querySelector('#push') !== null) {
-    const pushButton = document.querySelector('#push'); 
+const pushButton = document.querySelector('#push');
+
+if (pushButton !== null) {
     pushButton.addEventListener('click', (evt) => {enablePush()});
 }
 
