@@ -32,6 +32,7 @@ push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=send_push, 
                   trigger="interval", 
+                  id="send_push_notifs",
                   hours=8)
 scheduler.start()
 
