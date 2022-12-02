@@ -53,6 +53,10 @@ for n in range(10):
     model.db.session.add(user)
 model.db.session.commit()
 
+# Prepare list of respondents to respond to exercises to be created. 
+
+respondents = User.query.filter(User.is_consumer == True).all()
+
 # Create renowned experts and author their exercises.
 
 prompt_types = ["short answer", 
@@ -114,6 +118,29 @@ for name, val in seed_experts.items(): # val is a dict with key "exercises" and 
                                         exercise=exercise)
             
             model.db.session.add(prompt)
+
+            # Create 2 test responses for each prompt of each exercise. 
+
+            pacific_time = pytz.timezone("America/Los_Angeles")
+            time_completed_exercise = datetime.now(pacific_time)
+
+            response_content = "Response"
+
+            user1 = choice(respondents)
+            response1 = crud.create_response(response_content=response_content, 
+                                             prompt=prompt, 
+                                             user=user1,
+                                             time_completed_exercise=time_completed_exercise)
+
+            user2 = choice(respondents) # It is possible for the same user to have multiple responses to the same prompt, from doing that exercise on different occasions. 
+            response2 = crud.create_response(response_content=response_content, 
+                                             prompt=prompt, 
+                                             user=user2,
+                                             time_completed_exercise=time_completed_exercise)
+
+            model.db.session.add_all([response1, response2])
+
+            # Since we seed responses for each prompt, it is possible for a user to respond to a subset of and not all prompts within an exercise.  The same users randomly picked for one prompt may not get picked again for the next prompt of the same exercise.
 
 model.db.session.commit()
 # Commit takes a long time so better to commit once outside loop 

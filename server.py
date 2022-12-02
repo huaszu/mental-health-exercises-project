@@ -196,7 +196,8 @@ def show_user_exercises():
         user_id = session["user_id"]
 
         user = crud.get_user_by_id(user_id)
-        exercises = crud.get_exercises_of_user(user_id) # This is a list
+        exercises = crud.get_unique_exercises_of_user(user_id) # This is a set
+        # print(exercises)
 
         # for exercise in exercises:
         #     prompts = crud.get_prompts_by_exercise(exercise.exercise_id) # This is a list

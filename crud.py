@@ -113,6 +113,12 @@ def get_response_by_id(response_id):
     return ResponseToPrompt.query.get(response_id)
 
 
+def get_responses_by_user_id(user_id): # Could alternatively write function that takes in user
+    """Return responses based on user_id."""
+
+    return ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).all()
+
+
 # Take in exercise_id, user_id.  Return that user's responses to prompts for that exercise.
 
 # Should I print or get?
@@ -172,6 +178,25 @@ def get_exercises_of_user(user_id):
         exercises.append(response.prompt.exercise)
     
     return exercises # a list of exercises
+
+
+def get_unique_exercises_of_user(user_id):
+    """Get unique exercises user has responded to."""
+
+    exercises = set() # Note: exercises will be unordered!
+
+    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all() # list of responses of user
+
+    # for response in responses:
+    #     print("Exercise Title:", response.prompt.exercise.title, 
+    #           "Prompt:", response.prompt.prompt_content, 
+    #           "Response:", response.response_content)
+
+    for response in responses:
+        # print("Exercise Title:", response.prompt.exercise.title)
+        exercises.add(response.prompt.exercise)
+    
+    return exercises # a set of exercises
 
 
 # # Take in exercise, print prompts
