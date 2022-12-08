@@ -46,12 +46,13 @@
       {% for exercise in exercises %}
       <div class="col">
         
-        <div class="card my-3">
+        <div class="card my-3 text-bg-success mb-3">
           
             <div class="card-body">            
-              <h3><a href="/exercises/{{ exercise.exercise_id }}">
-                {{ exercise.title }}</a></h3>
-              <p>{{ exercise.description[:(200 - len(exercise.title))] + "..." }}</p>
+              <div><h3 class="card-title"><a href="/exercises/{{ exercise.exercise_id }}">
+                {{ exercise.title }}</a></h3></div>
+              
+              <div><p class="card-text">{{ exercise.description[:200] + "..." }}</p></div>
             </div>
           
         </div>
