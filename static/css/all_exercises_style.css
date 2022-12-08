@@ -1,0 +1,5 @@
+.card-hover:hover {
+    background-color: rgb(186, 247, 191);
+    /* border-color: #bfff97; */
+    border: dotted;
+}
