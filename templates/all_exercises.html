@@ -45,7 +45,7 @@
       <li>
         <a href="/exercises/{{ exercise.exercise_id }}">
           {{ exercise.title }}
-        <p>{{ exercise.description }}</p>
+        <p>{{ exercise.description[:100] + "..." }}</p>
         </a>
       </li>
     {% endfor %}
