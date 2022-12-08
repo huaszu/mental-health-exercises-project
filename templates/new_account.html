@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
-{% block title %}Hall of Mirrors Home{% endblock %}
+{% block title %}Create Account{% endblock %}
 
 {% block head %}
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/css/homepage_style.css">
-      <!-- Google Font -->
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,800,700,900' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block body %}
+  <h1>Welcome!</h1>
 
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -20,7 +19,7 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/exercises">All Exercises</a>
+            <a class="nav-link-active" aria-current="page" href="/exercises">All Exercises</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/users/my_exercises">My Completed Exercises</a>
@@ -29,7 +28,7 @@
 
         <ul class="navbar-nav me-2">
           <li class="nav-item me-2">
-            <a class="nav-link" href="/new_account">Create Account</a>
+            <a class="nav-link" href="#">Create Account</a>
           </li>
         </ul>
       </div>
@@ -42,26 +41,39 @@
 
       <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 left">
         <p>Reflect on Yourself and How You Coexist with the World</p>
-
+        
       </section>
 
       <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6 right">
         
           <div class="col-md-4 col-md-offset-3 sign-in-or-up-bg">
-            <h2 id="signin">Log In</h2>
-            <form action="/login" method="POST">
-              <p class="log-in-form-text">
-                Email <input class="form-control" type="text" name="email" placeholder="example@email.com">
+            <h2 id="signup">Create an Account</h2>
+            <form action="/users" method="POST">
+              <p>
+                Email* <input class="form-control" type="text" name="email" placeholder="Your Email" required>
               </p>
-  
-              <p class="log-in-form-text">
-                Password <input class="form-control" type="password" name="password" placeholder="Your Password">
+
+              <p>
+                Password* <input class="form-control" type="password" name="password" placeholder="Your Password" required>
               </p>
-  
+
+              <p>
+                First Name* <input class="form-control" type="text" name="first-name" placeholder="Your First Name" required>
+              </p>
+
+              <p>
+                Last Name* <input class="form-control" type="text" name="last-name" placeholder="Your Last Name" required>
+              </p>
+
+              <p>
+                Pen Name <input class="form-control" type="text" name="pen-name" placeholder="Your Pen Name">
+              </p>
+
               <p>
                 <input type="submit" class="btn">
               </p>
             </form>
+
 
           </div>
 

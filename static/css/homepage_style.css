@@ -18,13 +18,13 @@ body {
 .navbar {
   background: transparent;
   border: none;
-  color: #fff;
+  color: #000000;
   font-family: 'Raleway', sans-serif;
 }
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-nav li a {
-  color: #fff;
+  color: #000000;
   font-family: 'Raleway', sans-serif;
 }
 
@@ -33,15 +33,25 @@ body {
   color: #ed8429;
 }
 
+/* navbar on mobile not working */
+
 p {
-  margin-left: 150px;
-  margin-right: 150px;
+  margin-left: 10px;
+  margin-right: 10px;
   text-align: center;
   font-family: sans-serif;
-  font-weight: 100;
-  font-size: 72px;
+  /* font-weight: 100; */
+  font-weight: bold;
+  font-size: 60px;
   color: #fff;
+  /* color: #000000; */
   font-family: 'Raleway', sans-serif;
+}
+
+.log-in-form-text {
+  font-size: 40px;
+  font-weight: 400;
+  color: #fff;
 }
 
 .left {
@@ -50,6 +60,8 @@ p {
 
 form {
   margin-top: 25px;
+  text-align: center;
+  padding-left: 10px;
 }
 
 #signup {
@@ -60,7 +72,19 @@ form {
   text-align: center;
   padding-bottom: 10px;
   margin-top: 125px;
+  font-size: 60px;
 }
+
+#signin {
+  color: #ffd200;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  text-align: left;
+  padding-bottom: 10px;
+  margin-top: 125px;
+  font-size: 40px;
+  }
 
 .btn {
   margin: 25px;
@@ -97,7 +121,7 @@ input[type='password'] {
   font-size: 16px;
   text-align: center;
   font-family: 'Raleway', sans-serif;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
 input[type='submit'] {
@@ -114,4 +138,24 @@ input[type='submit'] {
 input[type='submit']:hover {
   background: #cccccc;
   animation-name: shake;
+}
+
+/* .container-fluid {
+    background: rgba(16, 10, 4, 0.6);
+    height: 90%;
+    line-height: 1.3;
+    position: fixed; */
+    /*height: 100%;*/
+    /* top: 40px;
+    bottom: 40px;
+    left: 40px;
+    right: 40px;
+  } */
+
+/* .right {
+  border: 1px dotted #fff;
+} */
+
+.sign-in-or-up-bg {
+  padding-left: 70px;
 }

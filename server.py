@@ -57,6 +57,12 @@ def show_homepage():
 
     return render_template("homepage.html")
 
+@app.route("/new_account")
+def show_create_account_page():
+    """View page to create new account."""
+
+    return render_template("new_account.html")
+
 @app.route("/exercises")
 def show_all_exercises():
     """View all exercises."""
