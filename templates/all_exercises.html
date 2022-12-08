@@ -40,14 +40,26 @@
 
   <h1>All Exercises</h1>
   
-  <ul>
-    {% for exercise in exercises %}
-      <li>
-        <a href="/exercises/{{ exercise.exercise_id }}">
-          {{ exercise.title }}
-        <p>{{ exercise.description[:100] + "..." }}</p>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+  <main class="container my-5">
+    
+    <div class="row pb-5">
+      {% for exercise in exercises %}
+      <div class="col">
+        
+        <div class="card my-3">
+          
+            <div class="card-body">            
+              <h3><a href="/exercises/{{ exercise.exercise_id }}">
+                {{ exercise.title }}</a></h3>
+              <p>{{ exercise.description[:(200 - len(exercise.title))] + "..." }}</p>
+            </div>
+          
+        </div>
+        
+      </div>
+      {% endfor %}
+    </div>
+    
+  </main>
+
 {% endblock %}
