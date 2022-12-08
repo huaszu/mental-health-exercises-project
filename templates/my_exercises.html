@@ -3,32 +3,66 @@
 {% block title %}{{ user.first_name }}'s Page{% endblock %}
 
 {% block body %}
-<h1>{{ user.first_name }}</h1>
 
-<h2>Navigation</h2>
-<ul>
-  <li><a href="/exercises">View all exercises</a></li>
-  <li><a href="/logout">Log Out</a></li>
-</ul>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="/">Hall of Mirrors</a>
+
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/exercises">All Exercises</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav me-2">
+          <li class="nav-item me-2">
+            <a class="nav-link" href="/logout">Log Out</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+<h1>{{ user.first_name }}</h1>
 
 <p>Here are all of the exercises you have completed and your past responses:</p>
 
-<ul>
-{% for exercise in exercises %}
-    <li>
-        {{ exercise.title }}
-        {% for prompt in exercise.prompts %}
-            <p>{{ prompt.prompt_content }}</p>
-            {% for response in prompt.responses %}
-                {% if response.user_id == user.user_id %}
-                    <p>{{ response.response_content }}</p>
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-        <!-- <span>
-            test
-        </span> -->
-    </li>
-{% endfor %}
-</ul>
+<div class="accordion" id="accordionExample">
+    {% for exercise in exercises %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                {{ exercise.title }}
+                </button>
+            </h2>
+
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% for prompt in exercise.prompts %}
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{ prompt.prompt_content }}</div>
+                                    {% for response in prompt.responses %}
+                                        {% if response.user_id == user.user_id %}
+                                            <p>{{ response.response_content }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <span class="badge bg-primary rounded-pill">14</span>
+                            </li>
+                        </ul>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
