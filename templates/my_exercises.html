@@ -35,8 +35,8 @@
 <div class="accordion" id="accordionExample">
     {% for exercise in exercises %}
         <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <h2 class="accordion-header" id="{{ loop.index }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                 {{ exercise.title }}
                 </button>
             </h2>
@@ -47,7 +47,7 @@
                         <ul class="list-group">
                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold">{{ prompt.prompt_content }}</div>
+                                    <div><h6>{{ prompt.prompt_content }}</h6></div>
                                     {% for response in prompt.responses %}
                                         {% if response.user_id == user.user_id %}
                                             <p>{{ response.response_content }}</p>
