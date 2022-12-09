@@ -33,8 +33,6 @@ body {
   color: #ed8429;
 }
 
-/* navbar on mobile not working */
-
 p {
   margin-left: 10px;
   margin-right: 10px;
@@ -113,7 +111,8 @@ input[type='text'],
 input[type='password'] {
   width: 350px;
   padding: 10px 0px;
-  background: transparent;
+  /* background: transparent; */
+  background-color: #00000099;
   border: 0;
   border-bottom: 1.5px solid #cccccc;
   outline: none;
@@ -125,15 +124,16 @@ input[type='password'] {
 }
 
 input[type='submit'] {
-  background: #ccc;
+  background: rgb(4, 93, 21);
   border: 0;
-  width: 350px;
+  width: 150px;
   height: 40px;
   border-radius: 0px;
   color: #fff;
   font-size: 12px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  text-align: center;
 }
 input[type='submit']:hover {
   background: #cccccc;
