@@ -1,14 +1,40 @@
 {% extends 'base.html' %}
-{% block title %}Create an Exercise{% endblock %}
+{% block title %}Create Exercise{% endblock %}
 
 {% block body %}
-  <h1>Create</h1>
 
-  <h2>Navigation</h2>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/">Hall of Mirrors</a>
 
-  <br>
-  
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/exercises">All Exercises</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/my_exercises">My Completed Exercises</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav me-2">
+        <li class="nav-item me-2">
+          <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<main class="container my-5">
+  <h1>Create an Exercise</h1>
+
   <form action="/add_exercise" method="POST">
+    
     
     <label for="title">Title of exercise:* </label>
     <input type="text" name="title" id="title" required>
@@ -37,12 +63,13 @@
     <div id="more-prompts"></div>
 
     <br>
-    <p>I want my exercise to have more prompts!</p>
-    <button type="button" id="add-prompt">Add prompt</button>
-
+    <p>I want my exercise to have more prompts!
+      <button type="button" id="add-prompt">Add prompt</button>
+    </p>
     <br>
     <button type="submit">Submit</button>
   </form>
+</main>
 {% endblock %}
 
 {% block after_body %}{% endblock %}
