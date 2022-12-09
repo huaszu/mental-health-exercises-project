@@ -34,40 +34,60 @@
   <h1>Create an Exercise</h1>
 
   <form action="/add_exercise" method="POST">
+    <div class="row mb-3">
+      <label for="inputTitle" class="col-sm-2 col-form-label">Title of exercise:*</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputTitle" name="title" required>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="description" class="col-sm-2 col-form-label">Description:*</label>
+      <div class="col-sm-10">
+        <textarea name="description" class="form-control" id="description" required></textarea>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="freq-select" class="col-sm-2 col-form-label">How often you recommend user to do this exercise:</label>
+      <div class="col-sm-10">
+        <select name="freq" class="form-control" id="freq-select">
+          <option value="1">every day</option>
+          <option value="7">once a week</option>
+          <option value="14">once every two weeks</option>
+          <option value="30">once a month</option>
+        </select>
+      </div>
+    </div>
     
+    <div class="row mb-3">
+      <label for="time-limit" class="col-sm-2 col-form-label"># of minutes for user to spend on exercise:</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="time-limit" name="time-limit" min="0">
+      </div>
+    </div>
+
+    <fieldset class="row mb-3">
+      <legend class="col-form-label col-sm-2 pt-0">TEST</legend>
+
+      <div class="row mb-3">
+        <label for="1" class="col-sm-2 col-form-label">A prompt for the user to respond to:*</label>
+        <div class="col-sm-10">
+          <textarea name="prompt" class="form-control prompt" id="1" required></textarea>
+        </div>
+      </div>
+
+      <section id="more-prompts"></section>
+
+      
+      <p>I want my exercise to have more prompts!
+        <button type="button" id="add-prompt">Add prompt</button>
+      
+      </p>
+    </fieldset>
+      
+      <button type="submit">Submit</button>
     
-    <label for="title">Title of exercise:* </label>
-    <input type="text" name="title" id="title" required>
-
-    <br>
-    <label for="description">Description:* </label>
-    <textarea name="description" id="description" required></textarea>
-    
-    <br>
-    <label for="freq-select">Choose how often you recommend a user to do this exercise: </label>
-    <select name="freq" id="freq-select">
-      <option value="1">every day</option>
-      <option value="7">once a week</option>
-      <option value="14">once every two weeks</option>
-      <option value="30">once a month</option>
-    </select>
-
-    <br>
-    <label for="time-limit">Recommend # of minutes for user to spend on exercise: </label>
-    <input type="number" name="time-limit" id="time-limit" min="0">
-
-    <br>
-    <label for="1">A prompt for the user to respond to:* </label>
-    <textarea class="prompt" name="prompt" id="1" required></textarea>
-
-    <div id="more-prompts"></div>
-
-    <br>
-    <p>I want my exercise to have more prompts!
-      <button type="button" id="add-prompt">Add prompt</button>
-    </p>
-    <br>
-    <button type="submit">Submit</button>
   </form>
 </main>
 {% endblock %}

@@ -8,9 +8,11 @@ let promptCounter = 2
 
 button.addEventListener('click', (evt) => {
     morePrompts.insertAdjacentHTML('beforeend', 
-                                   `<br><label for="${promptCounter}">
-                                   A prompt for the user to respond to: 
-                                   </label><textarea class="prompt" name=
-                                   "prompt" id="${promptCounter}"></textarea>`);
+                                   `<div class="row mb-3">
+                                        <label for="${promptCounter}" class="col-sm-2 col-form-label">A prompt for the user to respond to: 
+                                        </label>
+                                        <textarea name="prompt" class="form-control prompt" id="${promptCounter}" required>
+                                        </textarea>
+                                    </div>`);
     promptCounter += 1;                               
     });
