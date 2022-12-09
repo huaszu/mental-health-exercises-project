@@ -3,73 +3,112 @@
 {% block title %}{{ exercise.title }} - Details{% endblock %}
 
 {% block head %}
-
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/css/exercise_details_style.css">
+    <!-- Google Font -->
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,800,700,900' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block body %}
-<h1>{{ exercise.title }}</h1>
 
-<h2>Navigation</h2>
-<ul>
-    <li><a href="/exercises">View all exercises</a></li>
-    {% if "user_id" in session %}
-        <li><a href="/users/my_exercises">View my completed exercises</a></li>
-    {% endif %}
-</ul>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="/">Hall of Mirrors</a>
+  
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/exercises">All Exercises</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/users/my_exercises">My Completed Exercises</a>
+          </li>
+        </ul>
+  
+        <ul class="navbar-nav me-2">        
+          <li class="nav-item me-2">
 
-<br>
-
-<p>
-  {{ exercise.description }}
-</p>
-
-<p>
-    Exercise Author: 
-    {% if exercise.author.pen_name %}
-        {{ exercise.author.pen_name }}
-    {% endif %}
-    {% if not exercise.author.pen_name %} 
-        {{ exercise.author.first_name[0] }}{{ exercise.author.last_name[0] }}
-    {% endif %}
-</p>
-
-<p>
-    {% if exercise.time_limit_per_sitting %}
-        Suggested time to spend on exercise: {{ exercise.time_limit_per_sitting }} minutes
-    {% endif %}
-</p>
-
-<p>
-    No editing once you submit! =P
-</p>
-
-<form action="/exercises/{{ exercise.exercise_id }}/submitted" method="POST" id="exercise">
-    {% for prompt in exercise.prompts %}
-        
-        <label for="response-textarea">{{ prompt.prompt_content }}</label>
-        <textarea class="responses" name="{{ prompt.prompt_id }}" id="{{ prompt.prompt_id }}"></textarea>
-        <br>
-
-    {% endfor %}
-
-    <br>
-    <p>
-        {% if exercise.frequency %}
-            We recommend you do this exercise once every {{ day }}. <br>
-    
+  
             {% if "user_id" in session %}
-                If you want notifications on this frequency to remind you, enable push messaging:
-                <button type="button" id="push">Push to me</button>
+            <a class="nav-link" href="/logout">Log Out</a>
             {% endif %}
-        {% endif %}
-    </p>
+          </li>
+          
+        </ul>
+  
+      </div>
+  
+    </div>
+</nav>
 
-    <button type="submit" id="completed-exercise">Submit</button>
-</form>
+<main class="container my-5">
+    <h1>{{ exercise.title }}</h1>
 
-<br>
-<a href="/" target="_blank">Create account or log in if you have not already.  Will open in new tab</a>
+    <div class="description rounded">
+    {{ exercise.description }}
+    </div>
 
+    <div class="exercise-form">
+        <p>
+            Exercise Author: 
+            <strong>
+            {% if exercise.author.pen_name %}
+                {{ exercise.author.pen_name }}
+            {% endif %}
+            {% if not exercise.author.pen_name %} 
+                {{ exercise.author.first_name[0] }}{{ exercise.author.last_name[0] }}
+            {% endif %}
+            </strong>
+        </p>
+
+        <p>
+            {% if exercise.time_limit_per_sitting %}
+                Suggested time to spend on exercise: 
+                <strong>{{ exercise.time_limit_per_sitting }} minutes</strong>
+            {% endif %}
+        </p>
+
+        <p>
+            No editing once you submit! =P
+        </p>
+
+        <form action="/exercises/{{ exercise.exercise_id }}/submitted" method="POST" id="exercise">
+            {% for prompt in exercise.prompts %}
+
+                <div class="row mb-3">
+                    <label for="{{ prompt.prompt_id }}" class="col-sm-2 col-form-label">{{ prompt.prompt_content }}</label>
+                    <div class="col-sm-10">
+                      <textarea name="{{ prompt.prompt_id }}" class="form-control responses" id="{{ prompt.prompt_id }}"></textarea>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+            <p>
+                {% if exercise.frequency %}
+                    We recommend you do this exercise once every {{ day }}. <br>
+            
+                    {% if "user_id" in session %}
+                        If you want notifications on this frequency to remind you, enable push messaging:
+                        <button type="button" id="push" class="btn btn-outline-info">Push to me</button>
+                    {% endif %}
+                {% endif %}
+            </p>
+            
+            <div class="d-grid gap-2">
+                <button type="submit" id="completed-exercise" class="btn btn-primary btn-lg">Submit</button>
+            </div>
+        </form>
+
+    </div>
+    
+    <br>
+    <a href="/" target="_blank">Create account or log in if you have not already.  Will open in new tab</a>
+    
+</main>
 {% endblock %}
 
 {% block after_body %}{% endblock %}
