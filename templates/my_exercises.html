@@ -28,43 +28,48 @@
     </div>
   </nav>
 
-<h1>{{ user.first_name }}</h1>
+<main class="container my-5">
+    <h1>{{ user.first_name }}</h1>
 
-<p>Here are all of the exercises you have completed and your past responses:</p>
+    <h4>Here are all of the exercises you have completed and your past responses:</h4>
 
-<div class="accordion" id="accordionExample">
-    {% for exercise in exercises %}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="heading{{ loop.index }}">
-                
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
-                    {{ exercise.title }}
-                    </button>
+    <div class="accordion" id="accordionExample">
+        {% for exercise in exercises %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ loop.index }}">
+                    
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                        {{ exercise.title }}
+                        </button>
 
-            </h2>
+                </h2>
 
-            <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    {% for prompt in exercise.prompts %}
-                        <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div><h6>{{ prompt.prompt_content }}</h6></div>
-                                    {% for response in prompt.responses %}
-                                        {% if response.user_id == user.user_id %}
-                                            <p>{{ response.response_content }}</p>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <span class="badge bg-primary rounded-pill">14</span>
-                            </li>
-                        </ul>
-                    {% endfor %}
+                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        {% for prompt in exercise.prompts %}
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div><h6>{{ prompt.prompt_content }}</h6></div>
+                                        {% for response in prompt.responses %}
+                                            {% if response.user_id == user.user_id %}
+                                                <br>
+                                                <p>{{ response.response_content }}</p>
+                                                <!-- <p>{{ response.time_completed_exercise }}</p> -->
+                                                
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <!-- <span class="badge bg-primary rounded-pill">11</span> -->
+                                </li>
+                            </ul>
+                        {% endfor %}
 
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
+</main>
 
 {% endblock %}

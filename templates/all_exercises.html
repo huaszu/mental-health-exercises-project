@@ -44,30 +44,29 @@
 
   </div>
 </nav>
-
-  <h1>All Exercises</h1>
   
-  <main class="container my-5">
-    
-    <div class="row pb-5">
-      {% for exercise in exercises %}
-        <div class="col">
+<main class="container my-5">
+  <h1>All Exercises</h1>
+
+  <div class="row pb-5">
+    {% for exercise in exercises %}
+      <div class="col">
+        
+        <div class="card my-3 card-hover">
           
-          <div class="card my-3 card-hover">
-            
-              <div class="card-body">            
-                <div><h3 class="card-title"><a href="/exercises/{{ exercise.exercise_id }}">
-                  {{ exercise.title }}</a></h3></div>
-                
-                <div><p class="card-text">{{ exercise.description[:200] + "..." }}</p></div>
-              </div>
-            
-          </div>
+            <div class="card-body">            
+              <div><h3 class="card-title"><a href="/exercises/{{ exercise.exercise_id }}">
+                {{ exercise.title }}</a></h3></div>
+              
+              <div><p class="card-text">{{ exercise.description[:200] + "..." }}</p></div>
+            </div>
           
         </div>
-      {% endfor %}
-    </div>
-    
-  </main>
+        
+      </div>
+    {% endfor %}
+  </div>
+  
+</main>
 
 {% endblock %}
