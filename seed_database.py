@@ -14,6 +14,7 @@ from model import User, Exercise, Prompt
 import crud
 import model
 import server
+import werkzeug.security
 
 os.system("dropdb health")
 os.system("createdb health")
@@ -42,9 +43,11 @@ for n in range(10):
     else: # Users 7, 8, 9
         is_expert = True
         is_consumer = True
+    
+    hashpw = werkzeug.security.generate_password_hash(password)
 
     user = crud.create_user(email=email, 
-                            password=password, 
+                            password=hashpw, 
                             first_name=first_name,
                             last_name=last_name,
                             is_expert=is_expert,
@@ -78,8 +81,10 @@ for name, val in seed_experts.items(): # val is a dict with key "exercises" and 
     is_expert = True
     is_consumer = True
 
+    hashpw = werkzeug.security.generate_password_hash(password)
+
     user = crud.create_user(email=email, 
-                            password=password, 
+                            password=hashpw, 
                             first_name=first_name,
                             last_name=last_name,
                             is_expert=is_expert,

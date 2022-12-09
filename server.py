@@ -11,6 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import json
 import requests
 import os
+import werkzeug.security
 
 from jinja2 import StrictUndefined
 
@@ -152,13 +153,15 @@ def register_user():
     is_consumer = True
     # pen_name = "pen"
 
+    hashpw = werkzeug.security.generate_password_hash(password)
+
     user = crud.get_user_by_email(email)
     if user:
         flash("Cannot create an account with that email. Try again.")
         # print("user is already a user") # This works, so `if user:` is evaluating as we expect
     else:
         user = crud.create_user(email=email, 
-                                password=password, 
+                                password=hashpw, 
                                 first_name=first_name, 
                                 last_name=last_name, 
                                 is_expert=is_expert, 
@@ -182,7 +185,9 @@ def process_login():
     if user == None: # is this not repetitive with `elif not user` ?
         flash("We don't have an account for you under this email!")
         return redirect("/")
-    elif not user or user.password != password:
+    # syntax: werkzeug.security.check_password_hash(hash, password user entered)
+        # returns True or False
+    elif not user or not werkzeug.security.check_password_hash(user.password, password):
         flash("The email or password you entered was incorrect.")
         return redirect("/")
     else:
