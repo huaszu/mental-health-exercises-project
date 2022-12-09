@@ -67,26 +67,22 @@
       </div>
     </div>
 
-    <fieldset class="row mb-3">
-      <legend class="col-form-label col-sm-2 pt-0">TEST</legend>
-
-      <div class="row mb-3">
-        <label for="1" class="col-sm-2 col-form-label">A prompt for the user to respond to:*</label>
-        <div class="col-sm-10">
-          <textarea name="prompt" class="form-control prompt" id="1" required></textarea>
-        </div>
+    <div class="row mb-3">
+      <label for="1" class="col-sm-2 col-form-label">A prompt for the user to respond to:*</label>
+      <div class="col-sm-10">
+        <textarea name="prompt" class="form-control prompt" id="1" required></textarea>
       </div>
+    </div>
 
-      <section id="more-prompts"></section>
-
+    <div id="more-prompts"></div>
       
-      <p>I want my exercise to have more prompts!
-        <button type="button" id="add-prompt">Add prompt</button>
-      
-      </p>
-    </fieldset>
-      
-      <button type="submit">Submit</button>
+    <p>I want my exercise to have more prompts!
+        <button type="button" id="add-prompt" class="btn btn-secondary">Add prompt</button>    
+    </p>
+    
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+    </div>
     
   </form>
 </main>
