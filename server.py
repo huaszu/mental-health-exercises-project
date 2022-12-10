@@ -22,7 +22,7 @@ app.config.from_pyfile('application.cfg.py')
 
 # MAKE SURE SESSION IS STILL WORKING!
 
-app.secret_key = "dev"
+app.secret_key = os.environ['APP_SECRET_KEY']
 app.jinja_env.undefined = StrictUndefined
 
 push_API_public_key = os.environ['VAPID_PUBLIC_KEY']

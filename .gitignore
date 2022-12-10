@@ -5,3 +5,4 @@ env/
 *key.txt
 instance/
 deployment/
+.DS_Store
