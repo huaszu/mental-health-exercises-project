@@ -32,7 +32,8 @@ seed_experts = {
     "Balloo Nicorn": {
         "exercises": [
             "Capstone Project Journal",
-            "Rilke Poem"
+            "Rilke Poem",
+            "Course Check-In"
         ]
     },
     "Ezra Bookman": {
@@ -112,6 +113,11 @@ seed_experts = {
     "Mahershala Ali": {
         "exercises": [
             "Lab One"
+        ]
+    },
+    "Sanyee Yuan": {
+        "exercises": [
+            "Inner Child"
         ]
     }
 }
@@ -578,6 +584,29 @@ seed_exercise_details = {
             "E",
             "A",
             "M"
+        ]        
+    },
+    "Course Check-In": {
+        "description": "Check in on yourself once a week! ~ Hackbright Academy",
+        "frequency": 7,
+        "time_limit_per_sitting": 10,
+        "prompts": [
+            "Write one word that describes how you are feeling right now.",
+            "What are you proud of?",
+            "What have you learned this week?",
+            "What have you learned that you want to explore more?",
+            "Which topic from this week did you most enjoy?",
+            "Which topic from this week did you find the hardest?",
+            "What are you doing to maintain your health - physical, mental, emotional, and social?",
+            "What are you going to do to relax?"
+        ]        
+    },
+    "Inner Child": {
+        "description": "What if every individual is a combination of different versions of self that stem from various points in life?  We can celebrate and heal our inner child to better identify our needs, behaviors, and triggers, and foster compassion for ourselves.",
+        "frequency": 30,
+        "time_limit_per_sitting": 30, 
+        "prompts": [
+            "Write a letter to your inner child.  You can do everything from acknowledging your inner child's suffering, to assuring your inner child that you are present to offer love and protection, to recognizing what else you can do to help your inner child feel safe, to thanking your inner child for being brave, to asking your inner child what brings joy."
         ]        
     }
 }
