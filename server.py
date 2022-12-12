@@ -12,6 +12,7 @@ import json
 import requests
 import os
 import werkzeug.security
+import sys
 
 from jinja2 import StrictUndefined
 
@@ -405,5 +406,9 @@ def initiate_push():
 
 if __name__ == "__main__":
     connect_to_db(app)
-    # app.run(host="0.0.0.0", debug=True)
-    app.run()
+    if "-d" in sys.argv:
+        app.run(host="0.0.0.0", debug=True)
+        # Run in debug mode
+    else:
+        app.run()
+        # Run normally
