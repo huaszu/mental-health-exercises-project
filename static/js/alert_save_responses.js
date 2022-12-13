@@ -26,7 +26,7 @@ form.addEventListener('submit', (evt) => {
                 fetch(`/exercises/${exercise_id}/submitted`, {
                     method: 'POST', 
                     body: JSON.stringify(responses),
-                    headers: {'Content-Type': 'application/json',},
+                    headers: {'Content-Type': 'application/json'},
                     credentials: 'include'})
                     .then((response) => window.location.replace(response.url))
             }
