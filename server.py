@@ -270,7 +270,7 @@ def save_user_responses(exercise_id):
     
     db.session.commit()
 
-    return redirect("/users/my_exercises") 
+    return redirect("https://www.hallofmirrors.org/users/my_exercises", code=302) 
     
 @app.route("/login-status.json")
 def get_login_status():
