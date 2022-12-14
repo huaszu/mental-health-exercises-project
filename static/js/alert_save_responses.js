@@ -42,8 +42,7 @@ form.addEventListener('submit', (evt) => {
                         //     const newResponseUrl = responseUrl;
                         //     console.log(newResponseUrl);
                         //     window.location.replace(newResponseUrl)
-                        // }
-                        
+                        // }                        
                     }
                     )
             }
