@@ -28,7 +28,22 @@ form.addEventListener('submit', (evt) => {
                     body: JSON.stringify(responses),
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include'})
-                    .then((response) => window.location.replace(response.url))
+                    .then((response) => {
+                        const responseUrl = response.url;
+                        console.log(responseUrl);
+
+                        if (responseUrl[4] === ':') {
+                            console.log('this is http');
+                            const newResponseUrl = 'https' + responseUrl.slice(4);
+                            console.log(newResponseUrl);
+                            window.location.replace(newResponseUrl)
+                        } else {
+                            const newResponseUrl = responseUrl;
+                            console.log(newResponseUrl);
+                            window.location.replace(newResponseUrl)
+                        }
+                        
+                    })
             }
         });
     });
