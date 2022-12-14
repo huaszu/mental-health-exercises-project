@@ -33,8 +33,8 @@ form.addEventListener('submit', (evt) => {
                     .then((response) => response.json()) // extract response body
                     .then((responseJson) => {
                         console.log(responseJson.url);
-                        console.log(window.location.hostname);
-                        // window.location.replace(window.location.hostname + responseJson.url);
+                        console.log(window.location.origin);
+                        window.location.replace(window.location.origin + responseJson.url);
 
                         // const responseUrl = response.url;
                         // console.log(responseUrl);
