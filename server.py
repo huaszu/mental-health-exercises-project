@@ -270,7 +270,7 @@ def save_user_responses(exercise_id):
     
     db.session.commit()
 
-    return redirect("https://www.hallofmirrors.org/users/my_exercises", code=302) 
+    return redirect("/users/my_exercises") 
     
 @app.route("/login-status.json")
 def get_login_status():
@@ -410,5 +410,5 @@ if __name__ == "__main__":
         app.run(host="0.0.0.0", debug=True)
         # Run in debug mode
     else:
-        app.run()
+        app.run(ssl_context=("/etc/letsencrypt/live/hallofmirrors.org/fullchain.pem", "/etc/letsencrypt/live/hallofmirrors.org/privkey.pem"))
         # Run normally
