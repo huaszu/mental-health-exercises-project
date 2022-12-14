@@ -271,7 +271,8 @@ def save_user_responses(exercise_id):
     db.session.commit()
 
     di = {}
-    di["url"] = url_for("show_user_exercises", _scheme="https", _external=True)
+    di["url"] = "https://hallofmirrors.org/users/my_exercises"
+    # url_for("show_user_exercises", _scheme="https", _external=True)
 
     print("\n\n\n\n", di)
     return di
