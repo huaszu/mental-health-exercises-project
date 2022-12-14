@@ -1,6 +1,6 @@
 """Server for mental health exercises app."""
 
-from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory)
+from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory, url_for)
 from model import connect_to_db, db
 from push_notification import send_first_push, send_push_for_test, send_push
 import crud
@@ -270,7 +270,8 @@ def save_user_responses(exercise_id):
     
     db.session.commit()
 
-    return redirect("/users/my_exercises")
+    return redirect(url_for("show_user_exercises",
+                            _scheme="https"))
     
 @app.route("/login-status.json")
 def get_login_status():
