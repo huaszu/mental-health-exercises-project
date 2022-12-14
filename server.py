@@ -410,5 +410,6 @@ if __name__ == "__main__":
         app.run(host="0.0.0.0", debug=True)
         # Run in debug mode
     else:
-        app.run(ssl_context=("/etc/letsencrypt/live/hallofmirrors.org/fullchain.pem", "/etc/letsencrypt/live/hallofmirrors.org/privkey.pem"))
+        # app.run(ssl_context=("/etc/letsencrypt/live/hallofmirrors.org/fullchain.pem", "/etc/letsencrypt/live/hallofmirrors.org/privkey.pem"))
+        app.run()
         # Run normally
