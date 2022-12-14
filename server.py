@@ -270,8 +270,11 @@ def save_user_responses(exercise_id):
     
     db.session.commit()
 
-    return redirect(url_for("show_user_exercises",
-                            _scheme="https"))
+    di = {}
+    di["url"] = url_for("show_user_exercises", _scheme="https", _external=True)
+
+    print("\n\n\n\n", di)
+    return di
     
 @app.route("/login-status.json")
 def get_login_status():

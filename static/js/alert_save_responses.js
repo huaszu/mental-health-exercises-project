@@ -27,9 +27,13 @@ form.addEventListener('submit', (evt) => {
                     method: 'POST', 
                     body: JSON.stringify(responses),
                     headers: {'Content-Type': 'application/json'},
-                    credentials: 'include'})
-                    .then((response) => {
-                        window.location.replace(response.url)
+                    credentials: 'include',
+                    redirect: 'follow'})
+                    // response object has a property url - the url is what was the destination
+                    .then((response) => response.json()) // extract response body
+                    .then((responseJson) => {
+                        console.log(responseJson.url);
+                        window.location.replace(responseJson.url);
                         // const responseUrl = response.url;
                         // console.log(responseUrl);
 
