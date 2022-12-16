@@ -44,11 +44,13 @@ class FlaskTestsLoggedIn(unittest.TestCase):
             with c.session_transaction() as sess:
                 sess['user_id'] = 1
 
-    # def test_important_page(self):
-    #     """Test important page."""
+        connect_to_db(server.app)
 
-    #     result = self.client.get("/users/my_exercises")
-    #     self.assertIn(b"Here are all of the exercises you have completed and your past responses:", result.data)
+    def test_important_page(self):
+        """Test important page."""
+
+        result = self.client.get("/users/my_exercises", follow_redirects=True)
+        self.assertIn(b"Here are all of the exercises you have completed and your past responses:", result.data)
         # ======================================================================
         # FAIL: test_important_page (__main__.FlaskTestsLoggedIn)
         # Test important page.
