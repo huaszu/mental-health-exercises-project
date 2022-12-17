@@ -30,11 +30,15 @@ form.addEventListener('submit', (evt) => {
                     credentials: 'include',
                     redirect: 'follow'})
                     // response object has a property url - the url is what was the destination
-                    .then((response) => response.json()) // extract response body
+                    // https://developer.mozilla.org/en-US/docs/Web/API/Response
+                    .then((response) => response.json()) // Extract response body.
+                    // Body is entirely JSON or entirely HTML or the data that I want to send.
+                    // In this case, the body is JSON object with one key in it.
+                    // Read that JSON object from our JavaScript
                     .then((responseJson) => {
                         console.log(responseJson.url);
                         console.log(window.location.origin);
-                        window.location.replace(window.location.origin + responseJson.url);
+                        window.location.replace(window.location.origin + responseJson.url); // And go to that URL
 
                         // const responseUrl = response.url;
                         // console.log(responseUrl);

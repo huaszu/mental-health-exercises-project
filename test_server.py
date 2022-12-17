@@ -43,22 +43,18 @@ class FlaskTestsLoggedIn(unittest.TestCase):
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 1
+        # Is 'user_id' the only key in session?  Yes
 
         connect_to_db(server.app)
+        # Without this line, "SQLALCHEMY_TRACK_MODIFICATIONS" showed up in 
+        # error - relates to what is in model.py !
 
     def test_important_page(self):
         """Test important page."""
 
         result = self.client.get("/users/my_exercises", follow_redirects=True)
+        # Should not make a difference whether follow_redirects=True or not
         self.assertIn(b"Here are all of the exercises you have completed and your past responses:", result.data)
-        # ======================================================================
-        # FAIL: test_important_page (__main__.FlaskTestsLoggedIn)
-        # Test important page.
-        # ----------------------------------------------------------------------
-        # Traceback (most recent call last):
-        #   File "/Users/hsy/src/mental-health-exercises-project/test_server.py", line 51, in test_important_page
-        #     self.assertIn(b"Here are all of the exercises you have completed and your past responses:", result.data)
-        # AssertionError: b'Here are all of the exercises you have completed and your past responses:' not found in b'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n<title>Redirecting...</title>\n<h1>Redirecting...</h1>\n<p>You should be redirected automatically to target URL: <a href="/">/</a>. If not click the link.'
 
     def test_create_exercise_page(self):
         """Test page for logged in user to author an exercise."""

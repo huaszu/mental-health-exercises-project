@@ -206,6 +206,7 @@ def show_user_exercises():
 
     try:
         user_id = session["user_id"]
+        print("\n\n\n\n\n", user_id)
 
         user = crud.get_user_by_id(user_id)
         exercises = crud.get_unique_exercises_of_user(user_id) # This is a set
@@ -219,7 +220,8 @@ def show_user_exercises():
     # If user is not logged in, say if user comes here by typing 
     # "/users/my_exercises" in the URL bar instead of by being redirected here
     # from logging in.
-    except:
+    except Exception as e:
+        print(e)        
         flash("Log in to see exercises you have completed.")
         return redirect("/")
 
