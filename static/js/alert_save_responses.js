@@ -37,7 +37,10 @@ form.addEventListener('submit', (evt) => {
                     // Read that JSON object from our JavaScript
                     .then((responseJson) => {
                         console.log(responseJson.url);
-                        console.log(window.location.origin);
+
+                        console.log(window.location.hostname); // Example: 'fellowship.hackbrightacademy.com'
+                        console.log(window.location.origin); // Example: 'https://fellowship.hackbrightacademy.com'
+
                         window.location.replace(window.location.origin + responseJson.url); // And go to that URL
 
                         // const responseUrl = response.url;
