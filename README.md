@@ -1,4 +1,6 @@
 # <The Hall of Mirrors>
+[Live Link](https://hallofmirrors.org)
+[Demo](https://youtu.be/kjDivrRaVE0)
 
 ## Description
 
@@ -48,31 +50,31 @@ The Hall of Mirrors is a web app for people to do journaling exercises that help
 
 To have this app running on your local computer, please follow the below steps:
 
-Install PostgreSQL
+Install PostgreSQL.
 
-Clone or fork this repository:
+Clone or fork this repository.
 ```
 $ git clone https://github.com/huaszu/mental-health-exercises-project.git
 ```
 
 Set up your own VAPID public key, private key, and claim to implement push notifications - https://blog.mozilla.org/services/2016/08/23/sending-vapid-identified-webpush-notifications-via-mozillas-push-service/.  Save them to secrets.sh.
 
-Create a virtual environment inside your mental-health-exercises-project directory:
+Create a virtual environment inside your mental-health-exercises-project directory.
 ```
 $ virtualenv env
 ```
 
-Activate the virtual environment:
+Activate the virtual environment.
 ```
 $ source env/bin/activate
 ```
 
-Source from secrets.sh to your environment:
+Source from secrets.sh to your environment.
 ```
 $ source secrets.sh
 ```
 
-Install dependencies:
+Install dependencies.
 ```
 $ pip3 install -r requirements.txt
 ```
@@ -81,25 +83,27 @@ Create database 'health'.
 ```
 $ createdb health
 ```
+
 Create your database tables and seed example data.
 ```
 $ python3 model.py
 $ python3 seed_database.py
 ```
-Run the app from the command line.
+
+Run the Flask app from the command line.
 ```
 $ python3 server.py
 ```
-If you want to use SQLAlchemy to query the database, run in interactive mode
+
+If you want to use SQLAlchemy to query the database, run in interactive mode.
 ```
 $ python3 -i model.py
 ```
 
-You can now navigate to 'localhost:5000/' to access the Hall of Mirrors.
-
-
-    ```
+**You can now navigate to `localhost:5000` to access the Hall of Mirrors.  Have fun!**
 
 ## Tests
 
 Examples on how to run them here.
+
+## Possible Future Features
