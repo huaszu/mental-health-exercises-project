@@ -9,9 +9,11 @@ The Hall of Mirrors is a web app for people to do journaling exercises that help
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
+- [Data Model](#data-model)
 - [Features for Users](#features-for-users)
 - [Installation](#installation)
 - [Tests](#tests)
+- [Possible Future Features](#possible-future-features)
 
 ## Tech Stack
 
@@ -29,6 +31,9 @@ The Hall of Mirrors is a web app for people to do journaling exercises that help
 - Notification API
 - pywebpush library for Webpush Data encryption
 - Python APScheduler library
+
+## Data Model
+[Diagram](https://dbdesigner.page.link/S9QqobYsVTev3k6F6)
 
 ## Features for Users
 
