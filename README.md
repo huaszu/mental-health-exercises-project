@@ -117,3 +117,10 @@ $ python3 test_server.py
 ```
 
 ## Possible Future Features
+
+- Enhance push notification content with clickable link that brings user to exercise and reminder of how many days have passed
+- Give user access to individual user administrative page that shows which exercises they have notifications enabled for and lets user turn off any specific notification series
+- Improve organization in user's view of past responses and offer insights to user about their writings
+- Facilitate search on inventory of all exercises
+- Allow prompt types other than long answer response, such as multiple choice
+- Enable multiple people to collaborate on an exercise online
