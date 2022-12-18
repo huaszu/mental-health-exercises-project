@@ -1,4 +1,4 @@
-# <The Hall of Mirrors>
+# The Hall of Mirrors
 [Live Link](https://hallofmirrors.org)
 [Demo](https://youtu.be/kjDivrRaVE0)
 
