@@ -13,20 +13,20 @@ The Hall of Mirrors is a web app for people to do journaling exercises that help
 
 ## Tech Stack
 
-Python
-JavaScript
-HTML
-CSS
-Flask
-SQLAlchemy
-PostgreSQL
-Jinja2
-JSON
-Push API
-Service Worker API
-Notification API
-pywebpush library for Webpush Data encryption
-Python APScheduler library
+- Python
+- JavaScript
+- HTML
+- CSS
+- Flask
+- SQLAlchemy
+- PostgreSQL
+- Jinja2
+- JSON
+- Push API
+- Service Worker API
+- Notification API
+- pywebpush library for Webpush Data encryption
+- Python APScheduler library
 
 ## Features for Users
 
