@@ -35,7 +35,7 @@ The Hall of Mirrors is a web app for people to do journaling exercises that help
 ## Data Model
 [Diagram](https://dbdesigner.page.link/S9QqobYsVTev3k6F6)
 
-## Features for Users
+## Features for App Users
 
 - Create account
 - Log in
@@ -109,6 +109,11 @@ $ python3 -i model.py
 
 ## Tests
 
-Examples on how to run them here.
+To integration test the app, `test_server.py` contains tests that use `TestCase` from Python's `unittest` module.  The tests use Flask's `test_client` method to return a pretend web browser.
+
+Run automated tests from the command line.
+```
+$ python3 test_server.py
+```
 
 ## Possible Future Features

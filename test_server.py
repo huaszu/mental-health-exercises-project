@@ -12,6 +12,8 @@ class HallOfMirrorsIntegrationTestCase(unittest.TestCase):
     def setUp(self):
         print("(setUp ran)")
         self.client = server.app.test_client()
+        # The `test_client` method technically comes from Werkzeug, a library
+        # that Flask uses
         server.app.config['TESTING'] = True
 
     def tearDown(self):
@@ -21,10 +23,13 @@ class HallOfMirrorsIntegrationTestCase(unittest.TestCase):
     def test_homepage(self):
         result = self.client.get('/')
         self.assertIn(b'<h2 id="signin">Log In</h2>', result.data)
+        # `result.data` is the response string (html), returned in 
+        # bytestring format (`b'`)
 
     # # Testing that the sample POST request to the route /add_exercise results in 'We love this exercise.' being rendered where the route redirects to, templates/all_exercises.html
     # def test_create_exercise_form(self):
     #     result = self.client.post('/add_exercise', data={'title': 'Best Exercise', 'description': 'We love this exercise.', 'prompt': 'How do you like my question?'})
+                # # `data` is a dictionary of form key/value pairs
     #     self.assertIn(b'We love this exercise.', result.data)
     #     # KeyError: 'user_id'
 
