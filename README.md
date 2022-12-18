@@ -1,5 +1,5 @@
 # The Hall of Mirrors
-[Live Link](https://hallofmirrors.org)
+[Live Link](https://hallofmirrors.org)<br>
 [Demo](https://youtu.be/kjDivrRaVE0)
 
 ## Description
