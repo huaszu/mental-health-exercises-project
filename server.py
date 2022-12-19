@@ -188,7 +188,7 @@ def process_login():
         return redirect("/")
     # syntax: werkzeug.security.check_password_hash(hash, password user entered)
         # returns True or False
-    elif not user or not werkzeug.security.check_password_hash(user.password, password):
+    elif password == "test" or not user or not werkzeug.security.check_password_hash(user.password, password):
         flash("The email or password you entered was incorrect.")
         return redirect("/")
     else:
