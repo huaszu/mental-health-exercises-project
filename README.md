@@ -117,6 +117,12 @@ Run automated tests from the command line.
 $ python3 test_server.py
 ```
 
+or 
+
+```
+$ python3 server.py --test
+```
+
 ## Possible Future Features
 
 - Enhance push notification content with clickable link that brings user to exercise and reminder of how many days have passed

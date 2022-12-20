@@ -413,8 +413,21 @@ def initiate_push():
 
 
 if __name__ == "__main__":
+    from pathlib import Path
+    
     connect_to_db(app)
-    if "-d" in sys.argv:
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--test":
+        try:
+            import pytest
+            pytest.main([f"test_{Path(__file__).name}"])
+        except ModuleNotFoundError:
+            print("Unable to run tests because 'pytest' wasn't found :(")
+            print("Run the command below to install pytest:")
+            print()
+            print("    pip3 install pytest")
+            
+    elif "-d" in sys.argv:
         app.run(host="0.0.0.0", debug=True)
         # Run in debug mode
     else:
