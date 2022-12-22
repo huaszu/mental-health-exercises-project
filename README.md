@@ -1,6 +1,6 @@
 # The Hall of Mirrors
-[Live Link](https://hallofmirrors.org)<br>
-[Demo](https://youtu.be/kjDivrRaVE0)
+This app is deployed with AWS Lightsail at [this live link](https://hallofmirrors.org)<br>
+Demo: [Video](https://youtu.be/kjDivrRaVE0)
 
 ## Description
 
@@ -50,20 +50,23 @@ The Hall of Mirrors is a web app for people to do journaling exercises that help
 
 #### Requirements:
 
-- PostgreSQL
+- PostgreSQL 14.6
 - Python 3.10
-- VAPID public key, private key, and claim
+- VAPID public key, private key, and claim - [Set up your own](https://blog.mozilla.org/services/2016/08/23/sending-vapid-identified-webpush-notifications-via-mozillas-push-service/)
 
 To have this app running on your local computer, please follow the below steps:
-
-Install PostgreSQL.
 
 Clone or fork this repository.
 ```
 $ git clone https://github.com/huaszu/mental-health-exercises-project.git
 ```
 
-Set up your own VAPID public key, private key, and claim to implement push notifications - https://blog.mozilla.org/services/2016/08/23/sending-vapid-identified-webpush-notifications-via-mozillas-push-service/.  Save them to secrets.sh.
+Save your VAPID public key, private key, and claim to `secrets.sh`.  Sample code:
+```
+export VAPID_PUBLIC_KEY="your_public_key"
+export VAPID_PRIVATE_KEY="your_private_key"
+export VAPID_CLAIM_EMAIL="mailto:you@example.com"
+```
 
 Create a virtual environment inside your mental-health-exercises-project directory.
 ```
@@ -75,7 +78,7 @@ Activate the virtual environment.
 $ source env/bin/activate
 ```
 
-Source from secrets.sh to your environment.
+Source from `secrets.sh` to your environment.
 ```
 $ source secrets.sh
 ```
