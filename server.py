@@ -362,7 +362,7 @@ def get_vapid_public_key():
 def initiate_push():
     """Create a subscription record if necessary and spawn first notification."""
 
-    # Is subscription unique for every user? 
+    # Subscription unique to a client
     # Is subscription unique for every user for every time user permits push
     # notifications from not having permitted them?
 
