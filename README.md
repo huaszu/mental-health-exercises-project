@@ -1,5 +1,5 @@
 # The Hall of Mirrors
-This app is deployed with AWS Lightsail at [this live link](https://hallofmirrors.org)<br>
+This app is deployed with AWS Lightsail at [this live link](https://hallofmirrors.org).<br>
 Demo: [Video](https://youtu.be/kjDivrRaVE0)
 
 ## Description
