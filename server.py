@@ -18,10 +18,8 @@ from jinja2 import StrictUndefined
 
 app = Flask(__name__, instance_relative_config=True)
 
-# Load configuration setup for use of MDN Push API
+# Load configuration setup for use of Push API
 app.config.from_pyfile('application.cfg.py')
-
-# MAKE SURE SESSION IS STILL WORKING!
 
 app.secret_key = os.environ['APP_SECRET_KEY']
 app.jinja_env.undefined = StrictUndefined
@@ -37,20 +35,6 @@ scheduler.add_job(func=send_push,
                   id="send_push_notifs",
                   hours=8)
 scheduler.start()
-
-# For testing job at interval of 30 seconds:
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=send_push_for_test, 
-#                   trigger="interval", 
-#                   seconds=30)
-# scheduler.start()
-
-# For testing job at interval of 10 seconds:
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=send_push_for_test, 
-#                   trigger="interval", 
-#                   seconds=10)
-# scheduler.start()
 
 
 @app.route("/")
@@ -363,19 +347,15 @@ def initiate_push():
     """Create a subscription record if necessary and spawn first notification."""
 
     # Subscription unique to a client
-    # Is subscription unique for every user for every time user permits push
-    # notifications from not having permitted them?
 
-    print("INSIDE PUSH SUBSCRIPTIONS")
     user_id = session["user_id"]
     user = crud.get_user_by_id(user_id)
 
-    json_data = request.json # vs request.get_json() ?
+    json_data = request.json
     subscription_json = json_data["subscription_json"]
     print(subscription_json)
 
     exercise_id = int(json_data["exercise_id"])
-    print("EXERCISE:", exercise_id)
     exercise = crud.get_exercise_by_id(exercise_id)
     
     # Check if there is already a matching PushSubscription object with the same 
@@ -388,7 +368,6 @@ def initiate_push():
     # If there is no PushSubscription object with matching subscription_json, 
     # create a new PushSubscription object.
     if subscription is None:
-        print("Let's create")
         subscription = crud.create_push_subscription(subscription_json=subscription_json, 
                                                      user=user)
 
