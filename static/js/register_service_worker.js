@@ -5,14 +5,6 @@
 // necessary and spawn first notification via 
 // route /api/push-subscriptions
 
-// try {
-//     const pushButton = document.querySelector('#push'); 
-//     pushButton.addEventListener('click', (evt) => {enablePush()});
-// } catch (error) {
-//     console.error('HTML elements do not have element with id #push', error);
-// }
-
-// Store document.querySelector('#push') as variable.  Test for variable null
 
 const pushButton = document.querySelector('#push');
 
@@ -24,11 +16,9 @@ function enablePush() {
     console.log('hello');
     if ('Notification' in window) {
         if (Notification.permission === 'granted') {
-            console.log('granted');
-            // const notification = new Notification('Test!');
             const splitPath = window.location.pathname.split('/');
             const exerciseId = splitPath[2];
-            fetch('/vapid_public.json') // Double check later! 
+            fetch('/vapid_public.json')
                 .then((response) => response.json())
                 .then((responseJson) => registerServiceWorker(
                     "/static/js/service_worker.js",
@@ -37,11 +27,8 @@ function enablePush() {
                     exerciseId
                 ));
         } else if (Notification.permission !== 'denied') {
-            console.log('ask for permission');
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
-                    console.log('now granted');
-                    // const notification = new Notification('Test me');
                     const splitPath = window.location.pathname.split('/');
                     const exerciseId = splitPath[2];
                     fetch('/vapid_public.json')
@@ -58,15 +45,6 @@ function enablePush() {
     }
 };
 
-
-// Removed from end of block js in exercise_details.html: 
-// <script type="text/javascript">
-//    registerServiceWorker(
-//        "/static/js/service_worker.js",
-//        "{{config['VAPID_PUBLIC_KEY']}}",
-//        "/api/push-subscriptions"
-//    );
-// </script>
 
 // Within the function registerServiceWorker(), we call the function 
 // subscribeUser().  Within subscribeUser(), we call the functions
