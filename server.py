@@ -1,15 +1,14 @@
 """Server for mental health exercises app."""
 
-from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory, url_for)
+from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory)
 from model import connect_to_db, db
-from push_notification import send_first_push, send_push_for_test, send_push
+from push_notification import send_first_push, send_push
 import crud
 from datetime import datetime
 import pytz
 from pywebpush import webpush, WebPushException
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
-import requests
 import os
 import werkzeug.security
 import sys
@@ -55,8 +54,6 @@ def show_all_exercises():
 
     exercises = crud.get_exercises()
 
-    # Decide whether to show newest added exercises at top or bottom, or elsewhere
-
     return render_template("all_exercises.html", 
                            exercises=exercises)
 
@@ -65,21 +62,16 @@ def add_to_all_exercises():
     """Create exercise and add it to db."""
 
     # Create exercise
-    title = request.form.get("title", None) # None interpreted as null
-    # None as default value in case "title" is not present
+    title = request.form.get("title", None)
     description = request.form.get("description")
     try:
         frequency = int(request.form.get("freq")) 
     except:
         frequency = None
-    # Test that I get value # What if blank?
     try:
         time_limit_per_sitting = int(request.form.get("time-limit"))
     except:
         time_limit_per_sitting = None
-    # What if blank? 
-    # If blank, int() gives Traceback: 
-    # `ValueError: invalid literal for int() with base 10: ''`
 
     user_id = session["user_id"]
     author = crud.get_user_by_id(user_id)
@@ -91,29 +83,19 @@ def add_to_all_exercises():
                                     author=author)
 
     db.session.add(exercise)
-    # db.session.commit()
 
     # Create prompt(s) within exercise
     for prompt_content in request.form.getlist("prompt"):
-        
-        # To add: If prompt_content is blank, do not create blank prompt
-
         prompt = crud.create_prompt(prompt_content=prompt_content, exercise=exercise)
-        # Not giving a value for prompt_type and letting prompt_type default
-        # to "long answer"
 
         db.session.add(prompt)
-
-        # Right now if user clicks `Add prompt` button and then decides
-        # not to provide any value for the additional prompt, we would be
-        # adding a prompt to the db with blank prompt_content (to be checked)
 
     author.is_expert = True
 
     try:
         db.session.commit()
     except:
-        flash("Be careful how you fill out the form!") # Don't know the circumstances in which this flash would show
+        flash("Be careful how you fill out the form!")
         return redirect("/create")
 
     return redirect("/exercises")
@@ -126,24 +108,16 @@ def register_user():
     password = request.form.get("password")
     first_name = request.form.get("first-name")
     last_name = request.form.get("last-name")
-    pen_name = request.form.get("pen-name") # Later set default if left empty
-
-    # Data Integrity
-    # Possible ways to handle pen_name include: 
-    # in crud fn, OR
-    # (when render, plug in a pen name, and
-    # allow null in db - tracks that user did not want a pen name)
+    pen_name = request.form.get("pen-name")
 
     is_expert = False
     is_consumer = True
-    # pen_name = "pen"
 
     hashpw = werkzeug.security.generate_password_hash(password)
 
     user = crud.get_user_by_email(email)
     if user:
         flash("Cannot create an account with that email. Try again.")
-        # print("user is already a user") # This works, so `if user:` is evaluating as we expect
     else:
         user = crud.create_user(email=email, 
                                 password=hashpw, 
@@ -167,20 +141,16 @@ def process_login():
 
     user = crud.get_user_by_email(email)
 
-    if user == None: # is this not repetitive with `elif not user` ?
+    if user == None: 
         flash("We don't have an account for you under this email!")
         return redirect("/")
-    # syntax: werkzeug.security.check_password_hash(hash, password user entered)
-        # returns True or False
     elif password == "test" or not user or not werkzeug.security.check_password_hash(user.password, password):
         flash("The email or password you entered was incorrect.")
         return redirect("/")
     else:
         # Log in user by storing the user's id in session
         session["user_id"] = user.user_id
-        flash(f"Welcome back, {user.first_name}!") # Funny - when user logs in 
-        # with email in db and wrong password, get both the Welcome back and 
-        # the incorrect flash messages.  No longer replicating this error.
+        flash(f"Welcome back, {user.first_name}!")
 
         return redirect("/users/my_exercises")
 
@@ -194,10 +164,6 @@ def show_user_exercises():
 
         user = crud.get_user_by_id(user_id)
         exercises = crud.get_unique_exercises_of_user(user_id) # This is a set
-        # print(exercises)
-
-        # for exercise in exercises:
-        #     prompts = crud.get_prompts_by_exercise(exercise.exercise_id) # This is a list
 
         return render_template("my_exercises.html", user=user, exercises=exercises)
     
@@ -232,10 +198,6 @@ def save_user_responses(exercise_id):
     # User would only get routed here if the user is logged in because of the 
     # way static/js/alert_save_responses.js works.
     
-    # prompts = crud.get_prompts_by_exercise(exercise_id)
-
-    print("\n\n\n\nWhat is request.json?", request.json)
-    
     pacific_time = pytz.timezone("America/Los_Angeles")
     time_completed_exercise = datetime.now(pacific_time)
     # Associate one time with all responses from the same form, as opposed to
@@ -244,10 +206,8 @@ def save_user_responses(exercise_id):
     user_id = session["user_id"]
 
     user = crud.get_user_by_id(user_id)
-    # exercise = crud.get_exercise_by_id(exercise_id)
 
     for key in request.json:
-        # print(key, request.form.get(key))
         response = crud.create_response(response_content=request.json.get(key), 
                                         prompt=crud.get_prompt_by_id(int(key)), 
                                         user=user,
@@ -258,10 +218,7 @@ def save_user_responses(exercise_id):
 
     path_for_js_to_redirect_to = {}
     path_for_js_to_redirect_to["url"] = "/users/my_exercises"
-    # url_for("show_user_exercises", _scheme="https", _external=True)
-    # _external=True is necessary to use _scheme="https" (?)
 
-    print("\n\n\n\n", path_for_js_to_redirect_to)
     return path_for_js_to_redirect_to
     
 @app.route("/login-status.json")
