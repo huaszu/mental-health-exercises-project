@@ -1,15 +1,17 @@
-"""Test suite."""
+"""Test suite for mental health exercises app."""
 
 import server
 import unittest
 from flask import session
-from model import connect_to_db, db
+from model import connect_to_db
 
 
 class HallOfMirrorsIntegrationTestCase(unittest.TestCase):
     """Integration tests: testing Flask server."""
 
     def setUp(self):
+        """To do before every test."""
+
         print("(setUp ran)")
         self.client = server.app.test_client()
         # The `test_client` method technically comes from Werkzeug, a library
@@ -17,21 +19,18 @@ class HallOfMirrorsIntegrationTestCase(unittest.TestCase):
         server.app.config['TESTING'] = True
 
     def tearDown(self):
+        """To do after every test."""
+
         print("(tearDown ran)")
         return
 
     def test_homepage(self):
+        """Test for expected HTML in homepage."""
+
         result = self.client.get('/')
         self.assertIn(b'<h2 id="signin">Log In</h2>', result.data)
         # `result.data` is the response string (html), returned in 
         # bytestring format (`b'`)
-
-    # # Testing that the sample POST request to the route /add_exercise results in 'We love this exercise.' being rendered where the route redirects to, templates/all_exercises.html
-    # def test_create_exercise_form(self):
-    #     result = self.client.post('/add_exercise', data={'title': 'Best Exercise', 'description': 'We love this exercise.', 'prompt': 'How do you like my question?'})
-                # # `data` is a dictionary of form key/value pairs
-    #     self.assertIn(b'We love this exercise.', result.data)
-    #     # KeyError: 'user_id'
 
 
 class FlaskTestsLoggedIn(unittest.TestCase):
@@ -51,14 +50,11 @@ class FlaskTestsLoggedIn(unittest.TestCase):
         # Is 'user_id' the only key in session?  Yes
 
         connect_to_db(server.app)
-        # Without this line, "SQLALCHEMY_TRACK_MODIFICATIONS" showed up in 
-        # error - relates to what is in model.py !
 
     def test_important_page(self):
         """Test important page."""
 
         result = self.client.get("/users/my_exercises", follow_redirects=True)
-        # Should not make a difference whether follow_redirects=True or not
         self.assertIn(b"Here are all of the exercises you have completed and your past responses:", result.data)
 
     def test_create_exercise_page(self):
@@ -69,5 +65,5 @@ class FlaskTestsLoggedIn(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # If called like a script, run our tests
+    # If called like a script, run tests
     unittest.main()
