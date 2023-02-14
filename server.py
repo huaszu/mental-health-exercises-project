@@ -338,10 +338,10 @@ def allow_sw_scope_with_http_header():
 def get_vapid_public_key():
     """Get VAPID public key for Push API."""
 
-    # print("VAPID Public Key:", push_API_public_key)
-
     return jsonify(push_API_public_key)
 
+# In the case that the client has granted permission for push notifications, 
+# this route sets up the client for notifications going forward.
 @app.route("/api/push-subscriptions", methods=["POST"])
 def initiate_push():
     """Create a subscription record if necessary and spawn first notification."""
@@ -407,9 +407,9 @@ if __name__ == "__main__":
             print("    pip3 install pytest")
             
     elif "-d" in sys.argv:
-        app.run(host="0.0.0.0", debug=True)
         # Run in debug mode
+        app.run(host="0.0.0.0", debug=True)        
     else:
-        # app.run(ssl_context=("/etc/letsencrypt/live/hallofmirrors.org/fullchain.pem", "/etc/letsencrypt/live/hallofmirrors.org/privkey.pem"))
-        app.run()
         # Run normally
+        app.run()
+        
