@@ -1,14 +1,12 @@
 """Script to seed database."""
 
 import os
-import json
-from random import choice, randint
+from random import choice
 from datetime import datetime
 import pytz
-import re
 from data.exercises import seed_experts, seed_exercise_details
 
-from flask_sqlalchemy import SQLAlchemy # Can I add these here?
+from flask_sqlalchemy import SQLAlchemy
 from model import User, Exercise, Prompt
 
 import crud
@@ -22,8 +20,6 @@ os.system("createdb health")
 model.connect_to_db(server.app)
 model.db.create_all()
 
-
-# user_role_opt_in = [True, False]
 
 # Create test users.
 
@@ -106,7 +102,6 @@ for name, val in seed_experts.items(): # val is a dict with key "exercises" and 
                                         frequency=frequency, 
                                         time_limit_per_sitting=time_limit_per_sitting,
                                         author=author)
-        # Alternative: Add exercise to list and loop over that list.  Do not do `for exercise in Exercise.query.all()` later
 
         model.db.session.add(exercise)
 
@@ -149,43 +144,3 @@ for name, val in seed_experts.items(): # val is a dict with key "exercises" and 
 
 model.db.session.commit()
 # Commit takes a long time so better to commit once outside loop 
-
-# Can make helper fn inside loop if code unwieldy
-
-
-
-# # Create 2 test responses for each prompt of each exercise. 
-
-# respondents = User.query.filter(User.is_consumer == True).all()
-
-# for exercise in Exercise.query.all():
-#     pacific_time = pytz.timezone("America/Los_Angeles")
-#     time_completed_exercise = datetime.now(pacific_time)
-
-#     for prompt in exercise.prompts:
-#         # print("prompt:", prompt)
-#         # response_content1 = "Response"
-#         response_content = "Response"
-#         # prompt1 = prompt
-#         user1 = choice(respondents)
-
-#         response1 = crud.create_response(response_content=response_content, 
-#                                          prompt=prompt, 
-#                                          user=user1,
-#                                          time_completed_exercise=time_completed_exercise)
-
-#         user2 = choice(respondents) # It is possible for the same user to have multiple responses to the same prompt, from doing that exercise on different occasions.
-
-#         response2 = crud.create_response(response_content=response_content, 
-#                                          prompt=prompt, 
-#                                          user=user2,
-#                                          time_completed_exercise=time_completed_exercise)
-
-
-#     model.db.session.add_all([response1, response2])
-#     model.db.session.commit()
-
-#Print out all of that user's prompts and responses
-# Show surveys user has responded to - viewing responses
-# Making responses
-# Creating forms
