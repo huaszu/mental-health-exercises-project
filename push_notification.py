@@ -6,7 +6,7 @@ from pywebpush import webpush, WebPushException
 import pytz
 from datetime import datetime
 import crud
-from model import connect_to_db, db
+from model import db
 
 push_API_public_key = os.environ['VAPID_PUBLIC_KEY']
 push_API_private_key = os.environ['VAPID_PRIVATE_KEY']

@@ -6,7 +6,6 @@ from push_notification import send_first_push, send_push
 import crud
 from datetime import datetime
 import pytz
-from pywebpush import webpush, WebPushException
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
 import os
