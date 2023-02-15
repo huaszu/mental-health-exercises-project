@@ -47,6 +47,8 @@ function enablePush() {
     }
 };
 
+// TODO: Make if...else statement more DRY.
+
 
 // Within the function `registerServiceWorker()`, call the function 
 // `subscribeUser()`.  Within `subscribeUser()`, call the functions
