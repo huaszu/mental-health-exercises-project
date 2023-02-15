@@ -98,4 +98,13 @@ def send_push():
 
 
 # TODO: Write helper function to make the try/except block in the
-# `send_first_push(subscription)` and `send_push()` functions more DRY
+# `send_first_push(subscription)` and `send_push()` functions more DRY.
+    # `subscription_info`, `vapid_private_key`, and `vapid_claims` behave
+    # similarly in both functions.
+    # `data` differs in the two functions because the text to show users in 
+    # the very first notification is the same warm welcome, as shown in 
+    # `send_first_push(subscription)`, while the text to show users in
+    # subsequent notifications focuses on encouraging a user to revisit a 
+    # specific exercise.  The latter therefore tailors the notification text
+    # to mention the pertinent exercise title, in addition to having the 
+    # personalization of mentioning the user's name
