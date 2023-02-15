@@ -15,23 +15,24 @@ import sys
 from jinja2 import StrictUndefined
 
 app = Flask(__name__, instance_relative_config=True)
-
-# Load configuration setup for use of Push API
 app.config.from_pyfile('application.cfg.py')
 
-app.secret_key = os.environ['APP_SECRET_KEY']
 app.jinja_env.undefined = StrictUndefined
+
+app.secret_key = os.environ['APP_SECRET_KEY']
 
 push_API_public_key = os.environ['VAPID_PUBLIC_KEY']
 push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
 push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
+# Reference: https://apscheduler.readthedocs.io/en/master/api.html
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=send_push, 
+scheduler.add_job(func=send_push, # the callable called when job is run
+                  # Schedule job to run periodically, at fixed intervals of time
                   trigger="interval", 
-                  id="send_push_notifs",
-                  hours=8)
+                  id="send_push_notifs", # unique identifier of job
+                  hours=8) # a float indicating number of hours to wait
 scheduler.start()
 
 

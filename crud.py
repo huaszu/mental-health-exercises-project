@@ -219,7 +219,7 @@ def get_notification_by_id(notification_id):
 def get_notifications_to_send(current):
     """Return notifications to send."""
 
-    # `current` is when the scheduled send_push() function begins to run
+    # `current` is when the scheduled `server.send_push()` function begins to run
 
     notifs_to_send = []
     notifications = Notification.query.all()
