@@ -261,7 +261,8 @@ def initiate_push():
     """Create a subscription record if necessary and spawn first notification."""
 
     # A subscription is unique to a client.
-    # A client has to have a subscription first before getting notifications.
+    # Before a client gets notifications, a subscription record has to exist
+    # in the database that is associated to that client.
 
     user_id = session["user_id"]
     user = crud.get_user_by_id(user_id)

@@ -2,6 +2,7 @@
 
 // Let's use the Service Worker API!
 
+
 self.addEventListener('install', (evt) => {
   console.log('Service Worker installing {=');
 });
