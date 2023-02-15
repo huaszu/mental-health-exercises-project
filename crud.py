@@ -1,9 +1,7 @@
-"""CRUD operations."""
+"""CRUD operations for mental health exercises app."""
 
 from model import db, User, Exercise, Prompt, ResponseToPrompt, PushSubscription, Notification, connect_to_db
-from datetime import datetime, date, timedelta
-import pytz
-from random import choice
+from datetime import timedelta
 
 
 def create_user(email, password, first_name, last_name, is_expert=False, is_consumer=True, pen_name=None):
@@ -27,13 +25,13 @@ def get_users():
 
 
 def get_user_by_id(user_id):
-    """Return user with user_id."""
+    """Return user by `user_id.`"""
 
     return User.query.get(user_id)
 
 
 def get_user_by_email(email):
-    """Return a user by email."""
+    """Return user by `email`."""
 
     return User.query.filter(User.email == email).first()
 
@@ -57,7 +55,7 @@ def get_exercises():
 
 
 def get_exercise_by_id(exercise_id):
-    """Return exercise with exercise_id."""
+    """Return exercise by `exercise_id`."""
 
     return Exercise.query.get(exercise_id)
 
@@ -79,19 +77,19 @@ def get_prompts():
 
 
 def get_prompt_by_id(prompt_id):
-    """Return prompt with prompt_id."""
+    """Return prompt by `prompt_id`."""
 
     return Prompt.query.get(prompt_id)
 
 
 def get_prompts_by_exercise(exercise_id):
-    """Return prompts with exercise_id."""
+    """Return prompts by `exercise_id`."""
 
     return Prompt.query.filter(Prompt.exercise_id == exercise_id).all()
 
 
 def create_response(response_content, prompt, user, time_completed_exercise):
-    """Create and return a new prompt."""
+    """Create and return a new response."""
 
     response = ResponseToPrompt(response_content=response_content, 
                                 prompt=prompt, 
@@ -108,34 +106,31 @@ def get_responses():
 
 
 def get_response_by_id(response_id):
-    """Return response with response_id."""
+    """Return response by `response_id`."""
 
     return ResponseToPrompt.query.get(response_id)
 
 
-def get_responses_by_user_id(user_id): # Could alternatively write function that takes in user
-    """Return responses based on user_id."""
+def get_responses_by_user_id(user_id):
+    """Return responses by `user_id`."""
 
     return ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).all()
 
 
-# Take in exercise_id, user_id.  Return that user's responses to prompts for that exercise.
-
-# Should I print or get?
 def print_exercise_responses_of_user(user_id, exercise_id):
-    """Print all of user's responses for this exercise."""
+    """Print all of user's responses to prompts for this exercise."""
 
     prompt_response_pairs = []
 
-    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).filter(Prompt.exercise_id == exercise_id).all() # returns list of responses
-    # joinedload for eager loading?
+    # List of responses
+    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).filter(Prompt.exercise_id == exercise_id).all()
 
     for response in responses:
         tup = (response.prompt.prompt_content, response.response_content)
         prompt_response_pairs.append(tup)
 
     for tup in prompt_response_pairs:
-        # unpack the tuple
+        # Unpack the tuple to make the print more useful for engineers
         (prompt_content, response_content) = tup
         print(f'Prompt: {prompt_content} Response: {response_content}')
     
@@ -147,126 +142,27 @@ def print_exercises_of_user(user_id):
 
     exercises = []
 
-    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all() # list of responses of user
-
-    # for response in responses:
-    #     print("Exercise Title:", response.prompt.exercise.title, 
-    #           "Prompt:", response.prompt.prompt_content, 
-    #           "Response:", response.response_content)
+    # List of responses of user
+    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all()
 
     for response in responses:
         print("Exercise Title:", response.prompt.exercise.title)
         exercises.append(response.prompt.exercise)
     
-    return exercises # a list of exercises
-
-
-def get_exercises_of_user(user_id):
-    """Get all exercises user has responded to."""
-
-    exercises = []
-
-    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all() # list of responses of user
-
-    # for response in responses:
-    #     print("Exercise Title:", response.prompt.exercise.title, 
-    #           "Prompt:", response.prompt.prompt_content, 
-    #           "Response:", response.response_content)
-
-    for response in responses:
-        # print("Exercise Title:", response.prompt.exercise.title)
-        exercises.append(response.prompt.exercise)
-    
-    return exercises # a list of exercises
+    return exercises
 
 
 def get_unique_exercises_of_user(user_id):
-    """Get unique exercises user has responded to."""
+    """Return unique exercises user has responded to."""
 
-    exercises = set() # Note: exercises will be unordered!
+    exercises = set() # Note: exercises will be unordered
 
-    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all() # list of responses of user
-
-    # for response in responses:
-    #     print("Exercise Title:", response.prompt.exercise.title, 
-    #           "Prompt:", response.prompt.prompt_content, 
-    #           "Response:", response.response_content)
+    responses = ResponseToPrompt.query.filter(ResponseToPrompt.user_id == user_id).join(Prompt).all()
 
     for response in responses:
-        # print("Exercise Title:", response.prompt.exercise.title)
         exercises.add(response.prompt.exercise)
     
-    return exercises # a set of exercises
-
-
-# # Take in exercise, print prompts
-# def print_exercise_prompts(exercise):
-#     # this_exercise = Exercise.query.filter(exercise.exercise_id == Exercise.exercise_id).one() # Alternative to .one() is .all() and then pull out only element of that list
-#     for prompt in exercise.prompts:
-#         print(prompt.responses) # Prints a list of responses per prompt.
-
-# Exercise.query.filter(1 == Exercise.exercise_id).join(Prompt).all()
-
-# Exercise.query.filter(1 == Exercise.exercise_id).options(db.joinedload('prompts')).one()
-
-
-
-# def print_user_prompts(user):
-#     print(ResponseToPrompt.query.filter(ResponseToPrompt.user == user).all())
-
-
-
-# def print_exercise_responses(user, exercise):
-#     """Print all of user's responses for this exercise."""
-
-#     print(ResponseToPrompt.query.filter(ResponseToPrompt.user == user).join(Prompt).all())
-#     filter for user
-#     join prompt 
-#     filter for exercise 
-
-#     as a list
-
-#     for response in user.responses:
-#         if response.prompt.exercise == exercise:
-#             print(response)
-
-#     # user.responses filter by response.prompt.exercise = exercise
-    
-#     # print(user.responses)
-#     print(User.query.filter(User.user_id == user.user_id))
-
-#     # first_response = ResponseToPrompt.query.first(ResponseToPrompt.user_id == user.user_id) # Use the `user` input to get to the first (any) response of that user
-#     # first_response.prompt.exercise
-#     #     print(response)
-#     #     for user_exercise in response.prompt.exercise: 
-#     #         if user_exercise == exercise:
-#     #             for element in exercise.prompts:
-
-#     #             print(exercise.prompts.
-#     #     for prompt in response.prompt:
-#     #     print(prompt)
-#     #     exercise = prompt.exercise
-#     #     print(exercise)
-#     #     if exercise not in exercises_of_user:
-#     #         exercises_of_user.append(exercise)
-
-
-# # Look at a user who has at least one response.
-# # test_user = User.query.filter(len(User.responses) > 0).first()
-# # print(test_user)
-
-# # exercises_of_user = [] # Elements of list are unique exercises the user has done.
-
-# # # for response in test_user.responses:
-# # for response in User.query.first().responses:
-# #     for prompt in response.prompt:
-# #         print(prompt)
-# #         exercise = prompt.exercise
-# #         print(exercise)
-# #         if exercise not in exercises_of_user:
-# #             exercises_of_user.append(exercise)
-
-# # print_exercise_responses(User.query.first(), choice(exercises_of_user))
+    return exercises
 
 
 def create_push_subscription(subscription_json, user):
@@ -285,7 +181,7 @@ def get_subscriptions():
 
 
 def get_first_subscription(subscription_json):
-    """Get first subscription to push notifications."""
+    """Return first subscription to push notifications."""
 
     first_subscription = PushSubscription.query.filter(PushSubscription.subscription_json == subscription_json).first()
 
@@ -293,15 +189,9 @@ def get_first_subscription(subscription_json):
 
 
 def get_subscription_by_id(subscription_id):
-    """Return subscription with subscription_id."""
+    """Return subscription by `subscription_id`."""
 
     return PushSubscription.query.get(subscription_id)
-
-
-# def get_subscription_json_by_id(subscription_id):
-#     """Return subscription_json for subscription_id."""
-
-#     return PushSubscription.query.get(subscription_id).subscription_json
 
 
 def create_notification(user, exercise, last_sent):
@@ -321,19 +211,20 @@ def get_notifications():
 
 
 def get_notification_by_id(notification_id):
-    """Return notification with notification_id."""
+    """Return notification by `notification_id`."""
 
     return Notification.query.get(notification_id)
 
 
 def get_notifications_to_send(current):
-    """Return notifications to deliver."""
+    """Return notifications to send."""
 
-    # Change function to take in current as an input, where current is when the 
-    # scheduled send_push() function begins to run
-    # pacific_time = pytz.timezone("America/Los_Angeles")
-    # now = datetime.now(pacific_time)
-    # print(now)
+    # `current` is when the scheduled send_push() function begins to run.
+    # Compare `current` to (the time the notification was last sent, plus the 
+    # days that a user is recommended to go before revisiting the exercise).
+    # If `current` is later in time in that comparison, then this 
+    # notification is due to be sent again, to encourage the user to revisit
+    # the exercise
 
     notifs_to_send = []
     notifications = Notification.query.all()
@@ -341,24 +232,15 @@ def get_notifications_to_send(current):
         next_date = notification.last_sent + timedelta(days=notification.exercise.frequency)
         if next_date < current:
             notifs_to_send.append(notification)
-    print(notifs_to_send)
+    # print(notifs_to_send)
+
     return notifs_to_send
-
-    # print(Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all())
-
-    # return Notification.query.filter((current - Notification.last_sent) > timedelta(days=Notification.exercise.frequency)).all()
-
-    # Handle first notif - OR last_sent None? 
-    
-    # 11:59 pm Day 0   11/27
-    # Day 1   date   12:00   11/28
-
-    # default last_sent at creation of notification?
 
 
 def get_notifications_to_send_for_test(current):
     """Return notifications to deliver for testing purposes."""
 
+    # Problem solving in collaboration with Jared B: 
     # get list of all notifications
     # for each notification:
     #   Check if that particular notification needs to be sent
