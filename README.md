@@ -6,6 +6,8 @@ Demo: [Video](https://youtu.be/kjDivrRaVE0)
 
 The Hall of Mirrors is a web app for people to do journaling exercises that help them build emotional literacy, as well as for people to author exercises in service of this goal.
 
+I have a lifelong interest in enabling relational and emotional well-being, informed by activities such as volunteering with a mental health hotline and starting a coaching practice focused on self-expression. 
+
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
