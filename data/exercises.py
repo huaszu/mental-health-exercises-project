@@ -1,3 +1,6 @@
+"""Information on subject matter experts and exercises to seed."""
+
+# A dictionary of experts and titles of exercises they each author
 seed_experts = {
     "Brené Brown": {
         "exercises": [
@@ -122,6 +125,16 @@ seed_experts = {
     }
 }
 
+# Enter `frequency` and `time_limit_per_sitting` as integers
+# Use default `prompt_type` of "long answer"
+
+# # Guide to format for inner dictionary:
+#       "description": 
+#       "frequency": 
+#       "time_limit_per_sitting": 
+#       "prompts": []
+
+# A dictionary of exercise titles and details corresponding to each exercise
 seed_exercise_details = {
     "Dare to Lead: Am I ready to give feedback?": {
         "description": "Sometimes speaking the truth feels as if we are being unkind, especially when sharing difficult information or feedback. But in reality, dancing around the truth is unkind. When we avoid stating the truth - when we are vague or ambiguous under the guise of being kind — it is often because we are trying to lessen the discomfort for ourselves, not for the other person.",
@@ -610,12 +623,3 @@ seed_exercise_details = {
         ]        
     }
 }
-
-# Make sure that frequency and time_limit_per_sitting are integers
-# Default prompt_type "long answer"
-
-# # Format for inner dictionary
-#         "description": 
-#         "frequency": 
-#         "time_limit_per_sitting": 
-#         "prompts": []
