@@ -95,3 +95,7 @@ def send_push():
         db.session.commit()
 
     print("Job succeeded")
+
+
+# TODO: Write helper function to make the try/except block in the
+# `send_first_push(subscription)` and `send_push()` functions more DRY
