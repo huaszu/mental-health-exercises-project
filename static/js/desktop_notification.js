@@ -1,7 +1,7 @@
 'use strict';
 
 // Listen for click on "notify" button to check whether client has granted
-// permission to send notifications and, if so, to send a test notification
+// permission to send notifications and, if so, to send a test notification.
 
 
 const button = document.querySelector('#notify'); 

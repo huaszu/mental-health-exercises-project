@@ -1,5 +1,11 @@
 'use strict';
 
+// Offer a useful path for the user if the user wants to save an exercise
+// submission but had not signed in to prevent the user from 
+// experiencing loss of the information they provided, if they indeed want to
+// sign in and keep the information. 
+
+
 const form = document.querySelector('#exercise');
 
 form.addEventListener('submit', (evt) => {
@@ -29,35 +35,21 @@ form.addEventListener('submit', (evt) => {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include',
                     redirect: 'follow'})
-                    // response object has a property url - the url is what was the destination
+                    // `response` object has a property `url`.  `url` is what was the destination.
                     // https://developer.mozilla.org/en-US/docs/Web/API/Response
                     .then((response) => response.json()) // Extract response body.
                     // Body is entirely JSON or entirely HTML or the data that I want to send.
-                    // In this case, the body is JSON object with one key in it.
-                    // Read that JSON object from our JavaScript
+                    // In this case, the body is a JSON object with one key in it.
+                    // Read that JSON object from our JavaScript.
                     .then((responseJson) => {
                         console.log(responseJson.url);
 
                         console.log(window.location.hostname); // Example: 'fellowship.hackbrightacademy.com'
                         console.log(window.location.origin); // Example: 'https://fellowship.hackbrightacademy.com'
 
-                        window.location.replace(window.location.origin + responseJson.url); // And go to that URL
-
-                        // const responseUrl = response.url;
-                        // console.log(responseUrl);
-
-                        // if (responseUrl[4] === ':') {
-                        //     console.log('this is http');
-                        //     const newResponseUrl = 'https' + responseUrl.slice(4);
-                        //     console.log(newResponseUrl);
-                        //     window.location.replace(newResponseUrl)
-                        // } else {
-                        //     const newResponseUrl = responseUrl;
-                        //     console.log(newResponseUrl);
-                        //     window.location.replace(newResponseUrl)
-                        // }                        
-                    }
-                    )
+                        // Go to that URL.
+                        window.location.replace(window.location.origin + responseJson.url);                      
+                    })
             }
         });
     });
