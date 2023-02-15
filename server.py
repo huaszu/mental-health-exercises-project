@@ -255,13 +255,13 @@ def get_vapid_public_key():
     return jsonify(push_API_public_key)
 
 # In the case that the client has granted permission for push notifications, 
-# this route sets up the client for notifications going forward
+# this route sets up the client for notifications going forward.
 @app.route("/api/push-subscriptions", methods=["POST"])
 def initiate_push():
     """Create a subscription record if necessary and spawn first notification."""
 
-    # A subscription is unique to a client
-    # A client has to have a subscription first before getting notifications
+    # A subscription is unique to a client.
+    # A client has to have a subscription first before getting notifications.
 
     user_id = session["user_id"]
     user = crud.get_user_by_id(user_id)
@@ -272,10 +272,10 @@ def initiate_push():
     # https://developer.mozilla.org/en-US/docs/Web/API/PushSubscription/endpoint, 
     # this endpoint takes the form of a custom URL that points to a push 
     # server, which can be used to send a push message to the particular 
-    # service worker instance that subscribed to the push service
+    # service worker instance that subscribed to the push service.
     subscription_json = json_data["subscription_json"]
 
-    # Each notification is specific to an exercise
+    # Each notification is specific to an exercise.
     exercise_id = int(json_data["exercise_id"])
     exercise = crud.get_exercise_by_id(exercise_id)
     
@@ -284,16 +284,16 @@ def initiate_push():
     subscription = crud.get_first_subscription(subscription_json=subscription_json)
 
     # If there is no PushSubscription object with matching `subscription_json`, 
-    # create a new PushSubscription object
+    # create a new PushSubscription object.
     if subscription is None:
         subscription = crud.create_push_subscription(subscription_json=subscription_json, 
                                                      user=user)
 
         db.session.add(subscription)
 
-    # Spawn first notification and record it.  
+    # Spawn first notification and record it.
     # Enables sending future notifications via a scheduled job that makes 
-    # calculation based on timing of previous notification
+    # calculation based on timing of previous notification.
     send_first_push(subscription)
     pacific_time = pytz.timezone("America/Los_Angeles")
     last_sent = datetime.now(pacific_time)
