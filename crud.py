@@ -259,8 +259,6 @@ def get_notifications_to_send(current):
 
     return notifs_to_send
 
-get_notifications_to_send(current)
-
 def get_subscriptions_from_notification(notification):
     """Return push subscriptions of user to whom notification belongs."""
 
