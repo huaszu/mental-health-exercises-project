@@ -234,8 +234,32 @@ def get_notifications_to_send(current):
             notifs_to_send.append(notification)
     # print(notifs_to_send)
 
+    # TODO: Optimize the database call.  Why?
+    # Because filtering in the database would take advantage of the db's index.
+    # And returning lots of data from the db to code takes more memory and time.
+
+    # Idea: Filter for notifications where the time gap that has transpired 
+    # from the time the notification was last sent to `current` is greater 
+    # than the gap recommended based on how often the exercise should be 
+    # completed. 
+    # Therefore, instead of `Notification.query.all()`:
+    
+    # Alternative 1: 
+    # `Notification.query.filter((current - Notification.last_sent) > timedelta(hours=Notification.Exercise.frequency)).all())`
+    # Testing this approach gave errors.
+
+    # Alternative 2: Based on SQLAlchemy documentation, I had a hypothesis that
+    # SQLAlchemy can identify the exercise based on a notification having a 
+    # relationship to an exercise.  I tried simplifying Alternative 1 to
+    # `Notification.query.filter((current - Notification.last_sent) > timedelta(hours=Exercise.frequency)).all())`
+    # Testing this approach gave errors.
+
+    # Next step: Further investigation of how SQLAlchemy works to come up with
+    # better alternatives.
+
     return notifs_to_send
 
+get_notifications_to_send(current)
 
 def get_subscriptions_from_notification(notification):
     """Return push subscriptions of user to whom notification belongs."""
