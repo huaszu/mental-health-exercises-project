@@ -288,11 +288,11 @@ def initiate_push():
     
     # Check if there is already a matching PushSubscription object with the same 
     # `subscription_json` 
-    subscription = crud.get_first_subscription(subscription_json=subscription_json)
+    existing_subscription = crud.get_first_subscription(subscription_json=subscription_json)
 
     # If there is no PushSubscription object with matching `subscription_json`, 
     # create a new PushSubscription object.
-    if subscription is None:
+    if existing_subscription is None:
         subscription = crud.create_push_subscription(subscription_json=subscription_json, 
                                                      user=user)
         
@@ -331,6 +331,10 @@ def initiate_push():
     return jsonify({
         "status": "success"
     })
+
+    # TODO: Configure a logger object instead of console.
+    # Next step: Investigate `logging` module in Python and incorporate its use 
+    # when error checking. 
 
 
 if __name__ == "__main__":
