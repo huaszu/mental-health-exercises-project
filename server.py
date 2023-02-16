@@ -3,6 +3,7 @@
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify, make_response, send_from_directory)
 from model import connect_to_db, db
 from push_notification import send_first_push, send_push
+from constants import PACIFIC_TIMEZONE_CITY
 import crud
 from datetime import datetime
 import pytz
@@ -191,6 +192,7 @@ def show_exercise(exercise_id):
         day = str(exercise.frequency) + " days"
 
     return render_template("exercise_details.html", exercise=exercise, day=day)
+print(PACIFIC_TIMEZONE_CITY)
 
 @app.route("/exercises/<exercise_id>/submitted", methods=["POST"])
 def save_user_responses(exercise_id):
@@ -201,7 +203,7 @@ def save_user_responses(exercise_id):
 
     # Associate one time with all responses from the same form, as opposed to
     # a different time with each response from the same form
-    pacific_time = pytz.timezone("America/Los_Angeles")
+    pacific_time = pytz.timezone(PACIFIC_TIMEZONE_CITY)
     time_completed_exercise = datetime.now(pacific_time)
     
     user_id = session["user_id"]
@@ -276,18 +278,14 @@ def initiate_push():
     user_id = session["user_id"]
     user = crud.get_user_by_id(user_id)
 
-    json_data = request.json
+    request_json_data = request.json
 
     # Get the string containing the URL endpoint of the subscription.  Based on 
     # https://developer.mozilla.org/en-US/docs/Web/API/PushSubscription/endpoint, 
     # this endpoint takes the form of a custom URL that points to a push 
     # server, which can be used to send a push message to the particular 
     # service worker instance that subscribed to the push service.
-    subscription_json = json_data["subscription_json"]
-
-    # Each notification is specific to an exercise.
-    exercise_id = int(json_data["exercise_id"])
-    exercise = crud.get_exercise_by_id(exercise_id)
+    subscription_json = request_json_data["subscription_json"]
     
     # Check if there is already a matching PushSubscription object with the same 
     # `subscription_json` 
@@ -304,7 +302,15 @@ def initiate_push():
     # Spawn first notification and record it.
     # Enables sending future notifications via a scheduled job that makes 
     # calculation based on timing of previous notification.
+
+
+
     send_first_push(subscription)
+    
+    # Each notification is specific to an exercise.
+    exercise_id = int(request_json_data["exercise_id"])
+    exercise = crud.get_exercise_by_id(exercise_id)
+
     pacific_time = pytz.timezone("America/Los_Angeles")
     last_sent = datetime.now(pacific_time)
 
