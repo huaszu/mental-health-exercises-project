@@ -192,7 +192,6 @@ def show_exercise(exercise_id):
         day = str(exercise.frequency) + " days"
 
     return render_template("exercise_details.html", exercise=exercise, day=day)
-print(PACIFIC_TIMEZONE_CITY)
 
 @app.route("/exercises/<exercise_id>/submitted", methods=["POST"])
 def save_user_responses(exercise_id):
@@ -311,7 +310,7 @@ def initiate_push():
     exercise_id = int(request_json_data["exercise_id"])
     exercise = crud.get_exercise_by_id(exercise_id)
 
-    pacific_time = pytz.timezone("America/Los_Angeles")
+    pacific_time = pytz.timezone(PACIFIC_TIMEZONE_CITY)
     last_sent = datetime.now(pacific_time)
 
     notification = crud.create_notification(user=user, 

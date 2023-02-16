@@ -7,6 +7,7 @@ import pytz
 from datetime import datetime
 import crud
 from model import db
+from constants import PACIFIC_TIMEZONE_CITY
 
 push_API_public_key = os.environ['VAPID_PUBLIC_KEY']
 push_API_private_key = os.environ['VAPID_PRIVATE_KEY']
@@ -50,7 +51,7 @@ def send_push():
     # creating different timestamps throughout various parts of the code 
     # within this function.  In one run of this job, evaluate all 
     # notifications within the job against the same timestamp. 
-    pacific_time = pytz.timezone("America/Los_Angeles")
+    pacific_time = pytz.timezone(PACIFIC_TIMEZONE_CITY)
     current = datetime.now(pacific_time)
 
     # Get notifications whose time is due to be sent again.

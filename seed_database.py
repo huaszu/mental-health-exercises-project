@@ -5,6 +5,7 @@ from random import choice
 from datetime import datetime
 import pytz
 from data.exercises import seed_experts, seed_exercise_details
+from constants import PACIFIC_TIMEZONE_CITY
 
 from flask_sqlalchemy import SQLAlchemy
 from model import User, Exercise, Prompt
@@ -140,7 +141,7 @@ for name, val in seed_experts.items():
 
             # Create 2 test responses for each prompt of each exercise 
 
-            pacific_time = pytz.timezone("America/Los_Angeles")
+            pacific_time = pytz.timezone(PACIFIC_TIMEZONE_CITY)
             time_completed_exercise = datetime.now(pacific_time)
 
             response_content = "Response"
