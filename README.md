@@ -16,6 +16,7 @@ I have a lifelong interest in enabling relational and emotional well-being, info
 - [Installation](#installation)
 - [Tests](#tests)
 - [Possible Future Features](#possible-future-features)
+- [Screenshots](#screenshots)
 - [License](#license)
 
 ## Tech Stack
