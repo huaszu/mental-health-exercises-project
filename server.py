@@ -295,14 +295,15 @@ def initiate_push():
     if subscription is None:
         subscription = crud.create_push_subscription(subscription_json=subscription_json, 
                                                      user=user)
-
-        db.session.add(subscription)
+        
+        try:
+            db.session.add(subscription)
+        except:
+            print("\n\n\n\n\n", "Error adding subscription record")
 
     # Spawn first notification and record it.
     # Enables sending future notifications via a scheduled job that makes 
     # calculation based on timing of previous notification.
-
-
 
     send_first_push(subscription)
     
@@ -317,7 +318,13 @@ def initiate_push():
                                             exercise=exercise, 
                                             last_sent=last_sent)
     
-    db.session.add(notification)
+    try:
+        db.session.add(notification)
+
+    except:
+        print("\n\n\n\n\n", "Error adding notification record", 
+              "user:", user_id, "exercise:", exercise_id, 
+              "last_sent:", last_sent)
 
     db.session.commit()
 
