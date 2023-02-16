@@ -27,10 +27,12 @@ push_API_subject = os.environ['VAPID_CLAIM_EMAIL']
 
 
 # Reference: https://apscheduler.readthedocs.io/en/master/api.html
+# A scheduled job runs periodically at fixed intervals of time to check what 
+# ensuing notifications should be generated, send those notifications, and 
+# record those notifications in the database. 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=send_push, # the callable called when job is run
-                  # Schedule job to run periodically, at fixed intervals of time
-                  trigger="interval", 
+                  trigger="interval", # run periodically
                   id="send_push_notifs", # unique identifier of job
                   hours=8) # a float indicating number of hours to wait
 scheduler.start()
@@ -256,6 +258,13 @@ def get_vapid_public_key():
 
 # In the case that the client has granted permission for push notifications, 
 # this route sets up the client for notifications going forward.
+# We need the following in place: a subscription; a record of that subscription 
+# in the database; and an initial notification, also recorded in the database.  
+    # Get the necessary information from the subscription and create a 
+    # subscription record with that information, if such a record does not
+    # already exist. 
+    # Then spawn a first notification and record it in the database.
+
 @app.route("/api/push-subscriptions", methods=["POST"])
 def initiate_push():
     """Create a subscription record if necessary and spawn first notification."""
