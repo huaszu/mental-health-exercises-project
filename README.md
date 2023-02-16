@@ -138,6 +138,14 @@ $ python3 server.py --test
 - Allow prompt types other than long answer response, such as multiple choice
 - Enable multiple people to collaborate on an exercise online
 
+## Screenshots
+
+<img src="static/img/screenshots/1-homepage.png" alt="homepage containing login and navigation to different parts of app, with background photograph of Monument Valley"/>
+<img src="static/img/screenshots/2-create.png" alt="interface for user to author a journaling exercise"/>
+<img src="static/img/screenshots/3-all_exercises.png" alt="inventory of journaling exercises, including the exercise that the user just now created"/>
+<img src="static/img/screenshots/4-exercise_details.png" alt="interface for user to reflect, respond to prompts within a journaling exercise, and enable push notifications if they so wish"/>
+<img src="static/img/screenshots/5-my_exercises.png" alt="view of all exercises that user has responded to, with accordion opened up to show a response within an exercise on the topic of belonging"/>
+
 ## License
 
 [CC BY-NC](https://creativecommons.org/licenses/by-nc/4.0/): This license allows reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creator.
