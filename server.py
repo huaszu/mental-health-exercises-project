@@ -320,7 +320,6 @@ def initiate_push():
     
     try:
         db.session.add(notification)
-
     except:
         print("\n\n\n\n\n", "Error adding notification record", 
               "user:", user_id, "exercise:", exercise_id, 
