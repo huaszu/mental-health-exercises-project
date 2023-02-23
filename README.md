@@ -17,6 +17,7 @@ I have a lifelong interest in enabling relational and emotional well-being, info
 - [Tests](#tests)
 - [Possible Future Features](#possible-future-features)
 - [Screenshots](#screenshots)
+- [Acknowledgments](#acknowledgments)
 - [License](#license)
 
 ## Tech Stack
@@ -146,6 +147,11 @@ $ python3 server.py --test
 <img src="static/img/screenshots/3-all_exercises.png" alt="inventory of journaling exercises, including the exercise that the user just now created"/>
 <img src="static/img/screenshots/4-exercise_details.png" alt="interface for user to reflect, respond to prompts within a journaling exercise, and enable push notifications if they so wish"/>
 <img src="static/img/screenshots/5-my_exercises.png" alt="view of all exercises that user has responded to, with accordion opened up to show a response within an exercise on the topic of belonging"/>
+
+## Acknowledgments 
+
+My Hackbright instructors: Drue Gilbert, Jared Bitz, Jocelyn Tang, Sean Fagan
+Engineers who have given code reviews: Helen Denisenko, Jan Bernhard, Jinsoo Lim, Leo Ahnn, Matt Piziak, Max M, Vlad Vengrenyuk
 
 ## License
 
