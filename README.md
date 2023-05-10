@@ -152,7 +152,7 @@ $ python3 server.py --test
 
 My Hackbright instructors: Drue Gilbert, Jared Bitz, Jocelyn Tang, Sean Fagan
 <br>
-Engineers who have given code reviews: Helen Denisenko, Jan Bernhard, Jinsoo Lim, Leo Ahnn, Matt Piziak, Max M, Vlad Vengrenyuk
+Engineers who have given code reviews: Helen Denisenko, Jan Bernhard, Jinsoo Lim, Leo Ahnn, Matt Piziak, Max Malekzadeh, Vlad Vengrenyuk
 
 ## License
 
