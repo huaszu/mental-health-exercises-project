@@ -55,7 +55,7 @@ I have a lifelong interest in enabling relational and emotional well-being, info
 #### Requirements:
 
 - PostgreSQL 14.6
-- Python 3.10
+- Python 3.10.5
 - VAPID public key, private key, and claim - [Set up your own](https://blog.mozilla.org/services/2016/08/23/sending-vapid-identified-webpush-notifications-via-mozillas-push-service/)
 
 To have this app running on your local computer, please follow the below steps:
