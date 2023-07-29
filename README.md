@@ -12,7 +12,7 @@ I have a lifelong interest in enabling relational and emotional well-being, info
 
 - [Tech Stack](#tech-stack)
 - [Data Model](#data-model)
-- [Features for Users](#features-for-users)
+- [Features for App Users](#features-for-app-users)
 - [Installation](#installation)
 - [Tests](#tests)
 - [Possible Future Features](#possible-future-features)
